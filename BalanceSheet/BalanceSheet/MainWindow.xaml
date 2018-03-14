@@ -1,0 +1,27 @@
+﻿<Window x:Class="Nachiappan.BalanceSheet.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
+        xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
+        d:DataContext="{d:DesignInstance balanceSheetViewModel:WorkFlowViewModel}"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:InputWorkFlowStepViewModel}">
+                <local:InputWorkFlowStepUserControl></local:InputWorkFlowStepUserControl>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:ProcessingWorkFlowStepViewModel}">
+                <local:ProcessingWorkFlowStepUserControl></local:ProcessingWorkFlowStepUserControl>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:AboutApplicationWorkFlowStepViewModel}">
+                <local:AboutApplicationWorkFlowStepUserControl/>
+            </DataTemplate>
+        </Grid.Resources>
+        <ContentPresenter Content="{Binding CurrentStep}"/>
+
+    </Grid>
+</Window>
