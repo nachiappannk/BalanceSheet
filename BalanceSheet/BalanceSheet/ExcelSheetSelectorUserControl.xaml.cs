@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 
-namespace Nachiappan.BalanceSheetViewModel
+namespace Nachiappan.BalanceSheet
 {
     /// <summary>
     /// Interaction logic for ExcelSheetSelectorUserControl.xaml

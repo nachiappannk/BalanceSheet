@@ -1,14 +1,12 @@
 ﻿<UserControl x:Class="Nachiappan.BalanceSheet.InputWorkFlowStepUserControl"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
-        xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"                 
         xmlns:balanceSheetViewModel1="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
+        xmlns:balanceSheet="clr-namespace:Nachiappan.BalanceSheet"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance balanceSheetViewModel1:InputWorkFlowStepViewModel}"
-        Height="300" Width="300">
+        d:DataContext="{d:DesignInstance balanceSheetViewModel1:InputWorkFlowStepViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -27,9 +25,9 @@
 
 
         <DockPanel LastChildFill="False" Grid.Row="1">
-            <balanceSheetViewModel:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
+            <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
                                                                   DataContext="{Binding JournalSelectorViewModel}"/>
-            <balanceSheetViewModel:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
+            <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
                                                                   DataContext="{Binding PreviousBalanceSheetSelectorViewModel}"/>
             <DockPanel DockPanel.Dock="Top" Margin="10,10,10,0" Height="25" LastChildFill="False">
                 <TextBlock Text="Accounting Period Start" DockPanel.Dock="Left" Margin="0,0,10,0" VerticalAlignment="Center"/>
