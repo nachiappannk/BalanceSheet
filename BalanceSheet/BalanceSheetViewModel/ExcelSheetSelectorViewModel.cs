@@ -89,7 +89,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 ExcelSheetInfoProvider sheetInfoProvider = new ExcelSheetInfoProvider(InputFileName);
                 SheetNames = sheetInfoProvider.GetSheetNames();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 SheetNames = new List<string>();
             }
