@@ -7,9 +7,8 @@
 
     public enum MessageType
     {
-        Information = 0,
-        Warning = 1,
-        IgnorableError = 2,
-        Error = 3,
+        
+        Warning = 0,
+        Error = 1,
     }
 }

@@ -69,7 +69,7 @@ namespace Nachiappan.BalanceSheetViewModel
                     {
                         if ((Math.Abs(credit) > 0.01) && (Math.Abs(debit) > 0.01))
                         {
-                            logger.Log(MessageType.IgnorableError, $"In file {r.FileName}, " +
+                            logger.Log(MessageType.Warning, $"In file {r.FileName}, " +
                                                                    $"in sheet {r.SheetName}, " +
                                                                    $"in line no. {r.LineNumber}, " +
                                                                    "both credit and debit is having non zero values. Taking the difference as value");
@@ -78,7 +78,7 @@ namespace Nachiappan.BalanceSheetViewModel
                     }
                     if (!isCreditAvailable && !isDebitAvailable)
                     {
-                        logger.Log(MessageType.IgnorableError, $"In file{r.FileName}, " +
+                        logger.Log(MessageType.Warning, $"In file{r.FileName}, " +
                                                                $"in sheet{r.SheetName}, " +
                                                                $"in line no. {r.LineNumber}, " +
                                                                "both credit and debit is not mentioned. Taking the value as 0");
@@ -157,14 +157,14 @@ namespace Nachiappan.BalanceSheetViewModel
                     var debit = isDebitAvailable ? r.ReadDouble(Debit) : 0;
                     if (isCreditAvailable && isDebitAvailable)
                     {
-                        logger.Log(MessageType.IgnorableError, $"In file{r.FileName}, " +
+                        logger.Log(MessageType.Warning, $"In file{r.FileName}, " +
                                                                $"in sheet{r.SheetName}, " +
                                                                $"in line no. {r.LineNumber}, " +
                                                                "both credit and debit is mentioned. Taking the difference as value");
                     }
                     if (!isCreditAvailable && !isDebitAvailable)
                     {
-                        logger.Log(MessageType.IgnorableError, $"In file{r.FileName}, " +
+                        logger.Log(MessageType.Warning, $"In file{r.FileName}, " +
                                                                $"in sheet{r.SheetName}, " +
                                                                $"in line no. {r.LineNumber}, " +
                                                                "both credit and debit is not mentioned. Taking the value as 0");

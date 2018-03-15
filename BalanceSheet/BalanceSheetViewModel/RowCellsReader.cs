@@ -80,7 +80,7 @@ namespace Nachiappan.BalanceSheetViewModel
             stringBuilder.AppendLine($"In sheet {SheetName}, ");
             stringBuilder.AppendLine($"In cell {GetCellAddress(zeroBasedColumnIndex)}, ");
             stringBuilder.AppendLine(errorMessage);
-            _logger.Log(MessageType.IgnorableError, stringBuilder.ToString());
+            _logger.Log(MessageType.Warning, stringBuilder.ToString());
         }
 
         private object ReadCell(int zeroBasedColumnIndex)

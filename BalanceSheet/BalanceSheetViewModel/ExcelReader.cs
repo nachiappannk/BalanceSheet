@@ -100,7 +100,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 b.AppendLine($"In File {fileName}, ");
                 b.AppendLine($"In Sheet {sheetName}, ");
                 b.AppendLine($"Expected heading {columnNameOptions.ElementAt(0)} but found {columnName}");
-                logger.Log(MessageType.IgnorableError, b.ToString());
+                logger.Log(MessageType.Warning, b.ToString());
             }
         }
     }

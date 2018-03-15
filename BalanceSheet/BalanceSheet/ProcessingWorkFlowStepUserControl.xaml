@@ -4,9 +4,31 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
+             xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance balanceSheetViewModel:ProcessingWorkFlowStepViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:Warning}">
+                <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4" Margin="1">
+                    <Grid Background="Orange">
+                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:Error}">
+                <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4" Margin="1">
+                    <Grid Background="Red">
+                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+        </Grid.Resources>
+        <DockPanel>
+            <TextBlock Text="{Binding OverAllMessage}" DockPanel.Dock="Top"/>
+            <ItemsControl ItemsSource="{Binding InformationList}"/>
+        </DockPanel>
+                
     </Grid>
 </UserControl>
