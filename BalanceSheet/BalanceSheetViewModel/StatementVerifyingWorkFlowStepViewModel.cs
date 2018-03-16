@@ -18,8 +18,8 @@ namespace Nachiappan.BalanceSheetViewModel
 
             
 
-            var statemetns = dataStore.GetPackage<List<Statement>>();
-            var displayableStatements = statemetns
+            var statements = dataStore.GetPackage<List<Statement>>();
+            var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
                 {
                     Description = x.Description,
@@ -29,9 +29,26 @@ namespace Nachiappan.BalanceSheetViewModel
                 .ToList();
             BalanceSheetStatements = displayableStatements;
 
+            var journalStatements = dataStore.GetPackage<List<JournalStatement>>();
+
+
+            JournalStatements = journalStatements.Select(x =>
+                new DisplayableJournalStatement()
+                {
+                    Description = x.Description,
+                    Date = x.Date,
+                    DetailedDescription = x.DetailedDescription,
+                    Tag = x.Tag,
+                    Credit = x.GetCreditValueOrNull(),
+                    Debit = x.GetDebitValueOrNull(),
+                }).ToList();
+
+
         }
 
         public List<DisplayableStatement>   BalanceSheetStatements { get; set; }
+
+        public List<DisplayableJournalStatement> JournalStatements { get; set; }
     }
 
 
@@ -47,6 +64,16 @@ namespace Nachiappan.BalanceSheetViewModel
 
         [DisplayName("Debit")]
         public double? Debit { get; set; }
+    }
+
+    public class DisplayableJournalStatement
+    {
+        public string Description { get; set; }
+        public DateTime Date { get; set; }
+        public double? Credit { get; set; }
+        public double? Debit { get; set; }
+        public string DetailedDescription { get; set; }
+        public string Tag { get; set; }
     }
 
 
