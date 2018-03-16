@@ -12,6 +12,20 @@ namespace Nachiappan.BalanceSheetViewModel
     public static class HasValueExtentions
     {
 
+        public static double? GetCreditValueOrNull(this IHasValue hasValue)
+        {
+            if(hasValue.Value > 0)
+                return hasValue.Value;
+             return null;
+        }
+
+        public static double? GetDebitValueOrNull(this IHasValue hasValue)
+        {
+            if (hasValue.Value <= 0)
+                return hasValue.Value;
+            return null;
+        }
+
         public static double GetCreditValue(this IHasValue hasValue)
         {
             return hasValue.Value > 0 ? hasValue.Value : 0;

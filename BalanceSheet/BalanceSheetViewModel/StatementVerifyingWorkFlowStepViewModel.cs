@@ -23,8 +23,8 @@ namespace Nachiappan.BalanceSheetViewModel
                 .Select(x => new DisplayableStatement()
                 {
                     Description = x.Description,
-                    Credit = x.GetCreditValue(),
-                    Debit = x.GetDebitValue(),
+                    Credit = x.GetCreditValueOrNull(),
+                    Debit = x.GetDebitValueOrNull(),
                 })
                 .ToList();
             BalanceSheetStatements = displayableStatements;
