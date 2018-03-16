@@ -24,6 +24,11 @@
             <DataTemplate DataType="{x:Type balanceSheetViewModel:StatementVerifyingWorkFlowStepViewModel}">
                 <local:StatementVerifyingWorkFlowStepUserControl/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:PrintOutputWorkFlowStepViewModel}">
+                <local:PrintOutputWorkFlowStepUserControl/>
+            </DataTemplate>
+
         </Grid.Resources>
         <ContentPresenter Content="{Binding CurrentStep}"/>
 

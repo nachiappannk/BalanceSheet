@@ -9,10 +9,11 @@ namespace Nachiappan.BalanceSheetViewModel
 {
     public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
-        public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToProcessingStep)
+        public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToProcessingStep, 
+            Action goToPrintStatementWorkFlowStep)
         {
             GoToPreviousCommand = new DelegateCommand(goToProcessingStep);
-            GoToNextCommand = new DelegateCommand(() => { }, () => false);
+            GoToNextCommand = new DelegateCommand(goToPrintStatementWorkFlowStep);
             Name = "Verify Input/Output Statements";
 
             
