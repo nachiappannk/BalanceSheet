@@ -30,9 +30,15 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToAboutApplicationStep();
         }
 
+        private void GoToStatementVerifyingWorkFlowStep()
+        {
+            CurrentStep = new StatementVerifyingWorkFlowStepViewModel();
+        }
+
+
         private void GoToProcessingStep()
         {
-            CurrentStep = new ProcessingWorkFlowStepViewModel(_dataStore);
+            CurrentStep = new ProcessingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToStatementVerifyingWorkFlowStep);
         }
 
         private void GoToInputStep()
@@ -52,6 +58,7 @@ namespace Nachiappan.BalanceSheetViewModel
         }
     }
 
-
-
+    internal class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
+    {
+    }
 }

@@ -1,23 +1,54 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
     public class ProcessingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
+        public DelegateCommand ReadAgainCommand { get; set; }
+
         private readonly DataStore _dataStore;
 
-        public List<Information> InformationList { get; set; }
+        public List<Information> InformationList
+        {
+            get { return _informationList; }
+            set
+            {
+                _informationList = value;
+                FirePropertyChanged();
+            }
+        }
 
         private bool _canGoToNext = false;
+        private List<Information> _informationList;
+        private string _overAllMessage;
 
-        public string OverAllMessage { get; set; }
+        public string OverAllMessage
+        {
+            get { return _overAllMessage; }
+            set
+            {
+                _overAllMessage = value;
+                FirePropertyChanged();
+            }
+        }
 
-        public ProcessingWorkFlowStepViewModel(DataStore dataStore)
+        public ProcessingWorkFlowStepViewModel(DataStore dataStore, Action goToInputStep, 
+            Action goToStatementVerifyingWorkFlowStep)
         {
             _dataStore = dataStore;
+            Name = "Read Input And Process";
+            GoToPreviousCommand = new DelegateCommand(goToInputStep);
+            GoToNextCommand = new DelegateCommand(goToStatementVerifyingWorkFlowStep);
+            ReadAgainCommand = new DelegateCommand(ProcessInputAndGenerateOutput);
+            ProcessInputAndGenerateOutput();
+        }
 
-            var input = dataStore.GetPackage<InputForBalanceSheetComputation>();
+        private void ProcessInputAndGenerateOutput()
+        {
+            var input = _dataStore.GetPackage<InputForBalanceSheetComputation>();
 
             var logger = new Logger();
 
@@ -34,7 +65,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 OverAllMessage = "Please fix, there are some un ignorable error(s)";
                 _canGoToNext = false;
             }
-            else if(logger.InformationList.Any(x => x.GetType() == typeof(Warning)))
+            else if (logger.InformationList.Any(x => x.GetType() == typeof(Warning)))
             {
                 OverAllMessage = "Please review, there are some error(s)";
                 _canGoToNext = true;
@@ -44,8 +75,6 @@ namespace Nachiappan.BalanceSheetViewModel
                 OverAllMessage = "Congrats!!! There are no errors";
                 _canGoToNext = true;
             }
-
-
         }
     }
 
