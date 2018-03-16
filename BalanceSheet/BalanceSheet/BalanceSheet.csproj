@@ -44,6 +44,7 @@
       <HintPath>..\packages\Prism.Wpf.7.0.0.336-pre\lib\net45\Prism.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Wpf.7.0.0.336-pre\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -70,6 +71,7 @@
     <Compile Include="AboutApplicationWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>AboutApplicationWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FormatableDataGrid.cs" />
     <Compile Include="InputWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>InputWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
@@ -77,6 +79,9 @@
       <DependentUpon>ProcessingWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SaveFileAction.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepUserControl.xaml.cs">
+      <DependentUpon>StatementVerifyingWorkFlowStepUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WorkFlowStepUserControl.xaml.cs">
       <DependentUpon>WorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
@@ -108,6 +113,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ProcessingWorkFlowStepUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatementVerifyingWorkFlowStepUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

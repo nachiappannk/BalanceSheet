@@ -58,7 +58,7 @@ namespace Nachiappan.BalanceSheetViewModel
         }
     }
 
-    internal class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
+    public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
     }
 }
