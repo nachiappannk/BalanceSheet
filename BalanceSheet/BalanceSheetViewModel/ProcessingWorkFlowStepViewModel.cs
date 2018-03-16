@@ -54,9 +54,11 @@ namespace Nachiappan.BalanceSheetViewModel
 
             JournalGateway gateway = new JournalGateway(input.CurrentJournalFileName);
             var statements = gateway.GetJournalStatements(logger, input.CurrentJournalSheetName);
+            _dataStore.PutPackage(statements);
 
             BalanceSheetGateway balanceSheetGateway = new BalanceSheetGateway(input.PreviousBalanceSheetFileName);
             var balanceSheetStatements = balanceSheetGateway.GetBalanceSheet(logger, input.PreviousBalanceSheetSheetName);
+            _dataStore.PutPackage(balanceSheetStatements);
 
             InformationList = logger.InformationList;
 

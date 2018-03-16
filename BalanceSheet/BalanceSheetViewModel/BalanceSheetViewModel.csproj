@@ -80,6 +80,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RowCellsReader.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel.cs" />
     <Compile Include="WorkFlowStepViewModel.cs" />
     <Compile Include="WorkFlowViewModel.cs" />
   </ItemGroup>

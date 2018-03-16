@@ -32,7 +32,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToStatementVerifyingWorkFlowStep()
         {
-            CurrentStep = new StatementVerifyingWorkFlowStepViewModel();
+            CurrentStep = new StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToProcessingStep);
         }
 
 
@@ -56,9 +56,5 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
-    {
     }
 }

@@ -4,14 +4,39 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
+             xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance balanceSheetViewModel:StatementVerifyingWorkFlowStepViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
-        <Grid>
-            <TabControl>
-                <TabItem Header="Previous Balance Sheet">
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Row="0" Background="DodgerBlue">
+            <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
+        </Grid>
+        <DockPanel Grid.Row="2" Background="DodgerBlue" LastChildFill="False">
+            <Button Width="60" Height="24" Content="Previous" DockPanel.Dock="Left" Margin="4,0" Command="{Binding GoToPreviousCommand}"/>
+            <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
+        </DockPanel>
+        <Grid Grid.Row="1">
+            <TabControl>
+                <TabControl.Resources>
+                    <Style x:Key="ReadOnlyFormatableDataGrid" TargetType="{x:Type local:FormatableDataGrid}">
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                        <Setter Property="VerticalAlignment" Value="Top"/>
+                        <Setter Property="IsReadOnly" Value="True"/>
+                        <Setter Property="ColumnWidth" Value="Auto"/>
+                        <Setter Property="Margin" Value="4"/>
+                        <Setter Property="AlternationCount" Value="2" />
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Previous Balance Sheet">
+                    <local:FormatableDataGrid ItemsSource="{Binding BalanceSheetStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
                 <TabItem Header="Journal">
 
