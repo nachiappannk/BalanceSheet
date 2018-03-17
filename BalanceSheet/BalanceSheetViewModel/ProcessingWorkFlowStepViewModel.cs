@@ -62,6 +62,26 @@ namespace Nachiappan.BalanceSheetViewModel
 
             InformationList = logger.InformationList;
 
+            var sumOfJournalStatement = statements.Sum(x => x.Value);
+            if (!sumOfJournalStatement.IsZero())
+            {
+                InformationList.Add(new Error()
+                {
+                    Message = "The input journal is not balanced. The sum of the journal entry is "+sumOfJournalStatement
+                });
+            }
+
+            var sumOfBalanceSheetStatement = balanceSheetStatements.Sum(x => x.Value);
+            if (!sumOfBalanceSheetStatement.IsZero())
+            {
+                InformationList.Add(new Error()
+                {
+                    Message = "The previous balance sheet is not balanced. The error in the input balance sheet is " + sumOfBalanceSheetStatement
+                });
+            }
+
+
+
             if (logger.InformationList.Any(x => x.GetType() == typeof(Error)))
             {
                 OverAllMessage = "Please fix, there are some un ignorable error(s)";

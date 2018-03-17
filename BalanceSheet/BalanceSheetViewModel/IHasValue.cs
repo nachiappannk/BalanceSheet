@@ -53,7 +53,7 @@ namespace Nachiappan.BalanceSheetViewModel
             return -1 * statements.Where(x => x.Value <= 0).GetTotal();
         }
 
-        private static bool IsZero(double value)
+        public static bool IsZero(this double value)
         {
             return Math.Abs(value) < 0.001;
         }
