@@ -62,12 +62,29 @@ namespace Nachiappan.BalanceSheetViewModel
 
             InformationList = logger.InformationList;
 
+            
+
+            if (input.AccountingPeriodStartDate > input.AccountingPeriodEndDate)
+            {
+                InformationList.Add(new Error()
+                {
+                    Message = "The accounting period start date is later than end date",
+                });
+            }
+            else if ((input.AccountingPeriodEndDate - input.AccountingPeriodEndDate).TotalDays < 29)
+            {
+                InformationList.Add(new Warning()
+                {
+                    Message = "The accounting period is less than 29 days",
+                });
+            }
+            
             var sumOfJournalStatement = statements.Sum(x => x.Value);
             if (!sumOfJournalStatement.IsZero())
             {
                 InformationList.Add(new Error()
                 {
-                    Message = "The input journal is not balanced. The sum of the journal entry is "+sumOfJournalStatement
+                    Message = "The input journal is not balanced. The sum of the journal entry is " + sumOfJournalStatement
                 });
             }
 
@@ -79,7 +96,6 @@ namespace Nachiappan.BalanceSheetViewModel
                     Message = "The previous balance sheet is not balanced. The error in the input balance sheet is " + sumOfBalanceSheetStatement
                 });
             }
-
 
 
             if (logger.InformationList.Any(x => x.GetType() == typeof(Error)))
