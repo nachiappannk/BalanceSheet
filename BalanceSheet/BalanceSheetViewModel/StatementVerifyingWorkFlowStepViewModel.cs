@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Documents;
 using Prism.Commands;
@@ -58,22 +59,41 @@ namespace Nachiappan.BalanceSheetViewModel
         [DisplayName("Account")]
         public string Description { get; set; }
 
-
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
         [DisplayName("Credit")]
         public double? Credit { get; set; }
 
+
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
         [DisplayName("Debit")]
         public double? Debit { get; set; }
     }
 
     public class DisplayableJournalStatement
     {
-        public string Description { get; set; }
+
+        [DisplayName("Date")]
+        [DisplayFormat(DataFormatString = CommonDefinition.DateDisplayFormat)]
         public DateTime Date { get; set; }
-        public double? Credit { get; set; }
-        public double? Debit { get; set; }
-        public string DetailedDescription { get; set; }
+
+        [DisplayName("Account")]
+        public string Description { get; set; }
+
+        [DisplayName("Tag")]
         public string Tag { get; set; }
+
+        [DisplayName("Description")]
+        public string DetailedDescription { get; set; }
+
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        [DisplayName("Credit")]
+        public double? Credit { get; set; }
+
+
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        [DisplayName("Debit")]
+        public double? Debit { get; set; }
+        
     }
 
 
