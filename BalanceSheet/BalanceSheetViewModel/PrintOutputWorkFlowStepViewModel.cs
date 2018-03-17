@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Documents;
 using Prism.Commands;
@@ -51,15 +52,23 @@ namespace Nachiappan.BalanceSheetViewModel
             SaveOutputRequest.Raise(file);
             if (file.FileSaved)
             {
-                //file.OutputFileName
-                WriteJournal(file.OutputFileName);
+                var outputFileName = file.OutputFileName;
+                if (File.Exists(outputFileName)) File.Delete(outputFileName);
+                WriteJournal(outputFileName);
+                WritePreviousBalanceSheet(outputFileName);
             }
+        }
+
+        private void WritePreviousBalanceSheet(string outputFileName)
+        {
+            var balanceStatements = _dataStore.GetPackage<List<Statement>>();
+            BalanceSheetGateway gateway = new BalanceSheetGateway(outputFileName);
+            gateway.WriteBalanceSheet(balanceStatements, "PreviousBS");
         }
 
 
         private void WriteJournal(String fileName)
         {
-
             var journalStatements = _dataStore.GetPackage<List<JournalStatement>>();
             JournalGateway gateway = new JournalGateway(fileName);
             gateway.WriteJournal(journalStatements);

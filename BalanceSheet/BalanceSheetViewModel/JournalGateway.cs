@@ -33,8 +33,8 @@ namespace Nachiappan.BalanceSheetViewModel
                 int index = 0;
 
                 writer.Write(index++, _headings.ToArray());
-                writer.SetColumnsWidth(6, 12, 35, 45, 12, 12);
-                writer.ApplyHeadingFormat(6);
+                writer.SetColumnsWidth(6, 12, 35, 30, 45, 12, 12);
+                writer.ApplyHeadingFormat(_headings.Count);
                 writer.WriteList(index, journalStatements.OrderBy(x => x.Date).ToList(),
                     (j, rowIndex) => new object[]
                     {
@@ -119,10 +119,10 @@ namespace Nachiappan.BalanceSheetViewModel
 
         }
 
-        public void WriteBalanceSheet(List<Statement> balanceSheetStatements)
+        public void WriteBalanceSheet(List<Statement> balanceSheetStatements, string sheetName)
         {
             var index = 0;
-            using (var writer = new ExcelSheetWriter(_excelFileName, "BS"))
+            using (var writer = new ExcelSheetWriter(_excelFileName, sheetName))
             {
                 writer.Write(index++, headings.ToArray<object>());
                 writer.SetColumnsWidth(6, 45, 12, 12, 12);
