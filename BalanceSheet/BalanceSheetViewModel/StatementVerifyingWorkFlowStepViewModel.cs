@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Windows.Documents;
 using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
@@ -19,7 +18,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
             
 
-            var statements = dataStore.GetPackage<List<Statement>>();
+            var statements = dataStore.GetPackage<List<Statement>>("inputpreviousbalancesheet");
             var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
                 {
@@ -30,7 +29,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 .ToList();
             BalanceSheetStatements = displayableStatements;
 
-            var journalStatements = dataStore.GetPackage<List<JournalStatement>>();
+            var journalStatements = dataStore.GetPackage<List<JournalStatement>>("inputjournal");
 
 
             JournalStatements = journalStatements.Select(x =>

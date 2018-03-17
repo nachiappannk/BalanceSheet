@@ -5,23 +5,27 @@ namespace Nachiappan.BalanceSheetViewModel
 {
     public class DataStore
     {
-        Dictionary<Type, object> dictionary = new Dictionary<Type, object>();
+        Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
-        public bool IsPackageStored<T>()
+        public bool IsPackageStored<T>(string packageName)
         {
-            return dictionary.ContainsKey(typeof(T));
+            var isPackageStored = dictionary.ContainsKey(packageName);
+            if (!isPackageStored) return false;
+            var package = dictionary[packageName];
+            if (package.GetType() == typeof(T)) return true;
+            return false;
         }
 
-        public T GetPackage<T>()
+        public T GetPackage<T>(string packageName)
         {
-            if (IsPackageStored<T>()) return (T)dictionary[typeof(T)];
-            else throw new Exception();
+            if (IsPackageStored<T>(packageName)) return (T)dictionary[packageName];
+            throw new Exception();
         }
 
-        public void PutPackage<T>(T t)
+        public void PutPackage<T>(T t, string packageName)
         {
-            if (!IsPackageStored<T>()) dictionary.Add(typeof(T), t);
-            dictionary[typeof(T)] = t;
+            if (!dictionary.ContainsKey(packageName)) dictionary.Add(packageName, t);
+            dictionary[packageName] = t;
         }
     }
 }

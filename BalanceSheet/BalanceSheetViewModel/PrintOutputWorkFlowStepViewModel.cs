@@ -61,7 +61,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void WritePreviousBalanceSheet(string outputFileName)
         {
-            var balanceStatements = _dataStore.GetPackage<List<Statement>>();
+            var balanceStatements = _dataStore.GetPackage<List<Statement>>("inputpreviousbalancesheet");
             BalanceSheetGateway gateway = new BalanceSheetGateway(outputFileName);
             gateway.WriteBalanceSheet(balanceStatements, "PreviousBS");
         }
@@ -69,7 +69,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void WriteJournal(String fileName)
         {
-            var journalStatements = _dataStore.GetPackage<List<JournalStatement>>();
+            var journalStatements = _dataStore.GetPackage<List<JournalStatement>>("inputjournal");
             JournalGateway gateway = new JournalGateway(fileName);
             gateway.WriteJournal(journalStatements);
         }       
