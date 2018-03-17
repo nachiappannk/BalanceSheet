@@ -4,9 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
+             xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance balanceSheetViewModel:PrintOutputWorkFlowStepViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Row="0" Background="DodgerBlue">
+            <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
+        </Grid>
+        <DockPanel Grid.Row="2" Background="DodgerBlue" LastChildFill="False">
+            <Button Width="60" Height="24" Content="Previous" DockPanel.Dock="Left" Margin="4,0" Command="{Binding GoToPreviousCommand}"/>
+            <Button Width="60" Height="24" Content="Close" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
+        </DockPanel>
+        <Grid Grid.Row="1">
+            <Button Content="Save utput" Height="24" Width="100"/>
+        </Grid>
+        
+
     </Grid>
 </UserControl>

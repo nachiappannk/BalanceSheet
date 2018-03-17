@@ -33,7 +33,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToPrintStatementWorkFlowStep()
         {
-            CurrentStep = new PrintOutputWorkFlowStepViewModel();
+            CurrentStep = new PrintOutputWorkFlowStepViewModel(_dataStore, GoToStatementVerifyingWorkFlowStep);
         }
 
 
@@ -63,10 +63,5 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public class PrintOutputWorkFlowStepViewModel : WorkFlowStepViewModel
-    {
-
     }
 }
