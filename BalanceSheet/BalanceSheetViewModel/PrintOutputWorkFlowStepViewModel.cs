@@ -56,6 +56,35 @@ namespace Nachiappan.BalanceSheetViewModel
                 if (File.Exists(outputFileName)) File.Delete(outputFileName);
                 WriteJournal(outputFileName);
                 WritePreviousBalanceSheet(outputFileName);
+                WriteTrialBalance(outputFileName);
+            }
+        }
+
+        private void WriteTrialBalance(string outputFileName)
+        {
+            var headings = new List<string> {"S.No.", "Account", "Tag", "Credit", "Debit"};
+
+            var trialBalanceStatements =
+                _dataStore.GetPackage<List<TrialBalanceStatement>>(WorkFlowViewModel.TrialBalancePackage);
+
+            using (var writer = new ExcelSheetWriter(outputFileName, "TrialBalance"))
+            {
+                var index = 0;
+                writer.Write(index++, headings.ToArray<object>());
+                writer.SetColumnsWidth(6, 45, 12, 12, 12, 12);
+                writer.ApplyHeadingFormat(headings.Count);
+                writer.WriteList(index, trialBalanceStatements, (b, rowIndex) => new object[]
+                {
+                    rowIndex - 1,
+                    b.Account,
+                    b.Tag,
+                    b.GetCreditValue(),
+                    b.GetDebitValue(),
+                });
+                index = index + 1 + trialBalanceStatements.Count;
+                writer.Write(index, new object[] { "", "Total", "", trialBalanceStatements.GetCreditTotal(),
+                    trialBalanceStatements.GetDebitTotal(), trialBalanceStatements.GetTotal()});
+
             }
         }
 
