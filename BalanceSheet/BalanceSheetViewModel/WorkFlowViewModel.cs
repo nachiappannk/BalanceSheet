@@ -11,6 +11,7 @@ namespace Nachiappan.BalanceSheetViewModel
         public const string TrimmedJournalPackage = nameof(TrimmedJournalPackage);
         public const string PreviousBalanceSheetPacakge = nameof(PreviousBalanceSheetPacakge);
         public const string InputParametersPackage = nameof(InputParametersPackage);
+        public const string TrialBalancePackage = nameof(TrialBalancePackage);
 
 
         public event PropertyChangedEventHandler PropertyChanged;

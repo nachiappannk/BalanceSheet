@@ -21,6 +21,16 @@ namespace Nachiappan.BalanceSheetViewModel
             TrimmedJournalStatements = GetStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
 
 
+            TrialBalanceStatements = dataStore
+                .GetPackage<List<TrialBalanceStatement>>(WorkFlowViewModel.TrialBalancePackage)
+                .Select(x => new DisplayableTrialBalanceStatement()
+                {
+                    Account = x.Account,
+                    Tag = x.Tag,
+                    Credit = x.GetCreditValueOrNull(),
+                    Debit = x.GetDebitValueOrNull(),
+                }).ToList();
+
         }
 
         private List<DisplayableJournalStatement> GetStatements(DataStore dataStore, string packageName)
@@ -57,8 +67,27 @@ namespace Nachiappan.BalanceSheetViewModel
         public List<DisplayableJournalStatement> JournalStatements { get; set; }
 
         public List<DisplayableJournalStatement> TrimmedJournalStatements { get; set; }
+
+        public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
     }
 
+
+    public class DisplayableTrialBalanceStatement
+    {
+        [DisplayName("Account")]
+        public string Account { get; set; }
+
+        [DisplayName("Tag")]
+        public string Tag { get; set; }
+
+        [DisplayName("Credit")]
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        public double? Credit { get; set; }
+
+        [DisplayName("Debit")]
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        public double? Debit { get; set; }
+    }
 
 
     public class DisplayableStatement

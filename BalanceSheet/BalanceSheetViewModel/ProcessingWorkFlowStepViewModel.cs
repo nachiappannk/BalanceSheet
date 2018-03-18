@@ -68,6 +68,22 @@ namespace Nachiappan.BalanceSheetViewModel
             TrimJournalStatementsBasedOnAccountAndDescription(statements, simpleAccountPatternRegex, 
                 nominalAccountPatternRegex, doubleNominalAccountPatternRegex, out var accountTrimmedStatements);
 
+
+
+
+
+            var groupedStatements = statements.GroupBy(x => x.Description + "#" + x.Tag).ToList();
+            var trialBalanseStatements = groupedStatements.Select(x =>
+            {
+                return new TrialBalanceStatement()
+                {
+                    Account = x.ElementAt(0).Description,
+                    Tag = x.ElementAt(0).Tag,
+                    Value = x.Sum(y => y.Value),
+                };
+            }).ToList();
+
+
             PerformAccountTrimmedStatementsValidation(accountTrimmedStatements, errorsAndWarnings);
             PerformDateTrimmedStatementValidations(dateTrimmedStatements, errorsAndWarnings);
             PerformBalanceCheckValidationOnJournal(statements, errorsAndWarnings);
@@ -80,6 +96,9 @@ namespace Nachiappan.BalanceSheetViewModel
 
             OverAllMessage = GetOverAllErrorMessage(errorsAndWarnings);
             
+
+            _dataStore.PutPackage(trialBalanseStatements, WorkFlowViewModel.TrialBalancePackage);
+
             _dataStore.PutPackage(statements, WorkFlowViewModel.InputJournalPackage);
 
             var trimmedJournalStatements = dateTrimmedStatements.ToList();
@@ -186,6 +205,10 @@ namespace Nachiappan.BalanceSheetViewModel
 
             readErrorAndWarnings = logger.InformationList.ToList();
         }
+
+        
+
+
 
         private static void CorrectAccountNesting(List<JournalStatement> journalStatements)
         {
@@ -322,5 +345,12 @@ namespace Nachiappan.BalanceSheetViewModel
 
     public class Error : Information
     {
+    }
+
+    public class TrialBalanceStatement : IHasValue
+    {
+        public string Account { get; set; }
+        public string Tag { get; set; }
+        public double Value { get; set; }
     }
 }
