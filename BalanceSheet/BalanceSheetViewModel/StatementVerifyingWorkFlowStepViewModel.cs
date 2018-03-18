@@ -17,8 +17,8 @@ namespace Nachiappan.BalanceSheetViewModel
             Name = "Verify Input/Output Statements";
 
             SetBalanceSheetStatements(dataStore);
-            JournalStatements = GetStatements(dataStore, "inputjournal");
-            TrimmedJournalStatements = GetStatements(dataStore, "trimmedjournalStatements");
+            JournalStatements = GetStatements(dataStore, WorkFlowViewModel.InputJournalPackage);
+            TrimmedJournalStatements = GetStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
 
 
         }
@@ -40,7 +40,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void SetBalanceSheetStatements(DataStore dataStore)
         {
-            var statements = dataStore.GetPackage<List<Statement>>("inputpreviousbalancesheet");
+            var statements = dataStore.GetPackage<List<Statement>>(WorkFlowViewModel.PreviousBalanceSheetPacakge);
             var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
                 {

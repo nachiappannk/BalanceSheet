@@ -47,7 +47,8 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void ProcessInputAndGenerateOutput()
         {
-            var input = _dataStore.GetPackage<InputForBalanceSheetComputation>("inputparameters");
+            var input = _dataStore.GetPackage<InputForBalanceSheetComputation>
+                (WorkFlowViewModel.InputParametersPackage);
             var startDate = input.AccountingPeriodStartDate;
             var endDate = input.AccountingPeriodEndDate;
 
@@ -63,9 +64,9 @@ namespace Nachiappan.BalanceSheetViewModel
 
             OverAllMessage = GetOverAllErrorMessage(errorsAndWarnings);
             
-            _dataStore.PutPackage(statements, "inputjournal");
-            _dataStore.PutPackage(trimmedStatements, "trimmedjournalStatements");
-            _dataStore.PutPackage(balanceSheetStatements, "inputpreviousbalancesheet");
+            _dataStore.PutPackage(statements, WorkFlowViewModel.InputJournalPackage);
+            _dataStore.PutPackage(trimmedStatements, WorkFlowViewModel.TrimmedJournalPackage);
+            _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetPacakge);
         }
 
         private static string GetOverAllErrorMessage(List<Information> errorsAndWarnings)
@@ -81,7 +82,8 @@ namespace Nachiappan.BalanceSheetViewModel
             return "Congrats!!! There are no errors";
         }
 
-        private static void PerformTrimmedStatementValidations(List<JournalStatement> trimmedStatements, List<Information> errorsAndWarnings)
+        private static void PerformTrimmedStatementValidations
+            (List<JournalStatement> trimmedStatements, List<Information> errorsAndWarnings)
         {
             if (trimmedStatements.Any())
             {

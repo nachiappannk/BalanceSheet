@@ -6,6 +6,13 @@ namespace Nachiappan.BalanceSheetViewModel
 {
     public class WorkFlowViewModel : INotifyPropertyChanged
     {
+
+        public const string InputJournalPackage = nameof(InputJournalPackage);
+        public const string TrimmedJournalPackage = nameof(TrimmedJournalPackage);
+        public const string PreviousBalanceSheetPacakge = nameof(PreviousBalanceSheetPacakge);
+        public const string InputParametersPackage = nameof(InputParametersPackage);
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public WorkFlowStepViewModel CurrentStep

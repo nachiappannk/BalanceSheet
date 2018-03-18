@@ -90,7 +90,7 @@ namespace Nachiappan.BalanceSheetViewModel
             input.PreviousBalanceSheetSheetName = PreviousBalanceSheetSelectorViewModel.SelectedSheet;
             input.CurrentJournalFileName = JournalSelectorViewModel.InputFileName;
             input.CurrentJournalSheetName = JournalSelectorViewModel.SelectedSheet;
-            _dataStore.PutPackage(input ,"inputparameters");
+            _dataStore.PutPackage(input ,WorkFlowViewModel.InputParametersPackage);
 
             _nextStep.Invoke();
 
