@@ -42,6 +42,11 @@
                     <local:FormatableDataGrid ItemsSource="{Binding JournalStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
+
+                <TabItem Header="TrimmedJournal">
+                    <local:FormatableDataGrid ItemsSource="{Binding TrimmedJournalStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                </TabItem>
             </TabControl>
         </Grid>    
         

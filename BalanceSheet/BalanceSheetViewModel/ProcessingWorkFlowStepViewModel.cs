@@ -21,7 +21,6 @@ namespace Nachiappan.BalanceSheetViewModel
             }
         }
 
-        private bool _canGoToNext = false;
         private List<Information> _informationList;
         private string _overAllMessage;
 
@@ -49,69 +48,125 @@ namespace Nachiappan.BalanceSheetViewModel
         private void ProcessInputAndGenerateOutput()
         {
             var input = _dataStore.GetPackage<InputForBalanceSheetComputation>("inputparameters");
+            var startDate = input.AccountingPeriodStartDate;
+            var endDate = input.AccountingPeriodEndDate;
 
+            ReadInputStatements(input, out var statements, out var balanceSheetStatements, out var errorsAndWarnings);
+            PerformDateValidations(startDate, endDate, errorsAndWarnings);
+            TrimJournalStatements(statements, startDate, endDate, out var trimmedStatements);
+
+            PerformTrimmedStatementValidations(trimmedStatements, errorsAndWarnings);
+            PerformBalanceCheckValidationOnJournal(statements, errorsAndWarnings);
+            PerformBalanceCheckValidationOnBalanceSheet(balanceSheetStatements, errorsAndWarnings);
+
+            InformationList = errorsAndWarnings;
+
+            OverAllMessage = GetOverAllErrorMessage(errorsAndWarnings);
+            
+            _dataStore.PutPackage(statements, "inputjournal");
+            _dataStore.PutPackage(trimmedStatements, "trimmedjournalStatements");
+            _dataStore.PutPackage(balanceSheetStatements, "inputpreviousbalancesheet");
+        }
+
+        private static string GetOverAllErrorMessage(List<Information> errorsAndWarnings)
+        {
+            if (errorsAndWarnings.Any(x => x.GetType() == typeof(Error)))
+            {
+                return "Please fix, there are some un ignorable error(s)";
+            }
+            if (errorsAndWarnings.Any(x => x.GetType() == typeof(Warning)))
+            {
+                return "Please review, there are some error(s)";
+            }
+            return "Congrats!!! There are no errors";
+        }
+
+        private static void PerformTrimmedStatementValidations(List<JournalStatement> trimmedStatements, List<Information> errorsAndWarnings)
+        {
+            if (trimmedStatements.Any())
+            {
+                errorsAndWarnings.Add(new Warning()
+                {
+                    Message = "Journal statement(s) have been trimmed as they are outside the accouting period",
+                });
+            }
+        }
+
+        private static void TrimJournalStatements(List<JournalStatement> statements,
+            DateTime startDate, DateTime endDate,
+            out List<JournalStatement> trimmedStatements)
+        {
+            var statementsBeforePeriod = statements.Where(x => x.Date < startDate).ToList();
+            statements.RemoveAll(x => statementsBeforePeriod.Contains(x));
+            var statementsAfterPeriod = statements.Where(x => x.Date > endDate).ToList();
+            statements.RemoveAll(x => statementsAfterPeriod.Contains(x));
+            trimmedStatements = statementsAfterPeriod.ToList();
+            trimmedStatements.AddRange(statementsBeforePeriod);
+        }
+
+        private static void ReadInputStatements(InputForBalanceSheetComputation input,
+            out List<JournalStatement> journalStatements,
+            out List<Statement> balanceSheetStatements, 
+            out List<Information> readErrorAndWarnings)
+        {
             var logger = new Logger();
 
             JournalGateway gateway = new JournalGateway(input.CurrentJournalFileName);
-            var statements = gateway.GetJournalStatements(logger, input.CurrentJournalSheetName);
-            _dataStore.PutPackage(statements,"inputjournal");
+            journalStatements = gateway.GetJournalStatements(logger, input.CurrentJournalSheetName);
 
             BalanceSheetGateway balanceSheetGateway = new BalanceSheetGateway(input.PreviousBalanceSheetFileName);
-            var balanceSheetStatements = balanceSheetGateway.GetBalanceSheet(logger, input.PreviousBalanceSheetSheetName);
-            _dataStore.PutPackage(balanceSheetStatements,"inputpreviousbalancesheet");
+            balanceSheetStatements = balanceSheetGateway.GetBalanceSheet(logger, input.PreviousBalanceSheetSheetName);
 
-            InformationList = logger.InformationList;
+            TrimTimeComponentFromDate(journalStatements);
 
-            
+            readErrorAndWarnings = logger.InformationList.ToList();
+        }
 
-            if (input.AccountingPeriodStartDate > input.AccountingPeriodEndDate)
+        private void PerformBalanceCheckValidationOnBalanceSheet(List<Statement> balanceSheetStatements, List<Information> informationList)
+        {
+            var sumOfBalanceSheetStatement = balanceSheetStatements.Sum(x => x.Value);
+            if (!sumOfBalanceSheetStatement.IsZero())
             {
-                InformationList.Add(new Error()
+                informationList.Add(new Error()
                 {
-                    Message = "The accounting period start date is later than end date",
+                    Message = "The previous balance sheet is not balanced. The error in the input balance sheet is " +
+                              sumOfBalanceSheetStatement
                 });
             }
-            else if ((input.AccountingPeriodEndDate - input.AccountingPeriodEndDate).TotalDays < 29)
-            {
-                InformationList.Add(new Warning()
-                {
-                    Message = "The accounting period is less than 29 days",
-                });
-            }
-            
+        }
+
+        private void PerformBalanceCheckValidationOnJournal(List<JournalStatement> statements, List<Information> informationList)
+        {
             var sumOfJournalStatement = statements.Sum(x => x.Value);
             if (!sumOfJournalStatement.IsZero())
             {
-                InformationList.Add(new Error()
+                informationList.Add(new Error()
                 {
                     Message = "The input journal is not balanced. The sum of the journal entry is " + sumOfJournalStatement
                 });
             }
+        }
 
-            var sumOfBalanceSheetStatement = balanceSheetStatements.Sum(x => x.Value);
-            if (!sumOfBalanceSheetStatement.IsZero())
+        private static void TrimTimeComponentFromDate(List<JournalStatement> statements)
+        {
+            statements.ForEach(x => x.Date = x.Date.Date);
+        }
+
+        private void PerformDateValidations(DateTime startDate, DateTime endDate, List<Information> informationList)
+        {
+            if (startDate > endDate)
             {
-                InformationList.Add(new Error()
+                informationList.Add(new Error()
                 {
-                    Message = "The previous balance sheet is not balanced. The error in the input balance sheet is " + sumOfBalanceSheetStatement
+                    Message = "The accounting period start date is later than end date",
                 });
             }
-
-
-            if (logger.InformationList.Any(x => x.GetType() == typeof(Error)))
+            else if ((endDate - startDate).TotalDays < 29)
             {
-                OverAllMessage = "Please fix, there are some un ignorable error(s)";
-                _canGoToNext = false;
-            }
-            else if (logger.InformationList.Any(x => x.GetType() == typeof(Warning)))
-            {
-                OverAllMessage = "Please review, there are some error(s)";
-                _canGoToNext = true;
-            }
-            else
-            {
-                OverAllMessage = "Congrats!!! There are no errors";
-                _canGoToNext = true;
+                informationList.Add(new Warning()
+                {
+                    Message = "The accounting period is less than 29 days",
+                });
             }
         }
     }

@@ -16,8 +16,30 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToNextCommand = new DelegateCommand(goToPrintStatementWorkFlowStep);
             Name = "Verify Input/Output Statements";
 
-            
+            SetBalanceSheetStatements(dataStore);
+            JournalStatements = GetStatements(dataStore, "inputjournal");
+            TrimmedJournalStatements = GetStatements(dataStore, "trimmedjournalStatements");
 
+
+        }
+
+        private List<DisplayableJournalStatement> GetStatements(DataStore dataStore, string packageName)
+        {
+            var journalStatements = dataStore.GetPackage<List<JournalStatement>>(packageName);
+            return journalStatements.Select(x =>
+                new DisplayableJournalStatement()   
+                {
+                    Description = x.Description,
+                    Date = x.Date,
+                    DetailedDescription = x.DetailedDescription,
+                    Tag = x.Tag,
+                    Credit = x.GetCreditValueOrNull(),
+                    Debit = x.GetDebitValueOrNull(),
+                }).ToList();
+        }
+
+        private void SetBalanceSheetStatements(DataStore dataStore)
+        {
             var statements = dataStore.GetPackage<List<Statement>>("inputpreviousbalancesheet");
             var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
@@ -28,27 +50,13 @@ namespace Nachiappan.BalanceSheetViewModel
                 })
                 .ToList();
             BalanceSheetStatements = displayableStatements;
-
-            var journalStatements = dataStore.GetPackage<List<JournalStatement>>("inputjournal");
-
-
-            JournalStatements = journalStatements.Select(x =>
-                new DisplayableJournalStatement()
-                {
-                    Description = x.Description,
-                    Date = x.Date,
-                    DetailedDescription = x.DetailedDescription,
-                    Tag = x.Tag,
-                    Credit = x.GetCreditValueOrNull(),
-                    Debit = x.GetDebitValueOrNull(),
-                }).ToList();
-
-
         }
 
         public List<DisplayableStatement>   BalanceSheetStatements { get; set; }
 
         public List<DisplayableJournalStatement> JournalStatements { get; set; }
+
+        public List<DisplayableJournalStatement> TrimmedJournalStatements { get; set; }
     }
 
 
