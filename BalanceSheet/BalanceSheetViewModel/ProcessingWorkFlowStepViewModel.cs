@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
@@ -54,19 +55,75 @@ namespace Nachiappan.BalanceSheetViewModel
 
             ReadInputStatements(input, out var statements, out var balanceSheetStatements, out var errorsAndWarnings);
             PerformDateValidations(startDate, endDate, errorsAndWarnings);
-            TrimJournalStatements(statements, startDate, endDate, out var trimmedStatements);
+            TrimJournalStatementsBasedOnDate(statements, startDate, endDate, out var dateTrimmedStatements);
 
-            PerformTrimmedStatementValidations(trimmedStatements, errorsAndWarnings);
+            var simpleAccountPattern = "^[a-zA-Z0-9]+$";
+            var nominalAccountPattern = "^[a-zA-Z0-9]+/[a-zA-Z0-9]+$";
+            var doubleNominalAccountPattern = "^[a-zA-Z0-9]+/[a-zA-Z0-9]+/[a-zA-Z0-9]+$";
+
+            Regex simpleAccountPatternRegex = new Regex(simpleAccountPattern, RegexOptions.IgnoreCase);
+            Regex nominalAccountPatternRegex = new Regex(nominalAccountPattern, RegexOptions.IgnoreCase);
+            Regex doubleNominalAccountPatternRegex = new Regex(doubleNominalAccountPattern, RegexOptions.IgnoreCase);
+
+            TrimJournalStatementsBasedOnAccountAndDescription(statements, simpleAccountPatternRegex, 
+                nominalAccountPatternRegex, doubleNominalAccountPatternRegex, out var accountTrimmedStatements);
+
+            PerformAccountTrimmedStatementsValidation(accountTrimmedStatements, errorsAndWarnings);
+            PerformDateTrimmedStatementValidations(dateTrimmedStatements, errorsAndWarnings);
             PerformBalanceCheckValidationOnJournal(statements, errorsAndWarnings);
             PerformBalanceCheckValidationOnBalanceSheet(balanceSheetStatements, errorsAndWarnings);
+
+
+            
 
             InformationList = errorsAndWarnings;
 
             OverAllMessage = GetOverAllErrorMessage(errorsAndWarnings);
             
             _dataStore.PutPackage(statements, WorkFlowViewModel.InputJournalPackage);
-            _dataStore.PutPackage(trimmedStatements, WorkFlowViewModel.TrimmedJournalPackage);
+
+            var trimmedJournalStatements = dateTrimmedStatements.ToList();
+            trimmedJournalStatements.AddRange(accountTrimmedStatements);
+            _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalPackage);
+
             _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetPacakge);
+        }
+
+        private static void PerformAccountTrimmedStatementsValidation(List<JournalStatement> filteredStatements, List<Information> errorsAndWarnings)
+        {
+            if (filteredStatements.Any())
+            {
+                errorsAndWarnings.Add(
+                    new Warning()
+                    {
+                        Message = "Filtered journal statements as account or description is invalid"
+                    });
+            }
+        }
+
+        private static void TrimJournalStatementsBasedOnAccountAndDescription(List<JournalStatement> statements,
+            Regex simpleAccountPatternRegex,
+            Regex nominalAccountPatternRegex,
+            Regex doubleNominalAccountPatternRegex, 
+            out List<JournalStatement> filteredStatements)
+        {
+            var filteredStatements1 = statements.Where(x =>
+            {
+                var isNominalAccount = nominalAccountPatternRegex.IsMatch(x.Description);
+                var isRealAccount = simpleAccountPatternRegex.IsMatch(x.Description);
+                var isDoubleNominalAccount = doubleNominalAccountPatternRegex.IsMatch(x.Description);
+
+                return !isRealAccount && !isNominalAccount && !isDoubleNominalAccount;
+            }).ToList();
+
+            statements.RemoveAll(x => filteredStatements1.Contains(x));
+
+            var filteredStatements2 = statements.Where(x => string.IsNullOrWhiteSpace(x.DetailedDescription)).ToList();
+            statements.RemoveAll(x => filteredStatements2.Contains(x));
+
+            filteredStatements = new List<JournalStatement>();
+            filteredStatements.AddRange(filteredStatements1);
+            filteredStatements.AddRange(filteredStatements2);
         }
 
         private static string GetOverAllErrorMessage(List<Information> errorsAndWarnings)
@@ -82,7 +139,7 @@ namespace Nachiappan.BalanceSheetViewModel
             return "Congrats!!! There are no errors";
         }
 
-        private static void PerformTrimmedStatementValidations
+        private static void PerformDateTrimmedStatementValidations
             (List<JournalStatement> trimmedStatements, List<Information> errorsAndWarnings)
         {
             if (trimmedStatements.Any())
@@ -94,7 +151,7 @@ namespace Nachiappan.BalanceSheetViewModel
             }
         }
 
-        private static void TrimJournalStatements(List<JournalStatement> statements,
+        private static void TrimJournalStatementsBasedOnDate(List<JournalStatement> statements,
             DateTime startDate, DateTime endDate,
             out List<JournalStatement> trimmedStatements)
         {
@@ -115,13 +172,78 @@ namespace Nachiappan.BalanceSheetViewModel
 
             JournalGateway gateway = new JournalGateway(input.CurrentJournalFileName);
             journalStatements = gateway.GetJournalStatements(logger, input.CurrentJournalSheetName);
+            
+            TrimTimeComponentFromDate(journalStatements);
+            TrimDescription(journalStatements);
+            TrimDetailedDescription(journalStatements);
+            TrimTag(journalStatements);
+            CorrectAccountNesting(journalStatements);
+
 
             BalanceSheetGateway balanceSheetGateway = new BalanceSheetGateway(input.PreviousBalanceSheetFileName);
             balanceSheetStatements = balanceSheetGateway.GetBalanceSheet(logger, input.PreviousBalanceSheetSheetName);
-
-            TrimTimeComponentFromDate(journalStatements);
+            TrimBalanceSheetDescription(balanceSheetStatements);
 
             readErrorAndWarnings = logger.InformationList.ToList();
+        }
+
+        private static void CorrectAccountNesting(List<JournalStatement> journalStatements)
+        {
+            //journalStatements.ForEach(x => x.Description = x.Description.Replace(@"/","#"));
+            journalStatements.ForEach(x => x.Description = x.Description.Replace(@"\", "/"));
+        }
+
+        private static void TrimBalanceSheetDescription(List<Statement> balanceSheetStatements)
+        {
+            balanceSheetStatements.ForEach(x =>
+            {
+                if (string.IsNullOrWhiteSpace(x.Description))
+                {
+                    x.Description = string.Empty;
+                }
+
+                x.Description = x.Description.Trim();
+            });
+        }
+
+        private static void TrimDetailedDescription(List<JournalStatement> journalStatements)
+        {
+            journalStatements.ForEach(x =>
+            {
+                if (string.IsNullOrWhiteSpace(x.DetailedDescription))
+                {
+                    x.DetailedDescription = string.Empty;
+                }
+            });
+            journalStatements.ForEach(x => x.DetailedDescription = x.DetailedDescription.Trim());
+        }
+
+        private static void TrimTag(List<JournalStatement> journalStatements)
+        {
+            journalStatements.ForEach(x =>
+            {
+                if (string.IsNullOrWhiteSpace(x.Tag))
+                {
+                    x.Tag = string.Empty;
+                }
+
+                ;
+            });
+            journalStatements.ForEach(x => x.Tag = x.Tag.Trim());
+        }
+
+        private static void TrimDescription(List<JournalStatement> journalStatements)
+        {
+            journalStatements.ForEach(x =>
+            {
+                if (string.IsNullOrWhiteSpace(x.Description))
+                {
+                    x.Description = string.Empty;
+                }
+
+                ;
+            });
+            journalStatements.ForEach(x => x.Description = x.Description.Trim());
         }
 
         private void PerformBalanceCheckValidationOnBalanceSheet(List<Statement> balanceSheetStatements, List<Information> informationList)
