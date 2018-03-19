@@ -6,8 +6,73 @@ using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
+
+    public static class LedgerClassifer
+    {
+
+        private const string SimpleAccountPattern = "^([a-zA-Z0-9]+)$";
+        private const string NominalAccountPattern = "^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$";
+        private const string DoubleNominalAccountPattern = "^([a-zA-Z0-9]+/[a-zA-Z0-9]+)/([a-zA-Z0-9]+)$";
+
+        private static Regex _simpleAccountPatternRegex = new Regex(SimpleAccountPattern, RegexOptions.IgnoreCase);
+        private static Regex _nominalAccountPatternRegex = new Regex(NominalAccountPattern, RegexOptions.IgnoreCase);
+        private static Regex _doubleNominalAccountPatternRegex = new Regex(DoubleNominalAccountPattern, RegexOptions.IgnoreCase);
+
+        public static bool IsRealLedger(string name)
+        {
+            return _simpleAccountPatternRegex.IsMatch(name);
+        }
+
+        public static bool IsNominalLedger(string name)
+        {
+            return _nominalAccountPatternRegex.IsMatch(name);
+        }
+
+        public static bool IsDoubleNominalLedger(string name)
+        {
+            return _doubleNominalAccountPatternRegex.IsMatch(name);
+        }
+
+        public static string GetNominalPartOfName(string name)
+        {
+            if (IsNominalLedger(name))
+            {
+                var match = _nominalAccountPatternRegex.Match(name);
+                return match.Groups[2].Value;
+            }
+            else if(IsDoubleNominalLedger(name))
+            {
+                var match = _doubleNominalAccountPatternRegex.Match(name);
+                return match.Groups[2].Value;
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
+        public static string GetBasePartOfName(string name)
+        {
+            if (IsNominalLedger(name))
+            {
+                var match = _nominalAccountPatternRegex.Match(name);
+                return match.Groups[1].Value;
+            }
+            else if (IsDoubleNominalLedger(name))
+            {
+                var match = _doubleNominalAccountPatternRegex.Match(name);
+                return match.Groups[1].Value;
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+    }
+
     public class ProcessingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
+
         public DelegateCommand ReadAgainCommand { get; set; }
 
         private readonly DataStore _dataStore;
@@ -24,6 +89,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private List<Information> _informationList;
         private string _overAllMessage;
+        
 
         public string OverAllMessage
         {
@@ -53,24 +119,11 @@ namespace Nachiappan.BalanceSheetViewModel
             var startDate = input.AccountingPeriodStartDate;
             var endDate = input.AccountingPeriodEndDate;
 
-            ReadInputStatements(input, out var statements, out var balanceSheetStatements, out var errorsAndWarnings);
+            ReadInputStatements(input, out var statements, out var previousBalanceSheetStatements, out var errorsAndWarnings);
             PerformDateValidations(startDate, endDate, errorsAndWarnings);
             TrimJournalStatementsBasedOnDate(statements, startDate, endDate, out var dateTrimmedStatements);
 
-            var simpleAccountPattern = "^[a-zA-Z0-9]+$";
-            var nominalAccountPattern = "^[a-zA-Z0-9]+/[a-zA-Z0-9]+$";
-            var doubleNominalAccountPattern = "^[a-zA-Z0-9]+/[a-zA-Z0-9]+/[a-zA-Z0-9]+$";
-
-            Regex simpleAccountPatternRegex = new Regex(simpleAccountPattern, RegexOptions.IgnoreCase);
-            Regex nominalAccountPatternRegex = new Regex(nominalAccountPattern, RegexOptions.IgnoreCase);
-            Regex doubleNominalAccountPatternRegex = new Regex(doubleNominalAccountPattern, RegexOptions.IgnoreCase);
-
-            TrimJournalStatementsBasedOnAccountAndDescription(statements, simpleAccountPatternRegex, 
-                nominalAccountPatternRegex, doubleNominalAccountPatternRegex, out var accountTrimmedStatements);
-
-
-
-
+            TrimJournalStatementsBasedOnAccountAndDescription(statements, out var accountTrimmedStatements);
 
             var groupedStatements = statements.GroupBy(x => x.Description + "#" + x.Tag).ToList();
             var trialBalanseStatements = groupedStatements.Select(x =>
@@ -84,13 +137,33 @@ namespace Nachiappan.BalanceSheetViewModel
             }).ToList();
 
 
+            LedgerHolder holder = new LedgerHolder(input.AccountingPeriodStartDate, input.AccountingPeriodEndDate);
+
+            foreach (var balanceSheetStatement in previousBalanceSheetStatements)
+            {
+                holder.CreateRealLedger(balanceSheetStatement.Description, balanceSheetStatement.Value);
+            }
+
+            foreach (var journalStatement in statements)
+            {
+                var ledger = holder.GetLedger(journalStatement.Description);
+                ledger.PostTransaction(journalStatement.Date, journalStatement.DetailedDescription, journalStatement.Value);
+            }
+            holder.CloseNominalLedgers();
+
+            var ledgers = holder.GetRealLedgers();
+
+            var balanceSheetStatements = ledgers.Select(x => new Statement()
+            {
+                Description = x.GetPrintableName(),
+                Value = x.GetLedgerValue(),
+            }).ToList();
+
+
             PerformAccountTrimmedStatementsValidation(accountTrimmedStatements, errorsAndWarnings);
             PerformDateTrimmedStatementValidations(dateTrimmedStatements, errorsAndWarnings);
             PerformBalanceCheckValidationOnJournal(statements, errorsAndWarnings);
-            PerformBalanceCheckValidationOnBalanceSheet(balanceSheetStatements, errorsAndWarnings);
-
-
-            
+            PerformBalanceCheckValidationOnBalanceSheet(previousBalanceSheetStatements, errorsAndWarnings);
 
             InformationList = errorsAndWarnings;
 
@@ -104,8 +177,8 @@ namespace Nachiappan.BalanceSheetViewModel
             var trimmedJournalStatements = dateTrimmedStatements.ToList();
             trimmedJournalStatements.AddRange(accountTrimmedStatements);
             _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalPackage);
-
-            _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetPacakge);
+            _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetPacakge);
+            _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.BalanceSheetPackage);
         }
 
         private static void PerformAccountTrimmedStatementsValidation(List<JournalStatement> filteredStatements, List<Information> errorsAndWarnings)
@@ -121,16 +194,13 @@ namespace Nachiappan.BalanceSheetViewModel
         }
 
         private static void TrimJournalStatementsBasedOnAccountAndDescription(List<JournalStatement> statements,
-            Regex simpleAccountPatternRegex,
-            Regex nominalAccountPatternRegex,
-            Regex doubleNominalAccountPatternRegex, 
             out List<JournalStatement> filteredStatements)
         {
             var filteredStatements1 = statements.Where(x =>
             {
-                var isNominalAccount = nominalAccountPatternRegex.IsMatch(x.Description);
-                var isRealAccount = simpleAccountPatternRegex.IsMatch(x.Description);
-                var isDoubleNominalAccount = doubleNominalAccountPatternRegex.IsMatch(x.Description);
+                var isNominalAccount = LedgerClassifer.IsNominalLedger(x.Description);
+                var isRealAccount = LedgerClassifer.IsRealLedger(x.Description);
+                var isDoubleNominalAccount = LedgerClassifer.IsDoubleNominalLedger(x.Description);
 
                 return !isRealAccount && !isNominalAccount && !isDoubleNominalAccount;
             }).ToList();
@@ -317,6 +387,205 @@ namespace Nachiappan.BalanceSheetViewModel
             }
         }
     }
+
+
+    public class LedgerHolder
+    {
+        private readonly DateTime _openingDate;
+        private readonly DateTime _closingDateTime;
+        private Dictionary<string, RealLedger> realLeadgers = new Dictionary<string, RealLedger>();
+        private Dictionary<string, NominalLedger> nominaLedgers = new Dictionary<string, NominalLedger>();
+        private Dictionary<string, NominalLedger> doubleNominalLedgers = new Dictionary<string, NominalLedger>();
+
+        public LedgerHolder(DateTime openingDate, DateTime closingDateTime)
+        {
+            _openingDate = openingDate;
+            _closingDateTime = closingDateTime;
+        }
+
+        private bool IsRealLedgerName(string name)
+        {
+            return LedgerClassifer.IsRealLedger(name);
+        }
+
+        private bool IsNominalLedgerName(string name)
+        {
+            return LedgerClassifer.IsNominalLedger(name);
+        }
+
+        private bool IsDoubleNominalLedgerName(string name)
+        {
+            return LedgerClassifer.IsDoubleNominalLedger(name);
+        }
+
+        public List<ILedger> GetRealLedgers()
+        {
+            return realLeadgers.Select(x => x.Value).ToList<ILedger>();
+        }
+
+        public void CloseNominalLedgers()
+        {
+            foreach (var doubleNominalLedger in doubleNominalLedgers)
+            {
+                CloseLedger(doubleNominalLedger.Value, doubleNominalLedger.Key);
+            }
+            foreach (var nominalLedger in nominaLedgers)
+            {
+                CloseLedger(nominalLedger.Value, nominalLedger.Key);
+            }
+        }
+
+        private void CloseLedger(NominalLedger nominalLedger, string fullName)
+        {
+            var value = nominalLedger.GetLedgerValue();
+            var baseLedgerName = LedgerClassifer.GetBasePartOfName(fullName);
+            nominalLedger.PostTransaction(_closingDateTime, "Closing", value * -1);
+            var baseLedger = GetLedger(baseLedgerName);
+            baseLedger.PostTransaction(_closingDateTime, "Closing of " + LedgerClassifer.GetNominalPartOfName(fullName), value);
+        }
+
+        public ILedger GetLedger(string name)
+        {
+            if (IsRealLedgerName(name))
+            {
+                if (!realLeadgers.ContainsKey(name))
+                {
+                    realLeadgers.Add(name, new RealLedger(name, _openingDate, 0));
+                }
+                return realLeadgers[name];
+            }
+
+            if (IsNominalLedgerName(name))
+            {
+                if (!nominaLedgers.ContainsKey(name))
+                {
+                    nominaLedgers.Add(name, new NominalLedger(name, GetNominalPartOfName(name), GetBasePartOfName(name)));
+                }
+                return nominaLedgers[name];
+            }
+
+            if (IsDoubleNominalLedgerName(name))
+            {
+                if (!doubleNominalLedgers.ContainsKey(name))
+                {
+                    doubleNominalLedgers.Add(name, new NominalLedger(name, GetNominalPartOfName(name), GetBasePartOfName(name)));
+                }
+                return doubleNominalLedgers[name];
+            }
+            throw new Exception();
+        }
+
+        private string GetNominalPartOfName(string name)
+        {
+            return LedgerClassifer.GetNominalPartOfName(name);
+        }
+
+        private string GetBasePartOfName(string name)
+        {
+            return LedgerClassifer.GetBasePartOfName(name);
+        }
+
+        public void CreateRealLedger(string name, double value)
+        {
+            if (!IsRealLedgerName(name))throw new Exception();
+            if(realLeadgers.ContainsKey(name)) throw new Exception();
+            realLeadgers.Add(name, new RealLedger(name, _openingDate, value));
+        }
+    }
+
+    
+
+    public class LedgerStatement : IHasValue
+    {
+        public int SerialNumber { get; set; }
+        public double Value { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class RealLedger : ILedger
+    {
+        private readonly string _accountName;
+        private double ledgerValue = 0;
+
+        private List<LedgerStatement> ledgerStatements = new List<LedgerStatement>();
+
+        public RealLedger(string accountName, DateTime openingDate, double value)
+        {
+            _accountName = accountName;
+            ledgerStatements.Add(new LedgerStatement()
+            {
+                Date = openingDate,
+                Description = "Opening",
+                SerialNumber = 1,
+                Value =  value
+            });
+            ledgerValue = value;
+
+        }
+
+        public string GetPrintableName()
+        {
+            return _accountName;
+        }
+
+       
+        public void PostTransaction(DateTime date, string statement, double value)
+        {
+            var count = ledgerStatements.Count + 1;
+            ledgerStatements.Add(new LedgerStatement() { Date = date, Description = statement, SerialNumber = count, Value = value });
+            ledgerValue += value;
+        }
+
+        public double GetLedgerValue()
+        {
+            return ledgerValue;
+        }
+    }
+
+
+    public interface ILedger
+    {
+        string GetPrintableName();
+        void PostTransaction(DateTime date, string statement, double value);
+        double GetLedgerValue();
+    }
+
+    public class NominalLedger : ILedger
+    {
+        private readonly string _accountName;
+        private readonly string _nominalName;
+        private readonly string _baseName;
+        private readonly DateTime _openingDate;
+        private double ledgerValue = 0;
+
+        private List<LedgerStatement> ledgerStatements = new List<LedgerStatement>();
+
+        public NominalLedger(string accountName, string nominalName, string baseName)
+        {
+            _accountName = accountName;
+            _nominalName = nominalName;
+            _baseName = baseName;
+        }
+
+        public string GetPrintableName()
+        {
+            return _accountName.Replace("/","-");
+        }
+
+        public void PostTransaction(DateTime date, string statement, double value)
+        {
+            var count = ledgerStatements.Count + 1;
+            ledgerStatements.Add(new LedgerStatement() { Date = date, Description = statement, SerialNumber = count, Value = value });
+            ledgerValue += value;
+        }
+
+        public double GetLedgerValue()
+        {
+            return ledgerValue;
+        }
+    }
+    
 
     public class Logger : ILogger
     {

@@ -15,12 +15,16 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToPreviousCommand = new DelegateCommand(goToProcessingStep);
             GoToNextCommand = new DelegateCommand(goToPrintStatementWorkFlowStep);
             Name = "Verify Input/Output Statements";
-
-            SetBalanceSheetStatements(dataStore);
+            PreviousBalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.PreviousBalanceSheetPacakge);
+            BalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.BalanceSheetPackage);
             JournalStatements = GetStatements(dataStore, WorkFlowViewModel.InputJournalPackage);
             TrimmedJournalStatements = GetStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
+            SetTrailBalanceStatements(dataStore);
 
+        }
 
+        private void SetTrailBalanceStatements(DataStore dataStore)
+        {
             TrialBalanceStatements = dataStore
                 .GetPackage<List<TrialBalanceStatement>>(WorkFlowViewModel.TrialBalancePackage)
                 .Select(x => new DisplayableTrialBalanceStatement()
@@ -30,7 +34,6 @@ namespace Nachiappan.BalanceSheetViewModel
                     Credit = x.GetCreditValueOrNull(),
                     Debit = x.GetDebitValueOrNull(),
                 }).ToList();
-
         }
 
         private List<DisplayableJournalStatement> GetStatements(DataStore dataStore, string packageName)
@@ -48,9 +51,9 @@ namespace Nachiappan.BalanceSheetViewModel
                 }).ToList();
         }
 
-        private void SetBalanceSheetStatements(DataStore dataStore)
+        private List<DisplayableStatement> GetBalanceSheetStatements(DataStore dataStore, string packageName)
         {
-            var statements = dataStore.GetPackage<List<Statement>>(WorkFlowViewModel.PreviousBalanceSheetPacakge);
+            var statements = dataStore.GetPackage<List<Statement>>(packageName);
             var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
                 {
@@ -59,10 +62,12 @@ namespace Nachiappan.BalanceSheetViewModel
                     Debit = x.GetDebitValueOrNull(),
                 })
                 .ToList();
-            BalanceSheetStatements = displayableStatements;
+            return displayableStatements;
         }
 
-        public List<DisplayableStatement>   BalanceSheetStatements { get; set; }
+        public List<DisplayableStatement>   PreviousBalanceSheetStatements { get; set; }
+
+        public List<DisplayableStatement> BalanceSheetStatements { get; set; }
 
         public List<DisplayableJournalStatement> JournalStatements { get; set; }
 

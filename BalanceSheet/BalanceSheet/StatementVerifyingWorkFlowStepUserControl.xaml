@@ -35,6 +35,11 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem Header="Previous Balance Sheet">
+                    <local:FormatableDataGrid ItemsSource="{Binding PreviousBalanceSheetStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                </TabItem>
+
+                <TabItem Header="Balance Sheet">
                     <local:FormatableDataGrid ItemsSource="{Binding BalanceSheetStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
