@@ -9,6 +9,10 @@ namespace Nachiappan.BalanceSheetViewModel
 {
     public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
+        private string _selectedLedgerName;
+        private Dictionary<string, ILedger> _ledgers;
+        private List<DisplayableLedgerStatement> _ledgerStatements;
+
         public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToProcessingStep, 
             Action goToPrintStatementWorkFlowStep)
         {
@@ -20,6 +24,10 @@ namespace Nachiappan.BalanceSheetViewModel
             JournalStatements = GetStatements(dataStore, WorkFlowViewModel.InputJournalPackage);
             TrimmedJournalStatements = GetStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
             SetTrailBalanceStatements(dataStore);
+            _ledgers = dataStore.GetPackage<Dictionary<string, ILedger>>(WorkFlowViewModel.LedgersPackage);
+            LedgerNames = _ledgers.Select(x => x.Key).ToList();
+            SelectedLedgerName = LedgerNames.ElementAt(0);
+
 
         }
 
@@ -74,8 +82,53 @@ namespace Nachiappan.BalanceSheetViewModel
         public List<DisplayableJournalStatement> TrimmedJournalStatements { get; set; }
 
         public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
+
+        public List<DisplayableLedgerStatement> LedgerStatements
+        {
+            get { return _ledgerStatements; }
+            set
+            {
+                _ledgerStatements = value;
+                FirePropertyChanged();
+            }
+        }
+
+        public List<string> LedgerNames { get; set; }
+
+        public string SelectedLedgerName
+        {
+            get { return _selectedLedgerName; }
+            set
+            {
+                _selectedLedgerName = value;
+                if (_ledgers.ContainsKey(value))
+                {
+                    var ledger = _ledgers[value];
+                    var statements = ledger.GetLedgerStatements();
+                    LedgerStatements = statements.Select(x => new DisplayableLedgerStatement()
+                    {
+                        SerialNumber = x.SerialNumber,
+                        Description = x.Description,
+                        Date = x.Date,
+                        Credit = x.GetCreditValueOrNull(),
+                        Debit = x.GetDebitValueOrNull(),
+                    }).ToList();
+                }
+
+                FirePropertyChanged();
+            }
+        }
     }
 
+
+    public class DisplayableLedgerStatement
+    {
+        public int SerialNumber { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; }
+        public double? Credit { get; set; }
+        public double? Debit { get; set; }
+    }
 
     public class DisplayableTrialBalanceStatement
     {

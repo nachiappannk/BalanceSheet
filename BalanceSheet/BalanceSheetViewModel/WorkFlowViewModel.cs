@@ -13,6 +13,7 @@ namespace Nachiappan.BalanceSheetViewModel
         public const string InputParametersPackage = nameof(InputParametersPackage);
         public const string TrialBalancePackage = nameof(TrialBalancePackage);
         public const string BalanceSheetPackage = nameof(BalanceSheetPackage);
+        public const string LedgersPackage = nameof(LedgersPackage);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -25,6 +26,8 @@ namespace Nachiappan.BalanceSheetViewModel
                 FirePropertyChanged();
             }
         }
+
+        
 
 
         private DataStore _dataStore;

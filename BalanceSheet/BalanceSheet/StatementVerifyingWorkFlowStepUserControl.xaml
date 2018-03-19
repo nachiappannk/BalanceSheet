@@ -54,6 +54,21 @@
                 </TabItem>
 
 
+                <TabItem Header="Ledgers">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <ComboBox ItemsSource="{Binding LedgerNames}" SelectedItem="{Binding SelectedLedgerName}"></ComboBox>
+                        <local:FormatableDataGrid Grid.Row="1" ItemsSource="{Binding LedgerStatements}" 
+                                                  Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                    </Grid>
+                    
+                </TabItem>
+
+
                 <TabItem Header="TrialBalance">
                     <local:FormatableDataGrid ItemsSource="{Binding TrialBalanceStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>

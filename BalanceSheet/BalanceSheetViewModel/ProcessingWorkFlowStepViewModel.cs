@@ -150,6 +150,9 @@ namespace Nachiappan.BalanceSheetViewModel
                 ledger.PostTransaction(journalStatement.Date, journalStatement.DetailedDescription, journalStatement.Value);
             }
             holder.CloseNominalLedgers();
+            var allLedgers = holder.GetAllLedgers();
+            var ledgerDictionary = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
+
 
             var ledgers = holder.GetRealLedgers();
 
@@ -179,6 +182,7 @@ namespace Nachiappan.BalanceSheetViewModel
             _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalPackage);
             _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetPacakge);
             _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.BalanceSheetPackage);
+            _dataStore.PutPackage(ledgerDictionary , WorkFlowViewModel.LedgersPackage);
         }
 
         private static void PerformAccountTrimmedStatementsValidation(List<JournalStatement> filteredStatements, List<Information> errorsAndWarnings)
@@ -423,6 +427,14 @@ namespace Nachiappan.BalanceSheetViewModel
             return realLeadgers.Select(x => x.Value).ToList<ILedger>();
         }
 
+        public List<ILedger> GetAllLedgers()
+        {
+            var ledgers = realLeadgers.Select(x => x.Value).ToList<ILedger>();
+            ledgers.AddRange(nominaLedgers.Select(x => x.Value).ToList());
+            ledgers.AddRange(doubleNominalLedgers.Select(x => x.Value).ToList());
+            return ledgers;
+        }
+
         public void CloseNominalLedgers()
         {
             foreach (var doubleNominalLedger in doubleNominalLedgers)
@@ -541,6 +553,11 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             return ledgerValue;
         }
+
+        public List<LedgerStatement> GetLedgerStatements()
+        {
+            return ledgerStatements.ToList();
+        }
     }
 
 
@@ -549,6 +566,7 @@ namespace Nachiappan.BalanceSheetViewModel
         string GetPrintableName();
         void PostTransaction(DateTime date, string statement, double value);
         double GetLedgerValue();
+        List<LedgerStatement> GetLedgerStatements();
     }
 
     public class NominalLedger : ILedger
@@ -560,6 +578,11 @@ namespace Nachiappan.BalanceSheetViewModel
         private double ledgerValue = 0;
 
         private List<LedgerStatement> ledgerStatements = new List<LedgerStatement>();
+
+        public List<LedgerStatement> GetLedgerStatements()
+        {
+            return ledgerStatements.ToList();
+        }
 
         public NominalLedger(string accountName, string nominalName, string baseName)
         {
