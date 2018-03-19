@@ -60,8 +60,10 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-
-                        <ComboBox ItemsSource="{Binding LedgerNames}" SelectedItem="{Binding SelectedLedgerName}"></ComboBox>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Ledger:" Margin="2"/>
+                            <ComboBox ItemsSource="{Binding LedgerNames}" SelectedItem="{Binding SelectedLedgerName}"/>
+                        </StackPanel>
                         <local:FormatableDataGrid Grid.Row="1" ItemsSource="{Binding LedgerStatements}" 
                                                   Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                     </Grid>
