@@ -558,6 +558,12 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             return ledgerStatements.ToList();
         }
+
+        public string GetLedgerType()
+        {
+            if (ledgerValue > 0) return "Equity or Liability";
+            else return "Asset";
+        }
     }
 
 
@@ -567,6 +573,8 @@ namespace Nachiappan.BalanceSheetViewModel
         void PostTransaction(DateTime date, string statement, double value);
         double GetLedgerValue();
         List<LedgerStatement> GetLedgerStatements();
+
+        string GetLedgerType();
     }
 
     public class NominalLedger : ILedger
@@ -582,6 +590,11 @@ namespace Nachiappan.BalanceSheetViewModel
         public List<LedgerStatement> GetLedgerStatements()
         {
             return ledgerStatements.ToList();
+        }
+
+        public string GetLedgerType()
+        {
+            return "Nominal Account";
         }
 
         public NominalLedger(string accountName, string nominalName, string baseName)

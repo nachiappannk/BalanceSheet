@@ -14,15 +14,13 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public static double? GetCreditValueOrNull(this IHasValue hasValue)
         {
-            if(hasValue.Value > 0)
-                return hasValue.Value;
+            if (hasValue.Value > 0) return hasValue.GetCreditValue();
              return null;
         }
 
         public static double? GetDebitValueOrNull(this IHasValue hasValue)
         {
-            if (hasValue.Value <= 0)
-                return hasValue.Value;
+            if (hasValue.Value <= 0) return hasValue.GetDebitValue();
             return null;
         }
 

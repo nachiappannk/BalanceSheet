@@ -58,13 +58,18 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Ledger:" Margin="2"/>
-                            <ComboBox ItemsSource="{Binding LedgerNames}" SelectedItem="{Binding SelectedLedgerName}"/>
+                            <ComboBox ItemsSource="{Binding LedgerNames}" SelectedItem="{Binding SelectedLedgerName}" Height="24"/>
                         </StackPanel>
-                        <local:FormatableDataGrid Grid.Row="1" ItemsSource="{Binding LedgerStatements}" 
+                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <TextBlock Text="Ledger Type: "/>
+                            <TextBlock Text="{Binding LedgerType}"/>
+                        </StackPanel>
+                        <local:FormatableDataGrid Grid.Row="2" ItemsSource="{Binding LedgerStatements}" 
                                                   Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                     </Grid>
                     

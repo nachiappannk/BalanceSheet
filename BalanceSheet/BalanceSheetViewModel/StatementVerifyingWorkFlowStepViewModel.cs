@@ -12,6 +12,7 @@ namespace Nachiappan.BalanceSheetViewModel
         private string _selectedLedgerName;
         private Dictionary<string, ILedger> _ledgers;
         private List<DisplayableLedgerStatement> _ledgerStatements;
+        private string _ledgerType;
 
         public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToProcessingStep, 
             Action goToPrintStatementWorkFlowStep)
@@ -83,6 +84,17 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
 
+
+        public string LedgerType
+        {
+            get { return _ledgerType; }
+            set
+            {
+                _ledgerType = value;
+                FirePropertyChanged();
+            }
+        }
+
         public List<DisplayableLedgerStatement> LedgerStatements
         {
             get { return _ledgerStatements; }
@@ -113,6 +125,7 @@ namespace Nachiappan.BalanceSheetViewModel
                         Credit = x.GetCreditValueOrNull(),
                         Debit = x.GetDebitValueOrNull(),
                     }).ToList();
+                    LedgerType = ledger.GetLedgerType();
                 }
 
                 FirePropertyChanged();
