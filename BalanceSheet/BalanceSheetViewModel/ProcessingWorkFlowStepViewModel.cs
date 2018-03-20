@@ -9,10 +9,10 @@ namespace Nachiappan.BalanceSheetViewModel
 
     public static class LedgerClassifer
     {
-
-        private const string SimpleAccountPattern = "^([a-zA-Z0-9]+)$";
-        private const string NominalAccountPattern = "^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$";
-        private const string DoubleNominalAccountPattern = "^([a-zA-Z0-9]+/[a-zA-Z0-9]+)/([a-zA-Z0-9]+)$";
+        private const string AccountNamePattern = @"[a-zA-Z0-9\s!@#$%^&*]+";
+        private const string SimpleAccountPattern = @"^("+AccountNamePattern+")$";
+        private const string NominalAccountPattern = @"^(" + AccountNamePattern + ")/(" + AccountNamePattern + ")$";
+        private const string DoubleNominalAccountPattern = @"^(" + AccountNamePattern + "/" + AccountNamePattern + ")/(" + AccountNamePattern + ")$";
 
         private static Regex _simpleAccountPatternRegex = new Regex(SimpleAccountPattern, RegexOptions.IgnoreCase);
         private static Regex _nominalAccountPatternRegex = new Regex(NominalAccountPattern, RegexOptions.IgnoreCase);
