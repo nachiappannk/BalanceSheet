@@ -65,25 +65,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutApplicationWorkFlowStepViewModel.cs" />
-    <Compile Include="DataStore.cs" />
-    <Compile Include="ExcelReader.cs" />
-    <Compile Include="ExcelSheetInfoProvider.cs" />
-    <Compile Include="ExcelSheetSelectorViewModel.cs" />
+    <Compile Include="Model\DataStore.cs" />
+    <Compile Include="Model\Excel\ExcelReader.cs" />
+    <Compile Include="Model\Excel\ExcelSheetInfoProvider.cs" />
+    <Compile Include="Model\Excel\ExcelSheetSelectorViewModel.cs" />
     <Compile Include="FileSaveAsNotification.cs" />
-    <Compile Include="IHasValue.cs" />
+    <Compile Include="Model\Statements\LedgerStatement.cs" />
+    <Compile Include="Model\Statements\IHasValue.cs" />
+    <Compile Include="Model\Ledger\LedgerType.cs" />
+    <Compile Include="Model\Ledger\ILedger.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="InputForBalanceSheetComputation.cs" />
     <Compile Include="InputWorkFlowStepViewModel.cs" />
-    <Compile Include="IRowCellsReader.cs" />
+    <Compile Include="Model\Excel\IRowCellsReader.cs" />
     <Compile Include="JournalGateway.cs" />
-    <Compile Include="JournalStatement.cs" />
+    <Compile Include="Model\Statements\JournalStatement.cs" />
+    <Compile Include="Model\Ledger\LedgerHolder.cs" />
+    <Compile Include="Model\LedgerClassifer.cs" />
+    <Compile Include="Model\Ledger\NominalLedger.cs" />
     <Compile Include="OptionsWorkFlowStepViewModel.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />
     <Compile Include="ProcessingWorkFlowStepViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RowCellsReader.cs" />
+    <Compile Include="Model\Ledger\RealLedger.cs" />
+    <Compile Include="Model\Excel\RowCellsReader.cs" />
+    <Compile Include="Model\Statements\BalanceSheetStatement.cs" />
     <Compile Include="StatementVerifyingWorkFlowStepViewModel.cs" />
+    <Compile Include="Model\Statements\TrimmedJournalStatement.cs" />
     <Compile Include="WorkFlowStepViewModel.cs" />
     <Compile Include="WorkFlowViewModel.cs" />
   </ItemGroup>

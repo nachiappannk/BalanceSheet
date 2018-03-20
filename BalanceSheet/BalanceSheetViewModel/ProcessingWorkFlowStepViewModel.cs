@@ -1,78 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using Nachiappan.BalanceSheetViewModel.Model;
+using Nachiappan.BalanceSheetViewModel.Model.Ledger;
+using Nachiappan.BalanceSheetViewModel.Model.Statements;
 using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
-
-    public static class LedgerClassifer
-    {
-        private const string AccountNamePattern = @"[a-zA-Z0-9\s!@#$%^&*]+";
-        private const string SimpleAccountPattern = @"^("+AccountNamePattern+")$";
-        private const string NominalAccountPattern = @"^(" + AccountNamePattern + ")/(" + AccountNamePattern + ")$";
-        private const string DoubleNominalAccountPattern = @"^(" + AccountNamePattern + "/" + AccountNamePattern + ")/(" + AccountNamePattern + ")$";
-
-        private static Regex _simpleAccountPatternRegex = new Regex(SimpleAccountPattern, RegexOptions.IgnoreCase);
-        private static Regex _nominalAccountPatternRegex = new Regex(NominalAccountPattern, RegexOptions.IgnoreCase);
-        private static Regex _doubleNominalAccountPatternRegex = new Regex(DoubleNominalAccountPattern, RegexOptions.IgnoreCase);
-
-        public static bool IsRealLedger(string name)
-        {
-            return _simpleAccountPatternRegex.IsMatch(name);
-        }
-
-        public static bool IsNominalLedger(string name)
-        {
-            return _nominalAccountPatternRegex.IsMatch(name);
-        }
-
-        public static bool IsDoubleNominalLedger(string name)
-        {
-            return _doubleNominalAccountPatternRegex.IsMatch(name);
-        }
-
-        public static string GetNominalPartOfName(string name)
-        {
-            if (IsNominalLedger(name))
-            {
-                var match = _nominalAccountPatternRegex.Match(name);
-                return match.Groups[2].Value;
-            }
-            else if(IsDoubleNominalLedger(name))
-            {
-                var match = _doubleNominalAccountPatternRegex.Match(name);
-                return match.Groups[2].Value;
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-
-        public static string GetBasePartOfName(string name)
-        {
-            if (IsNominalLedger(name))
-            {
-                var match = _nominalAccountPatternRegex.Match(name);
-                return match.Groups[1].Value;
-            }
-            else if (IsDoubleNominalLedger(name))
-            {
-                var match = _doubleNominalAccountPatternRegex.Match(name);
-                return match.Groups[1].Value;
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-    }
-
     public class ProcessingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
-
         public DelegateCommand ReadAgainCommand { get; set; }
 
         private readonly DataStore _dataStore;
@@ -153,7 +90,7 @@ namespace Nachiappan.BalanceSheetViewModel
             
             var ledgers = holder.GetRealLedgers();
 
-            var balanceSheetStatements = ledgers.Select(x => new Statement()
+            var balanceSheetStatements = ledgers.Select(x => new BalanceSheetStatement()
             {
                 Description = x.GetPrintableName(),
                 Value = x.GetLedgerValue(),
@@ -257,7 +194,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private static void ReadInputStatements(InputForBalanceSheetComputation input,
             out List<JournalStatement> journalStatements,
-            out List<Statement> balanceSheetStatements, 
+            out List<BalanceSheetStatement> balanceSheetStatements, 
             out List<Information> readErrorAndWarnings)
         {
             var logger = new Logger();
@@ -288,7 +225,7 @@ namespace Nachiappan.BalanceSheetViewModel
             journalStatements.ForEach(x => x.Description = x.Description.Replace(@"\", "/"));
         }
 
-        private static void TrimBalanceSheetDescription(List<Statement> balanceSheetStatements)
+        private static void TrimBalanceSheetDescription(List<BalanceSheetStatement> balanceSheetStatements)
         {
             balanceSheetStatements.ForEach(x =>
             {
@@ -321,8 +258,6 @@ namespace Nachiappan.BalanceSheetViewModel
                 {
                     x.Tag = string.Empty;
                 }
-
-                ;
             });
             journalStatements.ForEach(x => x.Tag = x.Tag.Trim());
         }
@@ -341,7 +276,7 @@ namespace Nachiappan.BalanceSheetViewModel
             journalStatements.ForEach(x => x.Description = x.Description.Trim());
         }
 
-        private void PerformBalanceCheckValidationOnBalanceSheet(List<Statement> balanceSheetStatements, List<Information> informationList)
+        private void PerformBalanceCheckValidationOnBalanceSheet(List<BalanceSheetStatement> balanceSheetStatements, List<Information> informationList)
         {
             var sumOfBalanceSheetStatement = balanceSheetStatements.Sum(x => x.Value);
             if (!sumOfBalanceSheetStatement.IsZero())
@@ -390,284 +325,6 @@ namespace Nachiappan.BalanceSheetViewModel
         }
     }
 
-
-    public class LedgerHolder
-    {
-        private readonly DateTime _openingDate;
-        private readonly DateTime _closingDateTime;
-        private Dictionary<string, RealLedger> realLeadgers = new Dictionary<string, RealLedger>();
-        private Dictionary<string, NominalLedger> nominaLedgers = new Dictionary<string, NominalLedger>();
-        private Dictionary<string, NominalLedger> doubleNominalLedgers = new Dictionary<string, NominalLedger>();
-
-        public LedgerHolder(DateTime openingDate, DateTime closingDateTime)
-        {
-            _openingDate = openingDate;
-            _closingDateTime = closingDateTime;
-        }
-
-        private bool IsRealLedgerName(string name)
-        {
-            return LedgerClassifer.IsRealLedger(name);
-        }
-
-        private bool IsNominalLedgerName(string name)
-        {
-            return LedgerClassifer.IsNominalLedger(name);
-        }
-
-        private bool IsDoubleNominalLedgerName(string name)
-        {
-            return LedgerClassifer.IsDoubleNominalLedger(name);
-        }
-
-        public List<ILedger> GetRealLedgers()
-        {
-            return realLeadgers.Select(x => x.Value).ToList<ILedger>();
-        }
-
-        public List<ILedger> GetAllLedgers()
-        {
-            var ledgers = realLeadgers.Select(x => x.Value).ToList<ILedger>();
-            ledgers.AddRange(nominaLedgers.Select(x => x.Value).ToList());
-            ledgers.AddRange(doubleNominalLedgers.Select(x => x.Value).ToList());
-            return ledgers;
-        }
-
-        public void CloseNominalLedgers()
-        {
-            foreach (var doubleNominalLedger in doubleNominalLedgers)
-            {
-                CloseLedger(doubleNominalLedger.Value, doubleNominalLedger.Key);
-            }
-            foreach (var nominalLedger in nominaLedgers)
-            {
-                CloseLedger(nominalLedger.Value, nominalLedger.Key);
-            }
-        }
-
-        private void CloseLedger(NominalLedger nominalLedger, string fullName)
-        {
-            var value = nominalLedger.GetLedgerValue();
-            var baseLedgerName = LedgerClassifer.GetBasePartOfName(fullName);
-            nominalLedger.PostTransaction(_closingDateTime, "Closing", value * -1);
-            var baseLedger = GetLedger(baseLedgerName);
-            baseLedger.PostTransaction(_closingDateTime, "Closing of " + LedgerClassifer.GetNominalPartOfName(fullName), value);
-        }
-
-        public ILedger GetLedger(string name)
-        {
-            if (IsRealLedgerName(name))
-            {
-                if (!realLeadgers.ContainsKey(name))
-                {
-                    realLeadgers.Add(name, new RealLedger(name, _openingDate, 0));
-                }
-                return realLeadgers[name];
-            }
-
-            if (IsNominalLedgerName(name))
-            {
-                if (!nominaLedgers.ContainsKey(name))
-                {
-                    nominaLedgers.Add(name, new NominalLedger(name, GetNominalPartOfName(name), GetBasePartOfName(name)));
-                }
-                return nominaLedgers[name];
-            }
-
-            if (IsDoubleNominalLedgerName(name))
-            {
-                if (!doubleNominalLedgers.ContainsKey(name))
-                {
-                    doubleNominalLedgers.Add(name, new NominalLedger(name, GetNominalPartOfName(name), GetBasePartOfName(name)));
-                }
-                return doubleNominalLedgers[name];
-            }
-            throw new Exception();
-        }
-
-        private string GetNominalPartOfName(string name)
-        {
-            return LedgerClassifer.GetNominalPartOfName(name);
-        }
-
-        private string GetBasePartOfName(string name)
-        {
-            return LedgerClassifer.GetBasePartOfName(name);
-        }
-
-        public void CreateRealLedger(string name, double value)
-        {
-            if (!IsRealLedgerName(name))throw new Exception();
-            if(realLeadgers.ContainsKey(name)) throw new Exception();
-            realLeadgers.Add(name, new RealLedger(name, _openingDate, value));
-        }
-    }
-
-    
-
-    public class LedgerStatement : IHasValue
-    {
-        public int SerialNumber { get; set; }
-        public double Value { get; set; }
-        public DateTime Date { get; set; }
-        public string Description { get; set; }
-    }
-
-    public class RealLedger : ILedger
-    {
-        private readonly string _accountName;
-        private double ledgerValue = 0;
-
-        private List<LedgerStatement> ledgerStatements = new List<LedgerStatement>();
-
-        public RealLedger(string accountName, DateTime openingDate, double value)
-        {
-            _accountName = accountName;
-            ledgerStatements.Add(new LedgerStatement()
-            {
-                Date = openingDate,
-                Description = "Opening",
-                SerialNumber = 1,
-                Value =  value
-            });
-            ledgerValue = value;
-
-        }
-
-        public string GetPrintableName()
-        {
-            return _accountName;
-        }
-
-       
-        public void PostTransaction(DateTime date, string statement, double value)
-        {
-            var count = ledgerStatements.Count + 1;
-            ledgerStatements.Add(new LedgerStatement() { Date = date, Description = statement, SerialNumber = count, Value = value });
-            ledgerValue += value;
-        }
-
-        public double GetLedgerValue()
-        {
-            return ledgerValue;
-        }
-
-        public List<LedgerStatement> GetLedgerStatements()
-        {
-            return ledgerStatements.ToList();
-        }
-
-        public List<LedgerStatement> GetLedgerStatements(LedgerType ledgerType)
-        {
-            bool isInversionRequired = false;
-            if (GetPossibleLedgerTypes().Contains(ledgerType))
-            {
-                if (ledgerType == LedgerType.Asset) isInversionRequired = true;
-                if (ledgerType == LedgerType.Liability) isInversionRequired = true;
-                if (ledgerType == LedgerType.Equity) isInversionRequired = false;
-            }
-
-            var ledgerStatements = GetLedgerStatements();
-
-            double factor = 1;
-            if(isInversionRequired) factor = -1;
-            return ledgerStatements.Select(x => new LedgerStatement()
-            {
-                SerialNumber = x.SerialNumber,
-                Date = x.Date,
-                Description = x.Description,
-                Value = x.Value * factor,
-            }).ToList();
-        }
-
-        public List<LedgerType> GetPossibleLedgerTypes()
-        {
-            if (ledgerValue < 0) return new List<LedgerType>() { LedgerType.Asset};
-            else return new List<LedgerType>(){LedgerType.Equity, LedgerType.Liability};
-        }
-        
-        public string GetLedgerType()
-        {
-            if (ledgerValue > 0) return "Equity or Liability";
-            else return "Asset";
-        }
-    }
-
-    public enum LedgerType
-    {
-        Notional,
-        Asset,
-        Liability,
-        Equity,
-    }
-
-
-    public interface ILedger
-    {
-        string GetPrintableName();
-        void PostTransaction(DateTime date, string statement, double value);
-        double GetLedgerValue();
-        List<LedgerStatement> GetLedgerStatements();
-        List<LedgerType> GetPossibleLedgerTypes();
-        List<LedgerStatement> GetLedgerStatements(LedgerType ledgerType);
-        string GetLedgerType();
-    }
-
-    public class NominalLedger : ILedger
-    {
-        private readonly string _accountName;
-        private readonly string _nominalName;
-        private readonly string _baseName;
-        private readonly DateTime _openingDate;
-        private double ledgerValue = 0;
-
-        private List<LedgerStatement> ledgerStatements = new List<LedgerStatement>();
-
-        public List<LedgerStatement> GetLedgerStatements()
-        {
-            return ledgerStatements.ToList();
-        }
-
-        public List<LedgerType> GetPossibleLedgerTypes()
-        {
-            return new List<LedgerType>(){LedgerType.Notional};
-        }
-
-        public List<LedgerStatement> GetLedgerStatements(LedgerType ledgerType)
-        {
-            return GetLedgerStatements();
-        }
-
-        public string GetLedgerType()
-        {
-            return "Nominal Account";
-        }
-
-        public NominalLedger(string accountName, string nominalName, string baseName)
-        {
-            _accountName = accountName;
-            _nominalName = nominalName;
-            _baseName = baseName;
-        }
-
-        public string GetPrintableName()
-        {
-            return _accountName.Replace("/","-");
-        }
-
-        public void PostTransaction(DateTime date, string statement, double value)
-        {
-            var count = ledgerStatements.Count + 1;
-            ledgerStatements.Add(new LedgerStatement() { Date = date, Description = statement, SerialNumber = count, Value = value });
-            ledgerValue += value;
-        }
-
-        public double GetLedgerValue()
-        {
-            return ledgerValue;
-        }
-    }
-    
 
     public class Logger : ILogger
     {

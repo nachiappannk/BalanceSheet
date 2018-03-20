@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Nachiappan.BalanceSheetViewModel
+namespace Nachiappan.BalanceSheetViewModel.Model.Statements
 {
     public interface IHasValue
     {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using OfficeOpenXml;
 
-namespace Nachiappan.BalanceSheetViewModel
+namespace Nachiappan.BalanceSheetViewModel.Model.Excel
 {
     public class RowCellsReader : IRowCellsReader
     {

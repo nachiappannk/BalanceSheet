@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Nachiappan.BalanceSheetViewModel.Annotations;
+using Nachiappan.BalanceSheetViewModel.Model.Ledger;
+using Nachiappan.BalanceSheetViewModel.Model.Statements;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
@@ -13,11 +15,11 @@ namespace Nachiappan.BalanceSheetViewModel
         public static readonly PackageDefinition<List<TrimmedJournalStatement>> TrimmedJournalStatementsPackageDefintion
             = new PackageDefinition<List<TrimmedJournalStatement>>(nameof(TrimmedJournalStatementsPackageDefintion));
         
-        public static readonly PackageDefinition<List<Statement>> PreviousBalanceSheetStatementsPackageDefinition = 
-            new PackageDefinition<List<Statement>>(nameof(PreviousBalanceSheetStatementsPackageDefinition));
+        public static readonly PackageDefinition<List<BalanceSheetStatement>> PreviousBalanceSheetStatementsPackageDefinition = 
+            new PackageDefinition<List<BalanceSheetStatement>>(nameof(PreviousBalanceSheetStatementsPackageDefinition));
 
-        public static readonly PackageDefinition<List<Statement>> BalanceSheetStatementsPackageDefinition =
-            new PackageDefinition<List<Statement>>(nameof(BalanceSheetStatementsPackageDefinition));
+        public static readonly PackageDefinition<List<BalanceSheetStatement>> BalanceSheetStatementsPackageDefinition =
+            new PackageDefinition<List<BalanceSheetStatement>>(nameof(BalanceSheetStatementsPackageDefinition));
 
         public static readonly PackageDefinition<InputForBalanceSheetComputation> InputParametersPackageDefinition = 
             new PackageDefinition<InputForBalanceSheetComputation>(nameof(InputParametersPackageDefinition));

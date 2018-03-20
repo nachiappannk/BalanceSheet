@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nachiappan.BalanceSheetViewModel
+namespace Nachiappan.BalanceSheetViewModel.Model.Excel
 {
     public interface IRowCellsReader
     {

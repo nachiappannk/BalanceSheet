@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Documents;
+using Nachiappan.BalanceSheetViewModel.Model.Excel;
+using Nachiappan.BalanceSheetViewModel.Model.Statements;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 

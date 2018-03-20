@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nachiappan.BalanceSheetViewModel.Model.Excel;
+using Nachiappan.BalanceSheetViewModel.Model.Statements;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
@@ -119,7 +121,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         }
 
-        public void WriteBalanceSheet(List<Statement> balanceSheetStatements, string sheetName)
+        public void WriteBalanceSheet(List<BalanceSheetStatement> balanceSheetStatements, string sheetName)
         {
             var index = 0;
             using (var writer = new ExcelSheetWriter(_excelFileName, sheetName))
@@ -141,7 +143,7 @@ namespace Nachiappan.BalanceSheetViewModel
             }
         }
 
-        public List<Statement> GetBalanceSheet(ILogger logger, string sheetName)
+        public List<BalanceSheetStatement> GetBalanceSheet(ILogger logger, string sheetName)
         {
             using (ExcelReader reader = new ExcelReader(_excelFileName, sheetName, logger))
             {
@@ -149,7 +151,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 var balanceSheetStatements = reader.ReadAllLines(1, (r) =>
                 {
                     var isValid = r.IsValueAvailable(SerialNumber);
-                    if (!isValid) return new StatementWithValidity() { IsValid = false };
+                    if (!isValid) return new BalanceSheetStatementWithValidity() { IsValid = false };
 
                     var isCreditAvailable = r.IsValueAvailable(Credit);
                     var credit = isCreditAvailable ? r.ReadDouble(Credit) : 0;
@@ -169,34 +171,22 @@ namespace Nachiappan.BalanceSheetViewModel
                                                                $"in line no. {r.LineNumber}, " +
                                                                "both credit and debit is not mentioned. Taking the value as 0");
                     }
-                    return new StatementWithValidity()
+                    return new BalanceSheetStatementWithValidity()
                     {
                         IsValid = true,
                         Description = r.ReadString(Ledger),
                         Value = credit - debit,
                     };
                 }).ToList();
-                var balanceSheet = new List<Statement>();
-                balanceSheet.AddRange(balanceSheetStatements.Where(x => x.IsValid).Select(y => new Statement() { Description = y.Description, Value = y.Value }));
+                var balanceSheet = new List<BalanceSheetStatement>();
+                balanceSheet.AddRange(balanceSheetStatements.Where(x => x.IsValid).Select(y => new BalanceSheetStatement() { Description = y.Description, Value = y.Value }));
                 return balanceSheet;
             }
         }
 
-        public class StatementWithValidity : Statement
+        public class BalanceSheetStatementWithValidity : BalanceSheetStatement
         {
             public bool IsValid { get; set; }
         }
     }
-
-
-    public class Statement : IHasValue
-    {
-        public string Description { get; set; }
-        public double Value { get; set; }
-    }
-
-
-    
-
-
 }

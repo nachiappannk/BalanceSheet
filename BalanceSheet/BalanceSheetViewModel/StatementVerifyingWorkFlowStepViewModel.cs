@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Nachiappan.BalanceSheetViewModel.Model.Ledger;
+using Nachiappan.BalanceSheetViewModel.Model.Statements;
 using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
@@ -81,15 +83,15 @@ namespace Nachiappan.BalanceSheetViewModel
                 }).ToList();
         }
 
-        private List<DisplayableStatement> GetBalanceSheetStatements(DataStore dataStore, PackageDefinition<List<Statement>> packageDefinition)
+        private List<DisplayableStatement> GetBalanceSheetStatements(DataStore dataStore, PackageDefinition<List<BalanceSheetStatement>> packageDefinition)
         {
             var statements = dataStore.GetPackage(packageDefinition);
             var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
                 {
                     Description = x.Description,
-                    Credit = x.GetCreditValueOrNull(),
-                    Debit = x.GetDebitValueOrNull(),
+                    Credit = HasValueExtentions.GetCreditValueOrNull(x),
+                    Debit = HasValueExtentions.GetDebitValueOrNull(x),
                 })
                 .ToList();
             return displayableStatements;
@@ -138,7 +140,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 {
                     var ledger = _ledgers[value];
 
-                    var ledgerType = BalanceSheetViewModel.LedgerType.Asset;
+                    var ledgerType = Model.Ledger.LedgerType.Asset;
                     if (_ledgerTypes.ContainsKey(value))
                     {
                         ledgerType = _ledgerTypes[value];
