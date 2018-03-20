@@ -1,7 +1,6 @@
 ﻿using Prism.Commands;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
@@ -9,35 +8,34 @@ namespace Nachiappan.BalanceSheetViewModel
     {
         private readonly DataStore _dataStore;
         private readonly Action _goToNextStep;
-        private readonly Action _goToPreviousStep;
 
         public InputWorkFlowStepViewModel(DataStore dataStore, Action goToNextStep, Action goToPreviousStep)
         {
             _dataStore = dataStore;
             _goToNextStep = goToNextStep;
-            _goToPreviousStep = goToPreviousStep;
             Name = "Input";
 
+            JournalSelectorViewModel = new ExcelSheetSelectorViewModel {Title = "Please provide the journal"};
+            PreviousBalanceSheetSelectorViewModel =
+                new ExcelSheetSelectorViewModel {Title = "Please provide the previous period balance sheet"};
 
 
-            JournalSelectorViewModel = new ExcelSheetSelectorViewModel();
-            JournalSelectorViewModel.Title = "Please provide the journal";
-            PreviousBalanceSheetSelectorViewModel = new ExcelSheetSelectorViewModel();
-            PreviousBalanceSheetSelectorViewModel.Title = "Please provide the previous period balance sheet";
-
-            
             JournalSelectorViewModel.ValidityChanged += RaiseCanExecuteChanged;
             PreviousBalanceSheetSelectorViewModel.ValidityChanged += RaiseCanExecuteChanged;
 
-            GoToPreviousCommand = new DelegateCommand(_goToPreviousStep, () => true);
+            GoToPreviousCommand = new DelegateCommand(goToPreviousStep, () => true);
             GoToNextCommand = new DelegateCommand(GoToNext, CanGoToNext);
 
+            SetParametersValueFromCache(dataStore);
+        }
 
+        private void SetParametersValueFromCache(DataStore dataStore)
+        {
             if (dataStore.IsPackageStored(WorkFlowViewModel.InputParametersPackageDefinition))
             {
                 var inputParameters = dataStore.GetPackage(WorkFlowViewModel.InputParametersPackageDefinition);
 
-                SetExcelInputParameters(JournalSelectorViewModel, 
+                SetExcelInputParameters(JournalSelectorViewModel,
                     inputParameters.CurrentJournalFileName, inputParameters.CurrentJournalSheetName);
 
                 SetExcelInputParameters(PreviousBalanceSheetSelectorViewModel,
@@ -73,7 +71,7 @@ namespace Nachiappan.BalanceSheetViewModel
         private DateTime? _accountingPeriodStartDate;
         public DateTime? AccountingPeriodStartDate
         {
-            get { return _accountingPeriodStartDate; }
+            get => _accountingPeriodStartDate;
             set
             {
                 if (_accountingPeriodStartDate != value)
@@ -87,7 +85,7 @@ namespace Nachiappan.BalanceSheetViewModel
         private DateTime? _accountingPeriodEndDate;
         public DateTime? AccountingPeriodEndDate
         {
-            get { return _accountingPeriodEndDate; }
+            get => _accountingPeriodEndDate;
             set
             {
                 if (_accountingPeriodEndDate != value)
@@ -109,21 +107,21 @@ namespace Nachiappan.BalanceSheetViewModel
 
         void GoToNext()
         {
-            if (!AccountingPeriodEndDate.HasValue) return;
-            if (!AccountingPeriodStartDate.HasValue) return;
 
+            var input = new InputForBalanceSheetComputation
+            {
+                // ReSharper disable once PossibleInvalidOperationException
+                AccountingPeriodEndDate = AccountingPeriodEndDate.Value,
+                // ReSharper disable once PossibleInvalidOperationException
+                AccountingPeriodStartDate = AccountingPeriodStartDate.Value,
+                PreviousBalanceSheetFileName = PreviousBalanceSheetSelectorViewModel.InputFileName,
+                PreviousBalanceSheetSheetName = PreviousBalanceSheetSelectorViewModel.SelectedSheet,
+                CurrentJournalFileName = JournalSelectorViewModel.InputFileName,
+                CurrentJournalSheetName = JournalSelectorViewModel.SelectedSheet
+            };
 
-            var input = new InputForBalanceSheetComputation();
-            input.AccountingPeriodEndDate = AccountingPeriodEndDate.Value;
-            input.AccountingPeriodStartDate = AccountingPeriodStartDate.Value;
-            input.PreviousBalanceSheetFileName = PreviousBalanceSheetSelectorViewModel.InputFileName;
-            input.PreviousBalanceSheetSheetName = PreviousBalanceSheetSelectorViewModel.SelectedSheet;
-            input.CurrentJournalFileName = JournalSelectorViewModel.InputFileName;
-            input.CurrentJournalSheetName = JournalSelectorViewModel.SelectedSheet;
             _dataStore.PutPackage(input ,WorkFlowViewModel.InputParametersPackageDefinition);
-
             _goToNextStep.Invoke();
-
         }
     }
 }
