@@ -1,6 +1,5 @@
 ﻿using Prism.Commands;
 using System;
-using System.Collections.Generic;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
@@ -90,7 +89,7 @@ namespace Nachiappan.BalanceSheetViewModel
             input.PreviousBalanceSheetSheetName = PreviousBalanceSheetSelectorViewModel.SelectedSheet;
             input.CurrentJournalFileName = JournalSelectorViewModel.InputFileName;
             input.CurrentJournalSheetName = JournalSelectorViewModel.SelectedSheet;
-            _dataStore.PutPackage(input ,WorkFlowViewModel.InputParametersPackage);
+            _dataStore.PutPackage(input ,WorkFlowViewModel.InputParametersPackageDefinition);
 
             _nextStep.Invoke();
 

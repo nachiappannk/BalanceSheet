@@ -114,8 +114,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void ProcessInputAndGenerateOutput()
         {
-            var input = _dataStore.GetPackage<InputForBalanceSheetComputation>
-                (WorkFlowViewModel.InputParametersPackage);
+            var input = _dataStore.GetPackage(WorkFlowViewModel.InputParametersPackageDefinition);
             var startDate = input.AccountingPeriodStartDate;
             var endDate = input.AccountingPeriodEndDate;
 
@@ -171,16 +170,16 @@ namespace Nachiappan.BalanceSheetViewModel
             OverAllMessage = GetOverAllErrorMessage(errorsAndWarnings);
             
 
-            _dataStore.PutPackage(trialBalanseStatements, WorkFlowViewModel.TrialBalancePackage);
+            _dataStore.PutPackage(trialBalanseStatements, WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
 
-            _dataStore.PutPackage(statements, WorkFlowViewModel.InputJournalPackage);
+            _dataStore.PutPackage(statements, WorkFlowViewModel.InputJournalStatementsPackageDefintion);
 
             var trimmedJournalStatements = dateTrimmedStatements.ToList();
             trimmedJournalStatements.AddRange(accountTrimmedStatements);
-            _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalPackage);
-            _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetPacakge);
-            _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.BalanceSheetPackage);
-            _dataStore.PutPackage(allLedgers, WorkFlowViewModel.LedgersPackage);
+            _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalStatementsPackageDefintion);
+            _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
+            _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
+            _dataStore.PutPackage(allLedgers, WorkFlowViewModel.LedgersPackageDefinition);
         }
 
         private static void PerformAccountTrimmedStatementsValidation(List<TrimmedJournalStatement> filteredStatements, List<Information> errorsAndWarnings)

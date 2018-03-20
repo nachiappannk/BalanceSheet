@@ -19,17 +19,17 @@ namespace Nachiappan.BalanceSheetViewModel
             Action goToPrintStatementWorkFlowStep)
         {
 
-            _ledgerTypes = dataStore.GetPackage<Dictionary<string, LedgerType>>(WorkFlowViewModel.LedgerTypePackage);
+            _ledgerTypes = dataStore.GetPackage(WorkFlowViewModel.LedgerNameToTypeMapPackageDefinition);
 
             GoToPreviousCommand = new DelegateCommand(goToProcessingStep);
             GoToNextCommand = new DelegateCommand(goToPrintStatementWorkFlowStep);
             Name = "Verify Input/Output Statements";
-            PreviousBalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.PreviousBalanceSheetPacakge);
-            BalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.BalanceSheetPackage);
-            JournalStatements = GetStatements(dataStore, WorkFlowViewModel.InputJournalPackage);
-            TrimmedJournalStatements = GetTrimmedStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
+            PreviousBalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
+            BalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
+            JournalStatements = GetInputJournalStatement(dataStore);
+            TrimmedJournalStatements = GetTrimmedStatements(dataStore);
             SetTrailBalanceStatements(dataStore);
-            var allLedgers = dataStore.GetPackage<List<ILedger>>(WorkFlowViewModel.LedgersPackage);
+            var allLedgers = dataStore.GetPackage(WorkFlowViewModel.LedgersPackageDefinition);
             _ledgers = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
             LedgerNames = _ledgers.Select(x => x.Key).ToList();
             SelectedLedgerName = LedgerNames.ElementAt(0);
@@ -40,7 +40,7 @@ namespace Nachiappan.BalanceSheetViewModel
         private void SetTrailBalanceStatements(DataStore dataStore)
         {
             TrialBalanceStatements = dataStore
-                .GetPackage<List<TrialBalanceStatement>>(WorkFlowViewModel.TrialBalancePackage)
+                .GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition)
                 .Select(x => new DisplayableTrialBalanceStatement()
                 {
                     Account = x.Account,
@@ -50,9 +50,9 @@ namespace Nachiappan.BalanceSheetViewModel
                 }).ToList();
         }
 
-        private List<DisplayableTrimmedJournalStatement> GetTrimmedStatements(DataStore dataStore, string packageName)
+        private List<DisplayableTrimmedJournalStatement> GetTrimmedStatements(DataStore dataStore)
         {
-            var journalStatements = dataStore.GetPackage<List<TrimmedJournalStatement>>(packageName);
+            var journalStatements = dataStore.GetPackage(WorkFlowViewModel.TrimmedJournalStatementsPackageDefintion);
             return journalStatements.Select(x =>
                 new DisplayableTrimmedJournalStatement()   
                 {
@@ -66,9 +66,9 @@ namespace Nachiappan.BalanceSheetViewModel
                 }).ToList();
         }
 
-        private List<DisplayableJournalStatement> GetStatements(DataStore dataStore, string packageName)
+        private List<DisplayableJournalStatement> GetInputJournalStatement(DataStore dataStore)
         {
-            var journalStatements = dataStore.GetPackage<List<JournalStatement>>(packageName);
+            var journalStatements = dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion);
             return journalStatements.Select(x =>
                 new DisplayableJournalStatement()
                 {
@@ -81,9 +81,9 @@ namespace Nachiappan.BalanceSheetViewModel
                 }).ToList();
         }
 
-        private List<DisplayableStatement> GetBalanceSheetStatements(DataStore dataStore, string packageName)
+        private List<DisplayableStatement> GetBalanceSheetStatements(DataStore dataStore, PackageDefinition<List<Statement>> packageDefinition)
         {
-            var statements = dataStore.GetPackage<List<Statement>>(packageName);
+            var statements = dataStore.GetPackage(packageDefinition);
             var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
                 {

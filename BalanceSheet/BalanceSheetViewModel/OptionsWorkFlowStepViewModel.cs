@@ -16,7 +16,7 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToPreviousCommand = new DelegateCommand(goToPreviousStep);
             Name = "Options";
 
-            var ledgers = dataStore.GetPackage<List<ILedger>>(WorkFlowViewModel.LedgersPackage);
+            var ledgers = dataStore.GetPackage<List<ILedger>>(WorkFlowViewModel.LedgersPackageDefinition);
 
             var optionLedgers = ledgers
                 .Where(x => x.GetPossibleLedgerTypes().Count > 1)
@@ -24,13 +24,13 @@ namespace Nachiappan.BalanceSheetViewModel
 
             var optionDictionary = new Dictionary<string, LedgerType>();
 
-            if (dataStore.IsPackageStored<Dictionary<string, LedgerType>>(WorkFlowViewModel.LedgerTypePackage))
+            if (dataStore.IsPackageStored(WorkFlowViewModel.LedgerNameToTypeMapPackageDefinition))
             {
-                optionDictionary = dataStore.GetPackage<Dictionary<string, LedgerType>>(WorkFlowViewModel.LedgerTypePackage);
+                optionDictionary = dataStore.GetPackage(WorkFlowViewModel.LedgerNameToTypeMapPackageDefinition);
             }
             else
             {
-                dataStore.PutPackage(optionDictionary, WorkFlowViewModel.LedgerTypePackage);
+                dataStore.PutPackage(optionDictionary, WorkFlowViewModel.LedgerNameToTypeMapPackageDefinition);
             }
 
             LedgerOptions = optionLedgers.Select(y => new LedgerOptionViewModel(y, optionDictionary)).ToList();

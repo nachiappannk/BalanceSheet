@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Nachiappan.BalanceSheetViewModel.Annotations;
 
@@ -6,54 +7,61 @@ namespace Nachiappan.BalanceSheetViewModel
 {
     public class WorkFlowViewModel : INotifyPropertyChanged
     {
+        public static readonly PackageDefinition<List<JournalStatement>> InputJournalStatementsPackageDefintion 
+            = new PackageDefinition<List<JournalStatement>>(nameof(InputJournalStatementsPackageDefintion));
 
-        public const string InputJournalPackage = nameof(InputJournalPackage);
-        public const string TrimmedJournalPackage = nameof(TrimmedJournalPackage);
-        public const string PreviousBalanceSheetPacakge = nameof(PreviousBalanceSheetPacakge);
-        public const string InputParametersPackage = nameof(InputParametersPackage);
-        public const string TrialBalancePackage = nameof(TrialBalancePackage);
-        public const string BalanceSheetPackage = nameof(BalanceSheetPackage);
-        public const string LedgersPackage = nameof(LedgersPackage);
-        public const string LedgerTypePackage = nameof(LedgerTypePackage);
+        public static readonly PackageDefinition<List<TrimmedJournalStatement>> TrimmedJournalStatementsPackageDefintion
+            = new PackageDefinition<List<TrimmedJournalStatement>>(nameof(TrimmedJournalStatementsPackageDefintion));
+        
+        public static readonly PackageDefinition<List<Statement>> PreviousBalanceSheetStatementsPackageDefinition = 
+            new PackageDefinition<List<Statement>>(nameof(PreviousBalanceSheetStatementsPackageDefinition));
+
+        public static readonly PackageDefinition<List<Statement>> BalanceSheetStatementsPackageDefinition =
+            new PackageDefinition<List<Statement>>(nameof(BalanceSheetStatementsPackageDefinition));
+
+        public static readonly PackageDefinition<InputForBalanceSheetComputation> InputParametersPackageDefinition = 
+            new PackageDefinition<InputForBalanceSheetComputation>(nameof(InputParametersPackageDefinition));
+
+        public static readonly PackageDefinition<List<TrialBalanceStatement>> TrialBalanceStatementsPackageDefinition = 
+            new PackageDefinition<List<TrialBalanceStatement>>(nameof(TrialBalanceStatementsPackageDefinition));
+
+        public static readonly PackageDefinition<List<ILedger>> LedgersPackageDefinition = 
+            new PackageDefinition<List<ILedger>>(nameof(LedgersPackageDefinition));
+
+        public static readonly PackageDefinition<Dictionary<string, LedgerType>> LedgerNameToTypeMapPackageDefinition = 
+            new PackageDefinition<Dictionary<string, LedgerType>>(nameof(LedgerNameToTypeMapPackageDefinition));
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private readonly DataStore _dataStore;
+
+        private WorkFlowStepViewModel _currentStep;
         public WorkFlowStepViewModel CurrentStep
         {
-            get { return _currentStep; }
+            get => _currentStep;
             set
             {
                 _currentStep = value;
                 FirePropertyChanged();
             }
         }
-
         
-
-
-        private DataStore _dataStore;
-        private WorkFlowStepViewModel _currentStep;
-
-
         public WorkFlowViewModel()
         {
             _dataStore = new DataStore();
-
             GoToAboutApplicationStep();
         }
 
-
-        private void GoToPrintStatementWorkFlowStep()
+        private void GoToAboutApplicationStep()
         {
-            CurrentStep = new PrintOutputWorkFlowStepViewModel(_dataStore, GoToStatementVerifyingWorkFlowStep);
+            CurrentStep = new AboutApplicationWorkFlowStepViewModel(GoToInputStep);
         }
 
-
-        private void GoToStatementVerifyingWorkFlowStep()
+        private void GoToInputStep()
         {
-            CurrentStep = new StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToProcessingStep, GoToPrintStatementWorkFlowStep);
+            CurrentStep = new InputWorkFlowStepViewModel(_dataStore, GoToProcessingStep, GoToAboutApplicationStep);
         }
-
 
         private void GoToProcessingStep()
         {
@@ -65,14 +73,14 @@ namespace Nachiappan.BalanceSheetViewModel
             CurrentStep = new OptionsWorkFlowStepViewModel(_dataStore, GoToProcessingStep, GoToStatementVerifyingWorkFlowStep);
         }
 
-        private void GoToInputStep()
+        private void GoToStatementVerifyingWorkFlowStep()
         {
-            CurrentStep = new InputWorkFlowStepViewModel(_dataStore, GoToProcessingStep, GoToAboutApplicationStep);
+            CurrentStep = new StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToOptionsStep, GoToPrintStatementWorkFlowStep);
         }
 
-        private void GoToAboutApplicationStep()
+        private void GoToPrintStatementWorkFlowStep()
         {
-            CurrentStep = new AboutApplicationWorkFlowStepViewModel(GoToInputStep);
+            CurrentStep = new PrintOutputWorkFlowStepViewModel(_dataStore, GoToStatementVerifyingWorkFlowStep);
         }
 
         [NotifyPropertyChangedInvocator]

@@ -65,7 +65,7 @@ namespace Nachiappan.BalanceSheetViewModel
             var headings = new List<string> {"S.No.", "Account", "Tag", "Credit", "Debit"};
 
             var trialBalanceStatements =
-                _dataStore.GetPackage<List<TrialBalanceStatement>>(WorkFlowViewModel.TrialBalancePackage);
+                _dataStore.GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
 
             using (var writer = new ExcelSheetWriter(outputFileName, "TrialBalance"))
             {
@@ -90,7 +90,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void WritePreviousBalanceSheet(string outputFileName)
         {
-            var balanceStatements = _dataStore.GetPackage<List<Statement>>(WorkFlowViewModel.PreviousBalanceSheetPacakge);
+            var balanceStatements = _dataStore.GetPackage(WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
             BalanceSheetGateway gateway = new BalanceSheetGateway(outputFileName);
             gateway.WriteBalanceSheet(balanceStatements, "PreviousBS");
         }
@@ -98,7 +98,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void WriteJournal(String fileName)
         {
-            var journalStatements = _dataStore.GetPackage<List<JournalStatement>>(WorkFlowViewModel.InputJournalPackage);
+            var journalStatements = _dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion);
             JournalGateway gateway = new JournalGateway(fileName);
             gateway.WriteJournal(journalStatements);
         }       

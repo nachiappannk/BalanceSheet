@@ -7,7 +7,8 @@
         xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
         d:DataContext="{d:DesignInstance balanceSheetViewModel:WorkFlowViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        WindowState="Maximized"
+        Title="Balance Sheet" Height="400" Width="600" MinHeight="400" MinWidth="600">
     <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type balanceSheetViewModel:InputWorkFlowStepViewModel}">
