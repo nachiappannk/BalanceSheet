@@ -1,4 +1,4 @@
-﻿namespace Nachiappan.BalanceSheetViewModel
+﻿namespace Nachiappan.BalanceSheetViewModel.Model
 {
     public interface ILogger
     {

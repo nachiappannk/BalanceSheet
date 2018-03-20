@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using System;
 using System.IO;
+using Nachiappan.BalanceSheetViewModel.Model;
 using Nachiappan.BalanceSheetViewModel.Model.Excel;
 
 namespace Nachiappan.BalanceSheetViewModel

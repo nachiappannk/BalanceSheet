@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Nachiappan.BalanceSheetViewModel.Annotations;
+using Nachiappan.BalanceSheetViewModel.Model;
 using Nachiappan.BalanceSheetViewModel.Model.Ledger;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
 

@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutApplicationWorkFlowStepViewModel.cs" />
+    <Compile Include="Model\ExcelGateway\BalanceSheetGateway.cs" />
     <Compile Include="Model\DataStore.cs" />
     <Compile Include="Model\Excel\ExcelReader.cs" />
     <Compile Include="Model\Excel\ExcelSheetInfoProvider.cs" />
@@ -74,11 +75,11 @@
     <Compile Include="Model\Statements\IHasValue.cs" />
     <Compile Include="Model\Ledger\LedgerType.cs" />
     <Compile Include="Model\Ledger\ILedger.cs" />
-    <Compile Include="ILogger.cs" />
+    <Compile Include="Model\ILogger.cs" />
     <Compile Include="InputForBalanceSheetComputation.cs" />
     <Compile Include="InputWorkFlowStepViewModel.cs" />
     <Compile Include="Model\Excel\IRowCellsReader.cs" />
-    <Compile Include="JournalGateway.cs" />
+    <Compile Include="Model\ExcelGateway\JournalGateway.cs" />
     <Compile Include="Model\Statements\JournalStatement.cs" />
     <Compile Include="Model\Ledger\LedgerHolder.cs" />
     <Compile Include="Model\LedgerClassifer.cs" />
@@ -102,5 +103,6 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Docs\PreviousBalanceSheetTemplate.xlsx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

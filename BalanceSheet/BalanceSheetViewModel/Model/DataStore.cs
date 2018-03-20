@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Nachiappan.BalanceSheetViewModel
+namespace Nachiappan.BalanceSheetViewModel.Model
 {
     public class DataStore
     {
