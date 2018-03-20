@@ -39,20 +39,25 @@
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
+                <TabItem Header="Trial Balance">
+                    <local:FormatableDataGrid ItemsSource="{Binding TrialBalanceStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                </TabItem>
+
                 <TabItem Header="Balance Sheet">
                     <local:FormatableDataGrid ItemsSource="{Binding BalanceSheetStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
+
                 <TabItem Header="Journal">
                     <local:FormatableDataGrid ItemsSource="{Binding JournalStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
-                <TabItem Header="TrimmedJournal">
+                <TabItem Header="Trimmed Journal">
                     <local:FormatableDataGrid ItemsSource="{Binding TrimmedJournalStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
-
 
                 <TabItem Header="Ledgers">
                     <Grid>
@@ -76,10 +81,7 @@
                 </TabItem>
 
 
-                <TabItem Header="TrialBalance">
-                    <local:FormatableDataGrid ItemsSource="{Binding TrialBalanceStatements}" 
-                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
-                </TabItem>
+                
             </TabControl>
         </Grid>    
         

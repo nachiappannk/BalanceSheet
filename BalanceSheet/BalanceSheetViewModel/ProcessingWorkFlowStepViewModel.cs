@@ -185,7 +185,7 @@ namespace Nachiappan.BalanceSheetViewModel
             _dataStore.PutPackage(ledgerDictionary , WorkFlowViewModel.LedgersPackage);
         }
 
-        private static void PerformAccountTrimmedStatementsValidation(List<JournalStatement> filteredStatements, List<Information> errorsAndWarnings)
+        private static void PerformAccountTrimmedStatementsValidation(List<TrimmedJournalStatement> filteredStatements, List<Information> errorsAndWarnings)
         {
             if (filteredStatements.Any())
             {
@@ -198,7 +198,7 @@ namespace Nachiappan.BalanceSheetViewModel
         }
 
         private static void TrimJournalStatementsBasedOnAccountAndDescription(List<JournalStatement> statements,
-            out List<JournalStatement> filteredStatements)
+            out List<TrimmedJournalStatement> filteredStatements)
         {
             var filteredStatements1 = statements.Where(x =>
             {
@@ -214,9 +214,9 @@ namespace Nachiappan.BalanceSheetViewModel
             var filteredStatements2 = statements.Where(x => string.IsNullOrWhiteSpace(x.DetailedDescription)).ToList();
             statements.RemoveAll(x => filteredStatements2.Contains(x));
 
-            filteredStatements = new List<JournalStatement>();
-            filteredStatements.AddRange(filteredStatements1);
-            filteredStatements.AddRange(filteredStatements2);
+            filteredStatements = new List<TrimmedJournalStatement>();
+            filteredStatements.AddRange(filteredStatements1.Select(x => new TrimmedJournalStatement(x, "The account is invalid")));
+            filteredStatements.AddRange(filteredStatements2.Select(x => new TrimmedJournalStatement(x, "The description is invalid")));
         }
 
         private static string GetOverAllErrorMessage(List<Information> errorsAndWarnings)
@@ -233,7 +233,7 @@ namespace Nachiappan.BalanceSheetViewModel
         }
 
         private static void PerformDateTrimmedStatementValidations
-            (List<JournalStatement> trimmedStatements, List<Information> errorsAndWarnings)
+            (List<TrimmedJournalStatement> trimmedStatements, List<Information> errorsAndWarnings)
         {
             if (trimmedStatements.Any())
             {
@@ -246,14 +246,16 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private static void TrimJournalStatementsBasedOnDate(List<JournalStatement> statements,
             DateTime startDate, DateTime endDate,
-            out List<JournalStatement> trimmedStatements)
+            out List<TrimmedJournalStatement> trimmedStatements)
         {
             var statementsBeforePeriod = statements.Where(x => x.Date < startDate).ToList();
             statements.RemoveAll(x => statementsBeforePeriod.Contains(x));
             var statementsAfterPeriod = statements.Where(x => x.Date > endDate).ToList();
             statements.RemoveAll(x => statementsAfterPeriod.Contains(x));
-            trimmedStatements = statementsAfterPeriod.ToList();
-            trimmedStatements.AddRange(statementsBeforePeriod);
+            trimmedStatements = statementsAfterPeriod
+                .Select(x => new TrimmedJournalStatement(x, "After the end of  accounting period")).ToList();
+            trimmedStatements.AddRange(statementsBeforePeriod.Select(x =>
+                new TrimmedJournalStatement(x, "Before the start of accounting period")));
         }
 
         private static void ReadInputStatements(InputForBalanceSheetComputation input,
@@ -286,7 +288,6 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private static void CorrectAccountNesting(List<JournalStatement> journalStatements)
         {
-            //journalStatements.ForEach(x => x.Description = x.Description.Replace(@"/","#"));
             journalStatements.ForEach(x => x.Description = x.Description.Replace(@"\", "/"));
         }
 

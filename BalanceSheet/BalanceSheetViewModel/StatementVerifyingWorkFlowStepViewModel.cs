@@ -23,7 +23,7 @@ namespace Nachiappan.BalanceSheetViewModel
             PreviousBalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.PreviousBalanceSheetPacakge);
             BalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.BalanceSheetPackage);
             JournalStatements = GetStatements(dataStore, WorkFlowViewModel.InputJournalPackage);
-            TrimmedJournalStatements = GetStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
+            TrimmedJournalStatements = GetTrimmedStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
             SetTrailBalanceStatements(dataStore);
             _ledgers = dataStore.GetPackage<Dictionary<string, ILedger>>(WorkFlowViewModel.LedgersPackage);
             LedgerNames = _ledgers.Select(x => x.Key).ToList();
@@ -45,11 +45,27 @@ namespace Nachiappan.BalanceSheetViewModel
                 }).ToList();
         }
 
+        private List<DisplayableTrimmedJournalStatement> GetTrimmedStatements(DataStore dataStore, string packageName)
+        {
+            var journalStatements = dataStore.GetPackage<List<TrimmedJournalStatement>>(packageName);
+            return journalStatements.Select(x =>
+                new DisplayableTrimmedJournalStatement()   
+                {
+                    Description = x.Description,
+                    Date = x.Date,
+                    DetailedDescription = x.DetailedDescription,
+                    Tag = x.Tag,
+                    Credit = x.GetCreditValueOrNull(),
+                    Debit = x.GetDebitValueOrNull(),
+                    Reason = x.Reason,
+                }).ToList();
+        }
+
         private List<DisplayableJournalStatement> GetStatements(DataStore dataStore, string packageName)
         {
             var journalStatements = dataStore.GetPackage<List<JournalStatement>>(packageName);
             return journalStatements.Select(x =>
-                new DisplayableJournalStatement()   
+                new DisplayableJournalStatement()
                 {
                     Description = x.Description,
                     Date = x.Date,
@@ -80,7 +96,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public List<DisplayableJournalStatement> JournalStatements { get; set; }
 
-        public List<DisplayableJournalStatement> TrimmedJournalStatements { get; set; }
+        public List<DisplayableTrimmedJournalStatement> TrimmedJournalStatements { get; set; }
 
         public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
 
@@ -201,6 +217,35 @@ namespace Nachiappan.BalanceSheetViewModel
         [DisplayName("Debit")]
         public double? Debit { get; set; }
         
+    }
+
+    public class DisplayableTrimmedJournalStatement
+    {
+
+        [DisplayName("Date")]
+        [DisplayFormat(DataFormatString = CommonDefinition.DateDisplayFormat)]
+        public DateTime Date { get; set; }
+
+        [DisplayName("Account")]
+        public string Description { get; set; }
+
+        [DisplayName("Tag")]
+        public string Tag { get; set; }
+
+        [DisplayName("Description")]
+        public string DetailedDescription { get; set; }
+
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        [DisplayName("Credit")]
+        public double? Credit { get; set; }
+
+
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        [DisplayName("Debit")]
+        public double? Debit { get; set; }
+
+        public string Reason { get; set; }
+
     }
 
 
