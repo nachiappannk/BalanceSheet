@@ -20,7 +20,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 if (_isValid != value)
                 {
                     _isValid = value;
-                    ValidityChanged.Invoke();
+                    ValidityChanged?.Invoke();
                 }
             }
         }
