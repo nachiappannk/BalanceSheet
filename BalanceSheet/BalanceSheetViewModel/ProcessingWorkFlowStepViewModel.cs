@@ -151,9 +151,7 @@ namespace Nachiappan.BalanceSheetViewModel
             }
             holder.CloseNominalLedgers();
             var allLedgers = holder.GetAllLedgers();
-            var ledgerDictionary = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
-
-
+            
             var ledgers = holder.GetRealLedgers();
 
             var balanceSheetStatements = ledgers.Select(x => new Statement()
@@ -182,7 +180,7 @@ namespace Nachiappan.BalanceSheetViewModel
             _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalPackage);
             _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetPacakge);
             _dataStore.PutPackage(balanceSheetStatements, WorkFlowViewModel.BalanceSheetPackage);
-            _dataStore.PutPackage(ledgerDictionary , WorkFlowViewModel.LedgersPackage);
+            _dataStore.PutPackage(allLedgers, WorkFlowViewModel.LedgersPackage);
         }
 
         private static void PerformAccountTrimmedStatementsValidation(List<TrimmedJournalStatement> filteredStatements, List<Information> errorsAndWarnings)
@@ -560,11 +558,48 @@ namespace Nachiappan.BalanceSheetViewModel
             return ledgerStatements.ToList();
         }
 
+        public List<LedgerStatement> GetLedgerStatements(LedgerType ledgerType)
+        {
+            bool isInversionRequired = false;
+            if (GetPossibleLedgerTypes().Contains(ledgerType))
+            {
+                if (ledgerType == LedgerType.Asset) isInversionRequired = true;
+                if (ledgerType == LedgerType.Liability) isInversionRequired = true;
+                if (ledgerType == LedgerType.Equity) isInversionRequired = false;
+            }
+
+            var ledgerStatements = GetLedgerStatements();
+
+            double factor = 1;
+            if(isInversionRequired) factor = -1;
+            return ledgerStatements.Select(x => new LedgerStatement()
+            {
+                SerialNumber = x.SerialNumber,
+                Date = x.Date,
+                Description = x.Description,
+                Value = x.Value * factor,
+            }).ToList();
+        }
+
+        public List<LedgerType> GetPossibleLedgerTypes()
+        {
+            if (ledgerValue < 0) return new List<LedgerType>() { LedgerType.Asset};
+            else return new List<LedgerType>(){LedgerType.Equity, LedgerType.Liability};
+        }
+        
         public string GetLedgerType()
         {
             if (ledgerValue > 0) return "Equity or Liability";
             else return "Asset";
         }
+    }
+
+    public enum LedgerType
+    {
+        Notional,
+        Asset,
+        Liability,
+        Equity,
     }
 
 
@@ -574,7 +609,8 @@ namespace Nachiappan.BalanceSheetViewModel
         void PostTransaction(DateTime date, string statement, double value);
         double GetLedgerValue();
         List<LedgerStatement> GetLedgerStatements();
-
+        List<LedgerType> GetPossibleLedgerTypes();
+        List<LedgerStatement> GetLedgerStatements(LedgerType ledgerType);
         string GetLedgerType();
     }
 
@@ -591,6 +627,16 @@ namespace Nachiappan.BalanceSheetViewModel
         public List<LedgerStatement> GetLedgerStatements()
         {
             return ledgerStatements.ToList();
+        }
+
+        public List<LedgerType> GetPossibleLedgerTypes()
+        {
+            return new List<LedgerType>(){LedgerType.Notional};
+        }
+
+        public List<LedgerStatement> GetLedgerStatements(LedgerType ledgerType)
+        {
+            return GetLedgerStatements();
         }
 
         public string GetLedgerType()

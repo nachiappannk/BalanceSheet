@@ -14,6 +14,7 @@ namespace Nachiappan.BalanceSheetViewModel
         public const string TrialBalancePackage = nameof(TrialBalancePackage);
         public const string BalanceSheetPackage = nameof(BalanceSheetPackage);
         public const string LedgersPackage = nameof(LedgersPackage);
+        public const string LedgerTypePackage = nameof(LedgerTypePackage);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -56,7 +57,12 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToProcessingStep()
         {
-            CurrentStep = new ProcessingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToStatementVerifyingWorkFlowStep);
+            CurrentStep = new ProcessingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToOptionsStep);
+        }
+
+        private void GoToOptionsStep()
+        {
+            CurrentStep = new OptionsWorkFlowStepViewModel(_dataStore, GoToProcessingStep, GoToStatementVerifyingWorkFlowStep);
         }
 
         private void GoToInputStep()

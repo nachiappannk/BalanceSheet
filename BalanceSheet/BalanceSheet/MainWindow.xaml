@@ -29,6 +29,10 @@
                 <local:PrintOutputWorkFlowStepUserControl/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:OptionsWorkFlowStepViewModel}">
+                <local:OptionsWorkFlowStepUserControl/>
+            </DataTemplate>
+
         </Grid.Resources>
         <ContentPresenter Content="{Binding CurrentStep}"/>
 

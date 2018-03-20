@@ -77,6 +77,7 @@
     <Compile Include="IRowCellsReader.cs" />
     <Compile Include="JournalGateway.cs" />
     <Compile Include="JournalStatement.cs" />
+    <Compile Include="OptionsWorkFlowStepViewModel.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />
     <Compile Include="ProcessingWorkFlowStepViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />

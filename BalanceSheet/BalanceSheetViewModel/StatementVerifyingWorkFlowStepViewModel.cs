@@ -8,15 +8,19 @@ using Prism.Commands;
 namespace Nachiappan.BalanceSheetViewModel
 {
     public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
-    {
+    {        
         private string _selectedLedgerName;
         private Dictionary<string, ILedger> _ledgers;
         private List<DisplayableLedgerStatement> _ledgerStatements;
         private string _ledgerType;
+        private Dictionary<string, LedgerType> _ledgerTypes;
 
         public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToProcessingStep, 
             Action goToPrintStatementWorkFlowStep)
         {
+
+            _ledgerTypes = dataStore.GetPackage<Dictionary<string, LedgerType>>(WorkFlowViewModel.LedgerTypePackage);
+
             GoToPreviousCommand = new DelegateCommand(goToProcessingStep);
             GoToNextCommand = new DelegateCommand(goToPrintStatementWorkFlowStep);
             Name = "Verify Input/Output Statements";
@@ -25,7 +29,8 @@ namespace Nachiappan.BalanceSheetViewModel
             JournalStatements = GetStatements(dataStore, WorkFlowViewModel.InputJournalPackage);
             TrimmedJournalStatements = GetTrimmedStatements(dataStore, WorkFlowViewModel.TrimmedJournalPackage);
             SetTrailBalanceStatements(dataStore);
-            _ledgers = dataStore.GetPackage<Dictionary<string, ILedger>>(WorkFlowViewModel.LedgersPackage);
+            var allLedgers = dataStore.GetPackage<List<ILedger>>(WorkFlowViewModel.LedgersPackage);
+            _ledgers = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
             LedgerNames = _ledgers.Select(x => x.Key).ToList();
             SelectedLedgerName = LedgerNames.ElementAt(0);
 
@@ -132,7 +137,15 @@ namespace Nachiappan.BalanceSheetViewModel
                 if (_ledgers.ContainsKey(value))
                 {
                     var ledger = _ledgers[value];
-                    var statements = ledger.GetLedgerStatements();
+
+                    var ledgerType = BalanceSheetViewModel.LedgerType.Asset;
+                    if (_ledgerTypes.ContainsKey(value))
+                    {
+                        ledgerType = _ledgerTypes[value];
+                    }
+                    
+                    var statements = ledger.GetLedgerStatements(ledgerType);
+
                     LedgerStatements = statements.Select(x => new DisplayableLedgerStatement()
                     {
                         SerialNumber = x.SerialNumber,
