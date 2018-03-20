@@ -40,7 +40,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "HelpDocument",
                 ".docx",
                 "Excel File (.docx)|*.docx",
-                "Nachiappan.BalanceSheetViewModel.HelpDocument.docx");
+                "Nachiappan.BalanceSheetViewModel.Docs.HelpDocument.docx");
         }
 
         private void SaveSampleBalanceSheet()
@@ -50,7 +50,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "BalanceSheetFormat",
                 ".xlsx",
                 "Excel File (.xlsx)|*.xlsx",
-                "Nachiappan.BalanceSheetViewModel.PreviousBalanceSheetTemplate.xlsx");
+                "Nachiappan.BalanceSheetViewModel.Docs.PreviousBalanceSheetTemplate.xlsx");
         }
 
         private void SaveJournal()
@@ -60,7 +60,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "JournalFormat",
                 ".xlsx",
                 "Excel File (.xlsx)|*.xlsx",
-                "Nachiappan.BalanceSheetViewModel.CurrentJournalTemplate.xlsx");
+                "Nachiappan.BalanceSheetViewModel.Docs.CurrentJournalTemplate.xlsx");
         }
 
         private void SaveFile(string saveFileTitle, string defaultFileName, string outputFileExtention, string filter,

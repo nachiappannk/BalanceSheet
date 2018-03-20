@@ -88,10 +88,10 @@
     <Compile Include="WorkFlowViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CurrentJournalTemplate.xlsx" />
-    <EmbeddedResource Include="HelpDocument.docx" />
+    <EmbeddedResource Include="Docs\CurrentJournalTemplate.xlsx" />
+    <EmbeddedResource Include="Docs\HelpDocument.docx" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="PreviousBalanceSheetTemplate.xlsx" />
+    <EmbeddedResource Include="Docs\PreviousBalanceSheetTemplate.xlsx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
