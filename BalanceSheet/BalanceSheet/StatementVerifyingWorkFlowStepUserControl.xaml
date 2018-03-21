@@ -59,6 +59,11 @@
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
+                <TabItem Header="Trimmed BalanceSheet">
+                    <local:FormatableDataGrid ItemsSource="{Binding TrimmedBalanceSheetStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                </TabItem>
+
                 <TabItem Header="Ledgers">
                     <Grid>
                         <Grid.RowDefinitions>

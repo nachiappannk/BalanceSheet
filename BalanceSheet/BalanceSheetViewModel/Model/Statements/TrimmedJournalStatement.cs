@@ -6,18 +6,18 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Statements
     {
         public TrimmedJournalStatement(JournalStatement x, string reason)
         {
-            Description = x.Description;
+            Account = x.Account;
             Date = x.Date;
             Value = x.Value;
-            DetailedDescription = x.DetailedDescription;
+            Description = x.Description;
             Tag = x.Tag;
             Reason = reason;
         }
 
-        public string Description { get; set; }
+        public string Account { get; set; }
         public DateTime Date { get; set; }
         public double Value { get; set; }
-        public string DetailedDescription { get; set; }
+        public string Description { get; set; }
         public string Tag { get; set; }
         public string Reason { get; set; }
     }

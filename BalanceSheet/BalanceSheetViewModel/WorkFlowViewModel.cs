@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Nachiappan.BalanceSheetViewModel.Annotations;
 using Nachiappan.BalanceSheetViewModel.Model;
-using Nachiappan.BalanceSheetViewModel.Model.Ledger;
+using Nachiappan.BalanceSheetViewModel.Model.Account;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
 
 namespace Nachiappan.BalanceSheetViewModel
@@ -28,11 +28,14 @@ namespace Nachiappan.BalanceSheetViewModel
         public static readonly PackageDefinition<List<TrialBalanceStatement>> TrialBalanceStatementsPackageDefinition = 
             new PackageDefinition<List<TrialBalanceStatement>>(nameof(TrialBalanceStatementsPackageDefinition));
 
-        public static readonly PackageDefinition<List<ILedger>> LedgersPackageDefinition = 
-            new PackageDefinition<List<ILedger>>(nameof(LedgersPackageDefinition));
+        public static readonly PackageDefinition<List<IAccount>> AccountsPackageDefinition = 
+            new PackageDefinition<List<IAccount>>(nameof(AccountsPackageDefinition));
 
-        public static readonly PackageDefinition<Dictionary<string, LedgerType>> LedgerNameToTypeMapPackageDefinition = 
-            new PackageDefinition<Dictionary<string, LedgerType>>(nameof(LedgerNameToTypeMapPackageDefinition));
+        public static readonly PackageDefinition<Dictionary<string, AccountType>> AccountNameToTypeMapPackageDefinition = 
+            new PackageDefinition<Dictionary<string, AccountType>>(nameof(AccountNameToTypeMapPackageDefinition));
+
+        public static readonly PackageDefinition<List<TrimmedBalanceSheetStatement>> TrimmedPreviousBalanceSheetStatements = 
+            new PackageDefinition<List<TrimmedBalanceSheetStatement>>(nameof(TrimmedPreviousBalanceSheetStatements));
 
 
         public event PropertyChangedEventHandler PropertyChanged;

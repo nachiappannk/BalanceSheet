@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Nachiappan.BalanceSheetViewModel.Model;
-using Nachiappan.BalanceSheetViewModel.Model.Ledger;
+using Nachiappan.BalanceSheetViewModel.Model.Account;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
 using Prism.Commands;
 
@@ -13,16 +13,16 @@ namespace Nachiappan.BalanceSheetViewModel
     public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
     {        
         private string _selectedLedgerName;
-        private Dictionary<string, ILedger> _ledgers;
+        private Dictionary<string, IAccount> _ledgers;
         private List<DisplayableLedgerStatement> _ledgerStatements;
         private string _ledgerType;
-        private Dictionary<string, LedgerType> _ledgerTypes;
+        private Dictionary<string, AccountType> _ledgerTypes;
 
         public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToProcessingStep, 
             Action goToPrintStatementWorkFlowStep)
         {
 
-            _ledgerTypes = dataStore.GetPackage(WorkFlowViewModel.LedgerNameToTypeMapPackageDefinition);
+            _ledgerTypes = dataStore.GetPackage(WorkFlowViewModel.AccountNameToTypeMapPackageDefinition);
 
             GoToPreviousCommand = new DelegateCommand(goToProcessingStep);
             GoToNextCommand = new DelegateCommand(goToPrintStatementWorkFlowStep);
@@ -32,12 +32,14 @@ namespace Nachiappan.BalanceSheetViewModel
             JournalStatements = GetInputJournalStatement(dataStore);
             TrimmedJournalStatements = GetTrimmedStatements(dataStore);
             SetTrailBalanceStatements(dataStore);
-            var allLedgers = dataStore.GetPackage(WorkFlowViewModel.LedgersPackageDefinition);
+            var allLedgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
             _ledgers = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
             LedgerNames = _ledgers.Select(x => x.Key).ToList();
             SelectedLedgerName = LedgerNames.ElementAt(0);
 
-
+            TrimmedBalanceSheetStatements = dataStore
+                    .GetPackage(WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements)
+                    .Select(x => new DisplayableTrimmedBalanceSheetStatement(x)).ToList();
         }
 
         private void SetTrailBalanceStatements(DataStore dataStore)
@@ -59,9 +61,9 @@ namespace Nachiappan.BalanceSheetViewModel
             return journalStatements.Select(x =>
                 new DisplayableTrimmedJournalStatement()   
                 {
-                    Description = x.Description,
+                    Description = x.Account,
                     Date = x.Date,
-                    DetailedDescription = x.DetailedDescription,
+                    DetailedDescription = x.Description,
                     Tag = x.Tag,
                     Credit = x.GetCreditValueOrNull(),
                     Debit = x.GetDebitValueOrNull(),
@@ -75,9 +77,9 @@ namespace Nachiappan.BalanceSheetViewModel
             return journalStatements.Select(x =>
                 new DisplayableJournalStatement()
                 {
-                    Description = x.Description,
+                    Description = x.Account,
                     Date = x.Date,
-                    DetailedDescription = x.DetailedDescription,
+                    DetailedDescription = x.Description,
                     Tag = x.Tag,
                     Credit = x.GetCreditValueOrNull(),
                     Debit = x.GetDebitValueOrNull(),
@@ -90,7 +92,7 @@ namespace Nachiappan.BalanceSheetViewModel
             var displayableStatements = statements
                 .Select(x => new DisplayableStatement()
                 {
-                    Description = x.Description,
+                    Description = x.Account,
                     Credit = HasValueExtentions.GetCreditValueOrNull(x),
                     Debit = HasValueExtentions.GetDebitValueOrNull(x),
                 })
@@ -99,6 +101,8 @@ namespace Nachiappan.BalanceSheetViewModel
         }
 
         public List<DisplayableStatement>   PreviousBalanceSheetStatements { get; set; }
+
+        public List<DisplayableTrimmedBalanceSheetStatement> TrimmedBalanceSheetStatements { get; set; }
 
         public List<DisplayableStatement> BalanceSheetStatements { get; set; }
 
@@ -141,13 +145,13 @@ namespace Nachiappan.BalanceSheetViewModel
                 {
                     var ledger = _ledgers[value];
 
-                    var ledgerType = Model.Ledger.LedgerType.Asset;
+                    var ledgerType = Model.Account.AccountType.Asset;
                     if (_ledgerTypes.ContainsKey(value))
                     {
                         ledgerType = _ledgerTypes[value];
                     }
                     
-                    var statements = ledger.GetLedgerStatements(ledgerType);
+                    var statements = ledger.GetAccountStatements(ledgerType);
 
                     LedgerStatements = statements.Select(x => new DisplayableLedgerStatement()
                     {
@@ -157,7 +161,7 @@ namespace Nachiappan.BalanceSheetViewModel
                         Credit = x.GetCreditValueOrNull(),
                         Debit = x.GetDebitValueOrNull(),
                     }).ToList();
-                    LedgerType = ledger.GetLedgerType();
+                    LedgerType = ledger.GetAccountType();
                 }
 
                 FirePropertyChanged();
@@ -262,6 +266,32 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public string Reason { get; set; }
 
+    }
+
+
+    public class DisplayableTrimmedBalanceSheetStatement
+    {
+        public DisplayableTrimmedBalanceSheetStatement(TrimmedBalanceSheetStatement statement)
+        {
+            Account = statement.Account;
+            Credit = statement.GetCreditValueOrNull();
+            Debit = statement.GetDebitValueOrNull();
+            Reason = statement.Reason;
+        }
+
+        [DisplayName("Account")]
+        public string Account { get; set; }
+
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        [DisplayName("Credit")]
+        public double? Credit { get; set; }
+
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        [DisplayName("Debit")]
+        public double? Debit { get; set; }
+
+        [DisplayName("Reason")]
+        public string Reason { get; set; }
     }
 
 

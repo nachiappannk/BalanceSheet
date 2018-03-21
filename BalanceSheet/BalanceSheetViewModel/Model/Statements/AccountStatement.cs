@@ -2,7 +2,7 @@
 
 namespace Nachiappan.BalanceSheetViewModel.Model.Statements
 {
-    public class LedgerStatement : IHasValue
+    public class AccountStatement : IHasValue
     {
         public int SerialNumber { get; set; }
         public double Value { get; set; }

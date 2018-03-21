@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nachiappan.BalanceSheetViewModel.Model;
+using Nachiappan.BalanceSheetViewModel.Model.Account;
 using NUnit.Framework;
 
 namespace Nachiappan.BalanceSheetViewModel.Tests
@@ -15,7 +16,7 @@ namespace Nachiappan.BalanceSheetViewModel.Tests
         [Test]
         public void IsNominalLedger()
         {
-            var result = LedgerClassifer.IsNominalLedger("ssssss/ddd");
+            var result = AccountClassifer.IsNominalLedger("ssssss/ddd");
             Assert.AreEqual(true, result);
         }
 
@@ -23,21 +24,21 @@ namespace Nachiappan.BalanceSheetViewModel.Tests
         [Test]
         public void IsDoubleNominalLedger()
         {
-            var result = LedgerClassifer.IsDoubleNominalLedger("ssssss/ddd/sssdfs");
+            var result = AccountClassifer.IsDoubleNominalLedger("ssssss/ddd/sssdfs");
             Assert.AreEqual(true, result);
         }
 
         [Test]
         public void IsRealLedger()
         {
-            var result = LedgerClassifer.IsRealLedger("ssssss");
+            var result = AccountClassifer.IsRealLedger("ssssss");
             Assert.AreEqual(true, result);
         }
 
         [Test]
         public void NominalTests()
         {
-            var nominalPart = LedgerClassifer.GetNominalPartOfName("s1234/d1234");
+            var nominalPart = AccountClassifer.GetNominalPartOfName("s1234/d1234");
             Assert.AreEqual("d1234", nominalPart);
         }
 
@@ -45,7 +46,7 @@ namespace Nachiappan.BalanceSheetViewModel.Tests
         [Test]
         public void DoubleNominalTests()
         {
-            var nominalPart = LedgerClassifer.GetNominalPartOfName("s1234/d1234/f1234");
+            var nominalPart = AccountClassifer.GetNominalPartOfName("s1234/d1234/f1234");
             Assert.AreEqual("f1234", nominalPart);
         }
 
@@ -54,7 +55,7 @@ namespace Nachiappan.BalanceSheetViewModel.Tests
         [Test]
         public void NominalTestsRealPart()
         {
-            var nominalPart = LedgerClassifer.GetBasePartOfName("s1234/d1234");
+            var nominalPart = AccountClassifer.GetBasePartOfName("s1234/d1234");
             Assert.AreEqual("s1234", nominalPart);
         }
 
@@ -62,7 +63,7 @@ namespace Nachiappan.BalanceSheetViewModel.Tests
         [Test]
         public void DoubleNominalTestsRealPart()
         {
-            var nominalPart = LedgerClassifer.GetBasePartOfName("s1234/d1234/f1234");
+            var nominalPart = AccountClassifer.GetBasePartOfName("s1234/d1234/f1234");
             Assert.AreEqual("s1234/d1234", nominalPart);
         }
     }

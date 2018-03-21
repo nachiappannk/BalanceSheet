@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nachiappan.BalanceSheetViewModel.Model;
 using Nachiappan.BalanceSheetViewModel.Model.Excel;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
 
-namespace Nachiappan.BalanceSheetViewModel
+namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 {
     public class BalanceSheetGateway
     {
@@ -37,7 +36,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 writer.WriteList(index, balanceSheetStatements, (b, rowIndex) => new object[]
                 {
                     rowIndex - 1,
-                    b.Description,
+                    b.Account,
                     b.GetCreditValue(),
                     b.GetDebitValue(),
                 });
@@ -79,12 +78,12 @@ namespace Nachiappan.BalanceSheetViewModel
                     return new BalanceSheetStatementWithValidity()
                     {
                         IsValid = true,
-                        Description = r.ReadString(Ledger),
+                        Account = r.ReadString(Ledger),
                         Value = credit - debit,
                     };
                 }).ToList();
                 var balanceSheet = new List<BalanceSheetStatement>();
-                balanceSheet.AddRange(balanceSheetStatements.Where(x => x.IsValid).Select(y => new BalanceSheetStatement() { Description = y.Description, Value = y.Value }));
+                balanceSheet.AddRange(balanceSheetStatements.Where(x => x.IsValid).Select(y => new BalanceSheetStatement() { Account = y.Account, Value = y.Value }));
                 return balanceSheet;
             }
         }

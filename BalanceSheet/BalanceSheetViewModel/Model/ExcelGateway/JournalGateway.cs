@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nachiappan.BalanceSheetViewModel.Model;
 using Nachiappan.BalanceSheetViewModel.Model.Excel;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
 
-namespace Nachiappan.BalanceSheetViewModel
+namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 {
     public class JournalGateway
     {
@@ -43,9 +42,9 @@ namespace Nachiappan.BalanceSheetViewModel
                     {
                         rowIndex - 1,
                         j.Date,
-                        j.Description,
+                        j.Account,
                         j.Tag,
-                        j.DetailedDescription,
+                        j.Description,
                         j.GetCreditValue(),
                         j.GetDebitValue(),
                     });
@@ -89,9 +88,9 @@ namespace Nachiappan.BalanceSheetViewModel
                     return new JournalStatement()
                     {
                         Date = r.ReadDate(Date),
-                        Description = r.ReadString(LedgerName),
+                        Account = r.ReadString(LedgerName),
                         Tag = r.ReadString(Tag),
-                        DetailedDescription = r.ReadString(Description),
+                        Description = r.ReadString(Description),
                         Value = credit - debit,
                     };
                 }).ToList();

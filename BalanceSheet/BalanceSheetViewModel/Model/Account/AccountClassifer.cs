@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Nachiappan.BalanceSheetViewModel.Model
+namespace Nachiappan.BalanceSheetViewModel.Model.Account
 {
-    public static class LedgerClassifer
+    public static class AccountClassifer
     {
         private const string AccountNamePattern = @"[a-zA-Z0-9\s!@#$%^&*]+";
-        private const string SimpleAccountPattern = @"^("+AccountNamePattern+")$";
+        private const string RealAccountPattern = @"^("+AccountNamePattern+")$";
         private const string NominalAccountPattern = @"^(" + AccountNamePattern + ")/(" + AccountNamePattern + ")$";
         private const string DoubleNominalAccountPattern = @"^(" + AccountNamePattern + "/" + AccountNamePattern + ")/(" + AccountNamePattern + ")$";
 
-        private static Regex _simpleAccountPatternRegex = new Regex(SimpleAccountPattern, RegexOptions.IgnoreCase);
+        private static Regex _realAccountPatternRegex = new Regex(RealAccountPattern, RegexOptions.IgnoreCase);
         private static Regex _nominalAccountPatternRegex = new Regex(NominalAccountPattern, RegexOptions.IgnoreCase);
         private static Regex _doubleNominalAccountPatternRegex = new Regex(DoubleNominalAccountPattern, RegexOptions.IgnoreCase);
 
         public static bool IsRealLedger(string name)
         {
-            return _simpleAccountPatternRegex.IsMatch(name);
+            return _realAccountPatternRegex.IsMatch(name);
         }
 
         public static bool IsNominalLedger(string name)
