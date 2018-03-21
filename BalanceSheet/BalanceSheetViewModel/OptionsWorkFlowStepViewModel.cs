@@ -16,7 +16,7 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             GoToNextCommand = new DelegateCommand(goToNextStep);
             GoToPreviousCommand = new DelegateCommand(goToPreviousStep);
-            Name = "Options";
+            Name = "Account type selection/verification";
 
             var ledgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
 
