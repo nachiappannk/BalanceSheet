@@ -12,6 +12,5 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         List<AccountStatement> GetAccountStatements();
         List<AccountType> GetPossibleAccountTypes();
         List<AccountStatement> GetAccountStatements(AccountType accountType);
-        string GetAccountType();
     }
 }

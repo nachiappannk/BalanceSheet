@@ -27,11 +27,6 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             return GetAccountStatements();
         }
 
-        public string GetAccountType()
-        {
-            return "Nominal Account";
-        }
-
         public NominalAccount(string accountName)
         {
             _accountName = accountName;

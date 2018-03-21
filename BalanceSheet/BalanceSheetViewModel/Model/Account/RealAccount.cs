@@ -77,11 +77,5 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             if (ledgerValue < 0) return new List<AccountType>() { AccountType.Asset};
             else return new List<AccountType>(){AccountType.Equity, AccountType.Liability};
         }
-        
-        public string GetAccountType()
-        {
-            if (ledgerValue > 0) return "Equity or Liability";
-            else return "Asset";
-        }
     }
 }

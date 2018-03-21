@@ -18,14 +18,14 @@ namespace Nachiappan.BalanceSheetViewModel
         private string _ledgerType;
         private Dictionary<string, AccountType> _ledgerTypes;
 
-        public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToProcessingStep, 
-            Action goToPrintStatementWorkFlowStep)
+        public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToPreviousStep, 
+            Action goToNextStep)
         {
 
             _ledgerTypes = dataStore.GetPackage(WorkFlowViewModel.AccountNameToTypeMapPackageDefinition);
 
-            GoToPreviousCommand = new DelegateCommand(goToProcessingStep);
-            GoToNextCommand = new DelegateCommand(goToPrintStatementWorkFlowStep);
+            GoToPreviousCommand = new DelegateCommand(goToPreviousStep);
+            GoToNextCommand = new DelegateCommand(goToNextStep);
             Name = "Verify Input/Output Statements";
             PreviousBalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
             BalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
@@ -93,8 +93,8 @@ namespace Nachiappan.BalanceSheetViewModel
                 .Select(x => new DisplayableStatement()
                 {
                     Description = x.Account,
-                    Credit = HasValueExtentions.GetCreditValueOrNull(x),
-                    Debit = HasValueExtentions.GetDebitValueOrNull(x),
+                    Credit = x.GetCreditValueOrNull(),
+                    Debit = x.GetDebitValueOrNull(),
                 })
                 .ToList();
             return displayableStatements;
@@ -145,7 +145,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 {
                     var ledger = _ledgers[value];
 
-                    var ledgerType = Model.Account.AccountType.Asset;
+                    var ledgerType = AccountType.Asset;
                     if (_ledgerTypes.ContainsKey(value))
                     {
                         ledgerType = _ledgerTypes[value];
@@ -161,10 +161,30 @@ namespace Nachiappan.BalanceSheetViewModel
                         Credit = x.GetCreditValueOrNull(),
                         Debit = x.GetDebitValueOrNull(),
                     }).ToList();
-                    LedgerType = ledger.GetAccountType();
+
+                    var accountType = GetAccountType(ledger);
+
+
+                    LedgerType = accountType.ToString();
                 }
 
                 FirePropertyChanged();
+            }
+        }
+
+        private AccountType GetAccountType(IAccount ledger)
+        {
+            var accountTypes = ledger.GetPossibleAccountTypes();
+            if (accountTypes.Count == 1) return accountTypes.ElementAt(0);
+            if (_ledgerTypes.ContainsKey(ledger.GetPrintableName()))
+            {
+                var accountType = _ledgerTypes[ledger.GetPrintableName()];
+                if (accountTypes.Contains(accountType)) return accountType;
+                else return accountTypes.ElementAt(0);
+            }
+            else
+            {
+                return accountTypes.ElementAt(0);
             }
         }
     }
