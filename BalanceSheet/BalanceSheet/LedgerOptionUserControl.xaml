@@ -14,6 +14,6 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Text="{Binding Name}"/>
-        <ComboBox Grid.Column="1" Height="24" ItemsSource="{Binding LedgerTypes}" SelectedItem="{Binding LedgerType}"/>
+        <ComboBox Grid.Column="1" Height="24" ItemsSource="{Binding AccountTypes}" SelectedItem="{Binding AccountType}"/>
     </Grid>
 </UserControl>

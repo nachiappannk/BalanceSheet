@@ -49,17 +49,17 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             _account = account;
             _optionDictionary = optionDictionary;
-            LedgerTypes = _account.GetPossibleAccountTypes();
+            AccountTypes = _account.GetPossibleAccountTypes();
             Name = _account.GetPrintableName();
             if (!_optionDictionary.ContainsKey(Name))
             {
-                _optionDictionary.Add(Name, LedgerTypes.ElementAt(0));
+                _optionDictionary.Add(Name, AccountTypes.ElementAt(0));
             }
         }
 
         public string Name { get; set; }
 
-        public List<AccountType> LedgerTypes { get; set; }
+        public List<AccountType> AccountTypes { get; set; }
 
 
         public AccountType AccountType

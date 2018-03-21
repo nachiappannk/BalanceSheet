@@ -15,11 +15,13 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid Row="0" Background="DodgerBlue">
-            <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
+            <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="White"/>
         </Grid>
         <DockPanel Grid.Row="2" Background="DodgerBlue" LastChildFill="False">
-            <Button Width="60" Height="24" Content="Previous" DockPanel.Dock="Left" Margin="4,0" Command="{Binding GoToPreviousCommand}"/>
-            <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
+            <Button Width="60" Height="24" Content="Previous" DockPanel.Dock="Left" Margin="4,0" 
+                    Command="{Binding GoToPreviousCommand}"/>
+            <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" 
+                    Command="{Binding GoToNextCommand}"/>
         </DockPanel>
         <ItemsControl ItemsSource="{Binding LedgerOptions}" Grid.Row="1">
             <ItemsControl.ItemTemplate>
