@@ -18,7 +18,7 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToPreviousCommand = new DelegateCommand(goToPreviousStep);
             Name = "Options";
 
-            var ledgers = dataStore.GetPackage<List<IAccount>>(WorkFlowViewModel.AccountsPackageDefinition);
+            var ledgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
 
             var optionLedgers = ledgers
                 .Where(x => x.GetPossibleAccountTypes().Count > 1)

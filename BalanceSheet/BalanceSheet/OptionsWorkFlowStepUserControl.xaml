@@ -7,7 +7,7 @@
              xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance balanceSheetViewModel:OptionsWorkFlowStepViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -23,12 +23,24 @@
             <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" 
                     Command="{Binding GoToNextCommand}"/>
         </DockPanel>
-        <ItemsControl ItemsSource="{Binding LedgerOptions}" Grid.Row="1">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:LedgerOptionUserControl/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <Border Grid.Row="1" Width="400" HorizontalAlignment="Center">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Row="0"  Margin="0,5,0,5">
+                    <TextBlock TextWrapping="Wrap" FontSize="14" FontWeight="DemiBold" Text="Select account type for the below accounts"/>
+                </Grid>
+                <ItemsControl ItemsSource="{Binding LedgerOptions}" Grid.Row="1">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:LedgerOptionUserControl/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
