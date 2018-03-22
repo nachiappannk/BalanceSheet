@@ -22,6 +22,7 @@ namespace Nachiappan.BalanceSheetViewModel
         public PrintOutputWorkFlowStepViewModel(DataStore dataStore, Action goToPrevious)
         {
             _dataStore = dataStore;
+            Name = "Save Output";
             GoToPreviousCommand = new DelegateCommand(goToPrevious);
             GoToNextCommand = new DelegateCommand(CloseApplication);
             SaveOutputCommand = new DelegateCommand(SaveOutput);
