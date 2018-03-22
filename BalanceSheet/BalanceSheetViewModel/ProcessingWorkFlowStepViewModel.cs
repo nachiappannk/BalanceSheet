@@ -90,6 +90,13 @@ namespace Nachiappan.BalanceSheetViewModel
             _dataStore.PutPackage(generalAccount.GetTrialBalanceStatements(), WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
             _dataStore.PutPackage(generalAccount.GetBalanceSheetStatements(), WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
 
+            logger.InformationList.Sort((a, b) =>
+            {
+                if (a.GetType() == b.GetType()) return 0;
+                if (a.GetType() == typeof(Error)) return -1;
+                return 1;
+            });
+            
             InformationList = logger.InformationList.ToList();
             OverAllMessage = GetOverAllErrorMessage(logger.InformationList.ToList());            
         }
@@ -172,7 +179,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public static Information CreateWarning(string message)
         {
-            return new Error() { Message = message };
+            return new Warning() { Message = message };
         }
     }
 

@@ -51,7 +51,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             if (trimmedStatements.Any())
             {
                 logger.Log(MessageType.Warning,
-                    "The invalid journal statement(s) have been removed. Please check");
+                    "The invalid journal statement(s) have been removed.");
             }
         }
 

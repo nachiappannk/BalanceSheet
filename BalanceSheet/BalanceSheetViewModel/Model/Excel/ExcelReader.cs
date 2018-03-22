@@ -98,7 +98,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Excel
                 StringBuilder b = new StringBuilder();
                 b.AppendLine($"In File {fileName}, ");
                 b.AppendLine($"In Sheet {sheetName}, ");
-                b.AppendLine($"Expected heading {columnNameOptions.ElementAt(0)} but found {columnName}");
+                b.Append($"Expected heading {columnNameOptions.ElementAt(0)} but found {columnName}");
                 logger.Log(MessageType.Warning, b.ToString());
             }
         }
