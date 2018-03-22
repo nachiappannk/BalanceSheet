@@ -27,10 +27,10 @@
                     <Setter Property="MinHeight" Value="35"/>
                     <Setter Property="CornerRadius" Value="4"/>
                     <Setter Property="Margin" Value="2"/>
-                    <Setter Property="Padding" Value="10,0"/>
+                    <Setter Property="Padding" Value="10,4,10,10"/>
                 </Style>
                 <DataTemplate DataType="{x:Type balanceSheetViewModel:Warning}">
-                    <Border Background="#FFE8B82F"
+                    <Border Background="#FFDFDF1F"
                             Style="{StaticResource InformationStyle}">
                         <Grid>
                             <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>

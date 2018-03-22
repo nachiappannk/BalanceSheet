@@ -95,11 +95,9 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Excel
             var columnNameOptionsLower = columnNameOptions.Select(x => x.ToLower()).ToList();
             if (!columnNameOptionsLower.Contains(columnNameLower))
             {
-                StringBuilder b = new StringBuilder();
-                b.AppendLine($"In File {fileName}, ");
-                b.AppendLine($"In Sheet {sheetName}, ");
-                b.Append($"Expected heading {columnNameOptions.ElementAt(0)} but found {columnName}");
-                logger.Log(MessageType.Warning, b.ToString());
+                logger.Log(MessageType.Warning, $"In File {fileName}, ",
+                    $"In Sheet {sheetName}, ",
+                    $"Expected heading {columnNameOptions.ElementAt(0)} but found {columnName}");
             }
         }
     }

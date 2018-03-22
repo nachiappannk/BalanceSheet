@@ -75,12 +75,10 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Excel
 
         private void LogError(int zeroBasedColumnIndex, string errorMessage)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"In file {FileName}, ");
-            stringBuilder.AppendLine($"In sheet {SheetName}, ");
-            stringBuilder.AppendLine($"In cell {GetCellAddress(zeroBasedColumnIndex)}, ");
-            stringBuilder.AppendLine(errorMessage);
-            _logger.Log(MessageType.Warning, stringBuilder.ToString());
+            _logger.Log(MessageType.Warning, $"In file {FileName}, ",
+                $"In sheet {SheetName}, ",
+                $"In cell {GetCellAddress(zeroBasedColumnIndex)}, ",
+                errorMessage);
         }
 
         private object ReadCell(int zeroBasedColumnIndex)
