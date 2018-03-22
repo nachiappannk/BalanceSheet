@@ -75,9 +75,6 @@
     <Compile Include="InputWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>InputWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LedgerOptionUserControl.xaml.cs">
-      <DependentUpon>LedgerOptionUserControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="OptionsWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>OptionsWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
@@ -103,10 +100,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="InputWorkFlowStepUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LedgerOptionUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
