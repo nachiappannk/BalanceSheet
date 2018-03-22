@@ -30,7 +30,7 @@
                     <Setter Property="Padding" Value="10,4,10,10"/>
                 </Style>
                 <DataTemplate DataType="{x:Type balanceSheetViewModel:Warning}">
-                    <Border Background="#FFDFDF1F"
+                    <Border Background="#FFF8E01F"
                             Style="{StaticResource InformationStyle}">
                         <Grid>
                             <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>

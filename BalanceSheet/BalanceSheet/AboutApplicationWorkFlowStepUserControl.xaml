@@ -9,7 +9,7 @@
              xmlns:interactionRequest="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance balanceSheetViewModel:AboutApplicationWorkFlowStepViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="700">
     <Grid>
         <i:Interaction.Triggers>
             <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SampleBalanceSheetSaveAsRequest}">
@@ -37,18 +37,26 @@
             <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
         </DockPanel>
 
-        <DockPanel Grid.Row="1" LastChildFill="False">
-            <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">This application helps in computing the balance sheet, trial balances and various other ledgers</TextBlock>
-            <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">The application needs the previous year balance sheet and current years journal as input. You could download the format of the balance sheet and journal</TextBlock>
-            <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleBalanceSheetCommand}" Content="Download Balance sheet Format" Height="24" Width="200"/>
-            <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleJournalCommand}" Content="Download Journal Format" Height="24" Width="200"/>
-            <Button DockPanel.Dock="Bottom" Command="{Binding SaveHelpDocumentCommand}" Content="Download Help Document" Height="24" Width="200"/>
-        </DockPanel>
+        <Border Style="{StaticResource MainBorderStyle}" Grid.Row="1">
+            <DockPanel Grid.Row="1" LastChildFill="False">
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="10">
+                    <TextBlock Text="About Balance Sheet" FontSize="14"/>
+                    <TextBlock/>
+                    <TextBlock Text="Balance sheet is a software that helps you in creating your balance sheet"/>
+                    <TextBlock TextWrapping="Wrap" Text="It needs the journal and previous periods balance sheet for the computation. The formats can be downloaded from below"/>
 
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Margin="0,0,0,10">
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleBalanceSheetCommand}" Content="Download Balance sheet Format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleJournalCommand}" Content="Download Journal Format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveHelpDocumentCommand}" Content="Download Help Document" Height="24" Width="200"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
     </Grid>
-    
-    
-    
-    
+
+
+
+
 
 </UserControl>
