@@ -56,7 +56,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding OverAllMessage}" FontSize="14" FontWeight="DemiBold" Margin="0,0,0,10"/>
+                    <TextBlock Text="{Binding OverAllMessage}" Style="{StaticResource HeadingText}"/>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl ItemsSource="{Binding InformationList}"/>
                     </ScrollViewer>
@@ -64,10 +64,11 @@
             </Border>
             <Border Style="{StaticResource AdditionalInformationBorderStyle}" Grid.Row="1">
                 <StackPanel Orientation="Vertical" Margin="2,0">
-                    <TextBlock Text="The steps to modify journal / balance sheet at this stage are below"/>
-                    <TextBlock Text="  1. Modify the input excel file (journal or balance sheet)"/>
-                    <TextBlock Text="  2. Save the input excel file"/>
-                    <TextBlock Text="  3. Hit the refresh button"/>
+                    <TextBlock Text="The steps to modify journal / balance sheet at this stage are below"  
+                               Style="{StaticResource HeadingText}"/>
+                    <TextBlock Text="  1. Modify the input excel file (journal or balance sheet)" Style="{StaticResource NormalText}"/>
+                    <TextBlock Text="  2. Save the input excel file" Style="{StaticResource NormalText}"/>
+                    <TextBlock Text="  3. Hit the refresh button" Style="{StaticResource NormalText}"/>
                     <Grid Margin="0,0,0,4">
                         <Button Content="Refresh" Width="60"  HorizontalAlignment="Right" 
                                 Margin="2,0" Command="{Binding ReadAgainCommand}"/>
