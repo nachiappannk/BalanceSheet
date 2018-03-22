@@ -7,7 +7,7 @@
              xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance balanceSheetViewModel:ProcessingWorkFlowStepViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -22,7 +22,7 @@
             <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
         </DockPanel>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Width="400" HorizontalAlignment="Center">
             <Grid.Resources>
                 <DataTemplate DataType="{x:Type balanceSheetViewModel:Warning}">
                     <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4" Margin="1">
@@ -38,6 +38,14 @@
                         </Grid>
                     </Border>
                 </DataTemplate>
+
+                <DataTemplate DataType="{x:Type balanceSheetViewModel:Information}">
+                    <Border BorderThickness="1" BorderBrush="Black" CornerRadius="4" Margin="1">
+                        <Grid Background="Red">
+                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
             </Grid.Resources>
             <DockPanel>
                 <Grid DockPanel.Dock="Top" Margin="4">
@@ -45,9 +53,22 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding OverAllMessage}" FontSize="16" FontWeight="Bold"/>
-                    <Button Content="Read Again" Grid.Column="1" Margin="2,0" Command="{Binding ReadAgainCommand}"/>
+                    <TextBlock Text="{Binding OverAllMessage}" FontSize="14" FontWeight="DemiBold"/>
+
                 </Grid>
+
+                <Border DockPanel.Dock="Bottom" Margin="0,10" CornerRadius="4" BorderThickness="2" BorderBrush="Gray" Background="Gainsboro">
+                    <StackPanel Orientation="Vertical" Margin="2,0">
+                        <TextBlock Text="The steps to modify journal / balance sheet at this stage are below"/>
+                        <TextBlock Text="  1. Modify the input excel file (journal or balance sheet)"/>
+                        <TextBlock Text="  2. Save the input excel file"/>
+                        <TextBlock Text="  3. Hit the refresh button"/>
+                        <Grid Margin="0,0,0,4">
+                            <Button Content="Refresh" Width="60"  HorizontalAlignment="Right" 
+                                Margin="2,0" Command="{Binding ReadAgainCommand}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <ItemsControl ItemsSource="{Binding InformationList}"/>
                 </ScrollViewer>

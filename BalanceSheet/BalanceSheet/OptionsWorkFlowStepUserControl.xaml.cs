@@ -24,5 +24,10 @@ namespace Nachiappan.BalanceSheet
         {
             InitializeComponent();
         }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataGrid.UnselectAllCells();
+        }
     }
 }

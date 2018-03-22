@@ -64,8 +64,14 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public AccountType AccountType
         {
-            get { return _optionDictionary[Name]; }
-            set { _optionDictionary[Name] = value; }
+            get
+            {
+                return _optionDictionary[Name];
+            }
+            set
+            {
+                _optionDictionary[Name] = value;
+            }
         }
     }
 }
