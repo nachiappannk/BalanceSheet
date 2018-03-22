@@ -96,15 +96,18 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private static string GetOverAllErrorMessage(List<Information> errorsAndWarnings)
         {
-            if (errorsAndWarnings.Any(x => x.GetType() == typeof(Error)))
-            {
-                return "Please fix, there are some un ignorable error(s)";
-            }
-            if (errorsAndWarnings.Any(x => x.GetType() == typeof(Warning)))
-            {
-                return "Please review, there are some error(s)";
-            }
-            return "Congrats!!! There are no errors";
+            var errorCount = errorsAndWarnings.Count(x => x.GetType() == typeof(Error));
+            var warningCount = errorsAndWarnings.Count(x => x.GetType() == typeof(Warning));
+
+            if (errorCount > 1 && warningCount > 1) return "Please check inputs. There are few errors and warnings";
+            if (errorCount > 1 && warningCount == 1) return "Please check inputs. There are few errors and one warning";
+            if (errorCount > 1 && warningCount == 0) return "Please check inputs. There are few errors";
+            if (errorCount == 1 && warningCount > 1) return "Please check inputs. There is an errors and a few warnings";
+            if (errorCount == 1 && warningCount == 1) return "Please check inputs. There is an errors and a warning";
+            if (errorCount == 1 && warningCount == 0) return "Please check inputs. There is an few errors";
+            if (errorCount == 0 && warningCount > 1) return "Please review inputs. There are a few warnings";
+            if (errorCount == 0 && warningCount == 1) return "Please review inputs. There a warning";
+            return "Congrats!!! There are no errors or warnings. Please verify output";
         }
 
 
