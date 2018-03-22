@@ -25,16 +25,17 @@
 
         <Border Grid.Row="1" Style="{StaticResource MainBorderStyle}">
         <DockPanel LastChildFill="False">
-            <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
-                                                                  DataContext="{Binding JournalSelectorViewModel}"/>
-            <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
+            <TextBlock Text="Input" Style="{StaticResource HeadingText}" DockPanel.Dock="Top"/> 
+            <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="0,10" 
+                                                                  DataContext="{Binding JournalSelectorViewModel}" />
+            <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="0,10" 
                                                                   DataContext="{Binding PreviousBalanceSheetSelectorViewModel}"/>
-            <DockPanel DockPanel.Dock="Top" Margin="10,10,10,0" Height="25" LastChildFill="False">
-                <TextBlock Text="Accounting Period Start" DockPanel.Dock="Left" Margin="0,0,10,0" VerticalAlignment="Center"/>
+            <DockPanel DockPanel.Dock="Top" Margin="0,10" Height="25" LastChildFill="False">
+                    <TextBlock Text="Accounting Period Start " DockPanel.Dock="Left" Style="{StaticResource Level2HeadingText}" VerticalAlignment="Center"/>
                 <DatePicker SelectedDate="{Binding AccountingPeriodStartDate}" DockPanel.Dock="Left"  />
             </DockPanel>
-            <DockPanel DockPanel.Dock="Top" Margin="10,10,10,0" Height="25" LastChildFill="False">
-                <TextBlock Text="Accounting Period End  " DockPanel.Dock="Left" Margin="0,0,10,0" VerticalAlignment="Center"/>
+            <DockPanel DockPanel.Dock="Top" Margin="0,10" Height="25" LastChildFill="False">
+                <TextBlock Text="Accounting Period End  " DockPanel.Dock="Left" Style="{StaticResource Level2HeadingText}" VerticalAlignment="Center"/>
                 <DatePicker SelectedDate="{Binding AccountingPeriodEndDate}" DockPanel.Dock="Left"/>
             </DockPanel>
         </DockPanel>

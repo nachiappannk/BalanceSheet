@@ -12,7 +12,8 @@
             <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="CornflowerBlue"/>
-            <Setter Property="Margin" Value="10,10,10,10"></Setter>
+            <Setter Property="Margin" Value="10,10,10,10"/>
+            <Setter Property="Padding" Value="4"/>
         </Style>
 
         <Style TargetType="Border" x:Key="AdditionalInformationBorderStyle">
@@ -23,7 +24,31 @@
             <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="Margin" Value="10,0,10,10"></Setter>
+            <Setter Property="Margin" Value="10,0,10,10"/>
+            <Setter Property="Padding" Value="4"/>
         </Style>
+        
+        <Style TargetType="{x:Type TextBlock}" x:Key="HeadingText">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="HintText">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="NormalText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="Level2HeadingText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+        </Style>
+
     </Application.Resources>
 </Application>
