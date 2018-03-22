@@ -4,6 +4,26 @@
              xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Border" x:Key="MainBorderStyle">
+            <Setter Property="MaxWidth" Value="600" />
+            <Setter Property="MinWidth" Value="400" />
+            <Setter Property="Width" Value="600" />
+            <Setter Property="Background" Value="Beige"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+            <Setter Property="Margin" Value="10,10,10,10"></Setter>
+        </Style>
+
+        <Style TargetType="Border" x:Key="AdditionalInformationBorderStyle">
+            <Setter Property="MaxWidth" Value="600" />
+            <Setter Property="MinWidth" Value="400" />
+            <Setter Property="Width" Value="600" />
+            <Setter Property="Background" Value="Gainsboro"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Margin" Value="10,0,10,10"></Setter>
+        </Style>
     </Application.Resources>
 </Application>

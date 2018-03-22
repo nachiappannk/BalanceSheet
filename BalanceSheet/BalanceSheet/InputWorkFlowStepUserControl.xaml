@@ -20,11 +20,11 @@
             <Button Width="60" Height="24" Content="Previous" DockPanel.Dock="Left" Margin="4,0" Command="{Binding GoToPreviousCommand}"/>
             <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
         </DockPanel>
-        
-        
 
 
-        <DockPanel LastChildFill="False" Grid.Row="1">
+
+        <Border Grid.Row="1" Style="{StaticResource MainBorderStyle}">
+        <DockPanel LastChildFill="False">
             <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
                                                                   DataContext="{Binding JournalSelectorViewModel}"/>
             <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="10,10,10,0" 
@@ -38,5 +38,6 @@
                 <DatePicker SelectedDate="{Binding AccountingPeriodEndDate}" DockPanel.Dock="Left"/>
             </DockPanel>
         </DockPanel>
+        </Border>
     </Grid>
 </UserControl>
