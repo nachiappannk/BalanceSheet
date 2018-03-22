@@ -15,12 +15,12 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <Grid Row="0" Background="DodgerBlue">
-            <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
+        <Grid Row="0" Style="{StaticResource HeaderStripGrid}">
+            <TextBlock Text="{Binding Name}" Style="{StaticResource HeaderStripText}"></TextBlock>
         </Grid>
-        <DockPanel Grid.Row="2" Background="DodgerBlue" LastChildFill="False">
-            <Button Width="60" Height="24" Content="Previous" DockPanel.Dock="Left" Margin="4,0" Command="{Binding GoToPreviousCommand}"/>
-            <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
+        <DockPanel Grid.Row="2" Style="{StaticResource FooterStripDockPanel}">
+            <Button Content="Previous" DockPanel.Dock="Left" Style="{StaticResource FooterStripButton}" Command="{Binding GoToPreviousCommand}"/>
+            <Button Style="{StaticResource FooterStripButton}" Content="Next" DockPanel.Dock="Right" Command="{Binding GoToNextCommand}"/>
         </DockPanel>
         <Grid Grid.Row="1">
             <TabControl>

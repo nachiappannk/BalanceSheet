@@ -49,6 +49,30 @@
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="DemiBold"/>
         </Style>
+        
+        <Style TargetType="{x:Type TextBlock}" x:Key="HeaderStripText">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style TargetType="{x:Type Grid}" x:Key="HeaderStripGrid">
+            <Setter Property="Background" Value="DodgerBlue"/>
+        </Style>
+
+        <Style TargetType="{x:Type DockPanel}" x:Key="FooterStripDockPanel">
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Setter Property="LastChildFill" Value="False"/>
+        </Style>
+
+        <Style TargetType="{x:Type Button}" x:Key="FooterStripButton">
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="MinWidth" Value="60"/>
+            <Setter Property="MaxWidth" Value="100"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="24"/>
+        </Style>
+
 
     </Application.Resources>
 </Application>
