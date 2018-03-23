@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
              xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
+             xmlns:statementVerifyingWorkFlowStepViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance balanceSheetViewModel:StatementVerifyingWorkFlowStepViewModel}"
+             d:DataContext="{d:DesignInstance statementVerifyingWorkFlowStepViewModel:StatementVerifyingWorkFlowStepViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
 

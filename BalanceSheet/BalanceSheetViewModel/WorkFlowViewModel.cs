@@ -81,7 +81,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToStatementVerifyingWorkFlowStep()
         {
-            CurrentStep = new StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToOptionsStep, GoToPrintStatementWorkFlowStep);
+            CurrentStep = new StatementVerifyingWorkFlowStepViewModel.StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToOptionsStep, GoToPrintStatementWorkFlowStep);
         }
 
         private void GoToPrintStatementWorkFlowStep()

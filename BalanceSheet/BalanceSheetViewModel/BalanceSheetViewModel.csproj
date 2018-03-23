@@ -97,7 +97,14 @@
     <Compile Include="Model\Account\RealAccount.cs" />
     <Compile Include="Model\Excel\RowCellsReader.cs" />
     <Compile Include="Model\Statements\BalanceSheetStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\CommonDefinition.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableAccountStatement.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableBalanceSheetStatement.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableJournalStatement.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableTrialBalanceStatement.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableTrimmedBalanceSheetStatement.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableTrimmedJournalStatement.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepViewModel\StatementVerifyingWorkFlowStepViewModel.cs" />
     <Compile Include="Model\Statements\TrimmedJournalStatement.cs" />
     <Compile Include="Model\Statements\TrialBalanceStatement.cs" />
     <Compile Include="WorkFlowStepViewModel.cs" />
