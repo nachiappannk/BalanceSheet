@@ -95,7 +95,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             {
                 Account = x.GetPrintableName(),
                 Value = x.GetAccountValue(),
-            }).ToList();
+            }).Where(x => !x.Value.IsZero()).ToList();
         }
 
         public List<TrialBalanceStatement> GetTrialBalanceStatements()
