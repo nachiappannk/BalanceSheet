@@ -74,8 +74,14 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
 
         public List<AccountType> GetPossibleAccountTypes()
         {
-            if (ledgerValue < 0) return new List<AccountType>() { AccountType.Asset};
-            else return new List<AccountType>(){AccountType.Equity, AccountType.Liability};
+            if (ledgerValue.IsZero())
+                return new List<AccountType>() {AccountType.Asset, AccountType.Liability, AccountType.Equity};
+            if (ledgerValue < 0)
+                return new List<AccountType>() {AccountType.Asset};
+            if(_accountName.ToLower().Contains("cap"))
+                return new List<AccountType>() {AccountType.Equity, AccountType.Liability};
+            return new List<AccountType>(){AccountType.Liability, AccountType.Equity};
+
         }
     }
 }
