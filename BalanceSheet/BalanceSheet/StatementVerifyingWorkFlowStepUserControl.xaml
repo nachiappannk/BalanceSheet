@@ -8,7 +8,7 @@
              xmlns:statementVerifyingWorkFlowStepViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance statementVerifyingWorkFlowStepViewModel:StatementVerifyingWorkFlowStepViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="700">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -65,29 +65,34 @@
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
-                <TabItem Header="Ledgers">
+                <TabItem Header="Accounts">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Ledger:" Margin="2"/>
-                            <ComboBox ItemsSource="{Binding LedgerNames}" SelectedItem="{Binding SelectedLedgerName}" Height="24"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBlock Text="Please select the account to be viewed: " Style="{StaticResource HeadingText}"
+                                       VerticalAlignment="Center" Margin="0"/>
+                            <ComboBox ItemsSource="{Binding LedgerNames}" SelectedItem="{Binding SelectedLedgerName}"  
+                                      VerticalAlignment="Center"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                            <TextBlock Text="Ledger Type: "/>
-                            <TextBlock Text="{Binding LedgerType}"/>
-                        </StackPanel>
-                        <local:FormatableDataGrid Grid.Row="2" ItemsSource="{Binding LedgerStatements}" 
-                                                  Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                        <DockPanel Grid.Row="1" DataContext="{Binding SelectedAccountViewModel}">
+                            <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="0,0,0,10">
+                                <TextBlock Text="{Binding AccountName}" Style="{StaticResource HeadingText}"/>
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                                    <TextBlock Text="Account Type :" Style="{StaticResource Level2HeadingText}"/>
+                                    <TextBlock Text="{Binding AccountType}" Style="{StaticResource Level2HeadingText}"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding OverAllMessage}" Style="{StaticResource NormalText}"/>
+                                <TextBlock Style="{StaticResource NormalText}"
+                                    Text="If you suspect the account type is wrongly choosen, please change it by going back"/>
+                            </StackPanel>
+                            <local:FormatableDataGrid ItemsSource="{Binding AccountStatements}" 
+                                                      Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                        </DockPanel>
                     </Grid>
-                    
                 </TabItem>
-
-
-                
             </TabControl>
         </Grid>    
         

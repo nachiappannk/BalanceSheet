@@ -9,12 +9,20 @@ using Prism.Commands;
 namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewModel
 {
     public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
-    {        
+    {
+        public List<DisplayableBalanceSheetStatement> PreviousBalanceSheetStatements { get; set; }
+        public List<DisplayableTrimmedBalanceSheetStatement> TrimmedBalanceSheetStatements { get; set; }
+        public List<DisplayableBalanceSheetStatement> BalanceSheetStatements { get; set; }
+        public List<DisplayableJournalStatement> JournalStatements { get; set; }
+        public List<DisplayableTrimmedJournalStatement> TrimmedJournalStatements { get; set; }
+        public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
+
         private string _selectedLedgerName;
-        private Dictionary<string, IAccount> _ledgers;
+        private readonly Dictionary<string, IAccount> _accounts;
         private List<DisplayableAccountStatement> _ledgerStatements;
         private string _ledgerType;
         private Dictionary<string, AccountType> _ledgerTypes;
+        private SelectedAccountViewModel _selectedAccountViewModel;
 
         public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToPreviousStep, 
             Action goToNextStep)
@@ -25,24 +33,41 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
             GoToPreviousCommand = new DelegateCommand(goToPreviousStep);
             GoToNextCommand = new DelegateCommand(goToNextStep);
             Name = "Verify Input/Output Statements";
+
             PreviousBalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
             BalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
+
             JournalStatements = GetInputJournalStatement(dataStore);
             TrimmedJournalStatements = GetTrimmedStatements(dataStore);
-            SetTrailBalanceStatements(dataStore);
-            var allLedgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
-            _ledgers = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
-            LedgerNames = _ledgers.Select(x => x.Key).ToList();
+            TrialBalanceStatements = GetTrailBalanceStatements(dataStore);
+
+            _accounts = CreateAccountDictionary(dataStore);
+
+
+
+            LedgerNames = _accounts.Select(x => x.Key).ToList();
             SelectedLedgerName = LedgerNames.ElementAt(0);
 
-            TrimmedBalanceSheetStatements = dataStore
-                    .GetPackage(WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements)
-                    .Select(x => new DisplayableTrimmedBalanceSheetStatement(x)).ToList();
+            TrimmedBalanceSheetStatements = GetTrimmedBalanceSheetStatements(dataStore);
         }
 
-        private void SetTrailBalanceStatements(DataStore dataStore)
+        private static Dictionary<string, IAccount> CreateAccountDictionary(DataStore dataStore)
         {
-            TrialBalanceStatements = dataStore
+            var allLedgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
+            var dictionary = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
+            return dictionary;
+        }
+
+        private static List<DisplayableTrimmedBalanceSheetStatement> GetTrimmedBalanceSheetStatements(DataStore dataStore)
+        {
+            return dataStore
+                .GetPackage(WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements)
+                .Select(x => new DisplayableTrimmedBalanceSheetStatement(x)).ToList();
+        }
+
+        private List<DisplayableTrialBalanceStatement> GetTrailBalanceStatements(DataStore dataStore)
+        {
+            return dataStore
                 .GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition)
                 .Select(x => new DisplayableTrialBalanceStatement(x)).ToList();
         }
@@ -69,38 +94,17 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
             return displayableStatements;
         }
 
-        public List<DisplayableBalanceSheetStatement>   PreviousBalanceSheetStatements { get; set; }
 
-        public List<DisplayableTrimmedBalanceSheetStatement> TrimmedBalanceSheetStatements { get; set; }
-
-        public List<DisplayableBalanceSheetStatement> BalanceSheetStatements { get; set; }
-
-        public List<DisplayableJournalStatement> JournalStatements { get; set; }
-
-        public List<DisplayableTrimmedJournalStatement> TrimmedJournalStatements { get; set; }
-
-        public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
-
-
-        public string LedgerType
+        public SelectedAccountViewModel SelectedAccountViewModel
         {
-            get { return _ledgerType; }
+            get { return _selectedAccountViewModel; }
             set
             {
-                _ledgerType = value;
+                _selectedAccountViewModel = value;
                 FirePropertyChanged();
             }
         }
 
-        public List<DisplayableAccountStatement> LedgerStatements
-        {
-            get { return _ledgerStatements; }
-            set
-            {
-                _ledgerStatements = value;
-                FirePropertyChanged();
-            }
-        }
 
         public List<string> LedgerNames { get; set; }
 
@@ -110,44 +114,73 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
             set
             {
                 _selectedLedgerName = value;
-                if (_ledgers.ContainsKey(value))
+                if (_accounts.ContainsKey(value))
                 {
-                    var ledger = _ledgers[value];
-
-                    var ledgerType = AccountType.Asset;
-                    if (_ledgerTypes.ContainsKey(value))
-                    {
-                        ledgerType = _ledgerTypes[value];
-                    }
-                    
-                    var statements = ledger.GetAccountStatements(ledgerType);
-
-                    LedgerStatements = statements.Select(x => new DisplayableAccountStatement(x)).ToList();
-
-                    var accountType = GetAccountType(ledger);
-
-
-                    LedgerType = accountType.ToString();
+                    SelectedAccountViewModel = new SelectedAccountViewModel(_accounts, value, _ledgerTypes);
                 }
-
                 FirePropertyChanged();
             }
         }
 
-        private AccountType GetAccountType(IAccount ledger)
+        
+    }
+
+    public class SelectedAccountViewModel
+    {
+        public SelectedAccountViewModel(IDictionary<string, IAccount> accounts, string selectedAccount, 
+            IDictionary<string,AccountType> accountTypes)
         {
-            var accountTypes = ledger.GetPossibleAccountTypes();
-            if (accountTypes.Count == 1) return accountTypes.ElementAt(0);
-            if (_ledgerTypes.ContainsKey(ledger.GetPrintableName()))
+            var account = accounts[selectedAccount];
+            var accountType = GetAccountType(account, accountTypes);
+            var statements = account.GetAccountStatements(accountType);
+            AccountName = selectedAccount;
+            AccountStatements = statements.Select(x => new DisplayableAccountStatement(x)).ToList();
+            AccountType = accountType.ToString();
+            var overAllMessage = GetOverallMessage(accountType, account);
+
+            OverAllMessage = overAllMessage;
+        }
+
+        private static string GetOverallMessage(AccountType accountType, IAccount account)
+        {
+            switch (accountType)
             {
-                var accountType = _ledgerTypes[ledger.GetPrintableName()];
-                if (accountTypes.Contains(accountType)) return accountType;
-                else return accountTypes.ElementAt(0);
+                case Model.Account.AccountType.Notional:
+                    return "Notional Account";
+                case Model.Account.AccountType.Equity:
+                    return "The total equity contribution from this account is " + account.GetAccountValue().ToString("N2");
+                case Model.Account.AccountType.Asset:
+                    return "The investment is " + (account.GetAccountValue() * -1).ToString("N2"); ;
+                case Model.Account.AccountType.Liability:
+                default:
+                    return "The borrowing is " + account.GetAccountValue().ToString("N2"); ;
+
+            }
+        }
+
+        private AccountType GetAccountType(IAccount ledger, IDictionary<string, AccountType> preferenceAccountTypes)
+        {
+            var possibleAccountTypes = ledger.GetPossibleAccountTypes();
+            if (possibleAccountTypes.Count == 1) return possibleAccountTypes.ElementAt(0);
+            if (preferenceAccountTypes.ContainsKey(ledger.GetPrintableName()))
+            {
+                var accountType = preferenceAccountTypes[ledger.GetPrintableName()];
+                if (possibleAccountTypes.Contains(accountType)) return accountType;
+                else return possibleAccountTypes.ElementAt(0);
             }
             else
             {
-                return accountTypes.ElementAt(0);
+                return possibleAccountTypes.ElementAt(0);
             }
         }
+
+        public string AccountName { get; set; }
+
+        public string OverAllMessage { get; set; }
+
+        public string AccountType { get; set; }
+
+        public List<DisplayableAccountStatement> AccountStatements { get; set; }
     }
+
 }
