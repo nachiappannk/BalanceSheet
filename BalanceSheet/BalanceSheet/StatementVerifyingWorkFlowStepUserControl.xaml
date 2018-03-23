@@ -34,19 +34,10 @@
                         <Setter Property="Margin" Value="4"/>
                         <Setter Property="AlternationCount" Value="2" />
                     </Style>
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
                 </TabControl.Resources>
                 <TabItem Header="Previous Balance Sheet">
                     <local:FormatableDataGrid ItemsSource="{Binding PreviousBalanceSheetStatements}" 
-                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
-                </TabItem>
-
-                <TabItem Header="Trial Balance">
-                    <local:FormatableDataGrid ItemsSource="{Binding TrialBalanceStatements}" 
-                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
-                </TabItem>
-
-                <TabItem Header="Balance Sheet">
-                    <local:FormatableDataGrid ItemsSource="{Binding BalanceSheetStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
@@ -55,16 +46,26 @@
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
-                <TabItem Header="Trimmed Journal">
-                    <local:FormatableDataGrid ItemsSource="{Binding TrimmedJournalStatements}" 
-                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
-                </TabItem>
-
-                <TabItem Header="Trimmed BalanceSheet">
+                <TabItem Header="Trimmed BalanceSheet" Visibility="{Binding IsTrimmedBalanceSheetJournalVisible, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}">
                     <local:FormatableDataGrid ItemsSource="{Binding TrimmedBalanceSheetStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
+
+                <TabItem Header="Trimmed Journal" Visibility="{Binding IsTrimmedJournalVisible, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <local:FormatableDataGrid ItemsSource="{Binding TrimmedJournalStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                </TabItem>
+
+
+                <TabItem Header="Trial Balance">
+                    <local:FormatableDataGrid ItemsSource="{Binding TrialBalanceStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                </TabItem>
+
+                
                 <TabItem Header="Accounts">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -93,6 +94,12 @@
                         </DockPanel>
                     </Grid>
                 </TabItem>
+
+                <TabItem Header="Balance Sheet">
+                    <local:FormatableDataGrid ItemsSource="{Binding BalanceSheetStatements}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
+                </TabItem>
+
             </TabControl>
         </Grid>    
         

@@ -17,6 +17,10 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
         public List<DisplayableTrimmedJournalStatement> TrimmedJournalStatements { get; set; }
         public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
 
+        public bool IsTrimmedJournalVisible { get; set; }
+
+        public bool IsTrimmedBalanceSheetJournalVisible { get; set; }
+
         private string _selectedLedgerName;
         private readonly Dictionary<string, IAccount> _accounts;
         private List<DisplayableAccountStatement> _ledgerStatements;
@@ -40,6 +44,10 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
             JournalStatements = GetInputJournalStatement(dataStore);
             TrimmedJournalStatements = GetTrimmedStatements(dataStore);
             TrialBalanceStatements = GetTrailBalanceStatements(dataStore);
+            TrimmedBalanceSheetStatements = GetTrimmedBalanceSheetStatements(dataStore);
+
+            IsTrimmedJournalVisible = TrimmedJournalStatements.Any();
+            IsTrimmedBalanceSheetJournalVisible = TrimmedBalanceSheetStatements.Any();
 
             _accounts = CreateAccountDictionary(dataStore);
 
@@ -48,7 +56,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
             LedgerNames = _accounts.Select(x => x.Key).ToList();
             SelectedLedgerName = LedgerNames.ElementAt(0);
 
-            TrimmedBalanceSheetStatements = GetTrimmedBalanceSheetStatements(dataStore);
+            
         }
 
         private static Dictionary<string, IAccount> CreateAccountDictionary(DataStore dataStore)
