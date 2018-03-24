@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nachiappan.BalanceSheetViewModel.Model;
 using Nachiappan.BalanceSheetViewModel.Model.Account;
+using Nachiappan.BalanceSheetViewModel.Model.Statements;
 using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel

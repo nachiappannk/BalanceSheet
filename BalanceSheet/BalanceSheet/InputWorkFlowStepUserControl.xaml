@@ -28,9 +28,11 @@
             <TextBlock Text="Input" Style="{StaticResource HeadingText}" DockPanel.Dock="Top"/> 
             <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="0,10" 
                                                                   DataContext="{Binding JournalSelectorViewModel}" />
-            <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="0,10" 
+                <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="0,10" 
                                                                   DataContext="{Binding PreviousBalanceSheetSelectorViewModel}"/>
-            <DockPanel DockPanel.Dock="Top" Margin="0,10" Height="25" LastChildFill="False">
+                <balanceSheet:ExcelSheetSelectorUserControl DockPanel.Dock="Top" Margin="0,10" 
+                                                        DataContext="{Binding AccountDefinitionViewModel}"/>
+                <DockPanel DockPanel.Dock="Top" Margin="0,10" Height="25" LastChildFill="False">
                     <TextBlock Text="Accounting Period Start " DockPanel.Dock="Left" Style="{StaticResource Level2HeadingText}" VerticalAlignment="Center"/>
                 <DatePicker SelectedDate="{Binding AccountingPeriodStartDate}" DockPanel.Dock="Left"  />
             </DockPanel>

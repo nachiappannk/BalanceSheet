@@ -151,13 +151,13 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
         {
             switch (accountType)
             {
-                case Model.Account.AccountType.Notional:
+                case Model.Statements.AccountType.Notional:
                     return "Notional Account";
-                case Model.Account.AccountType.Equity:
+                case Model.Statements.AccountType.Equity:
                     return "The total equity contribution from this account is " + account.GetAccountValue().ToString("N2");
-                case Model.Account.AccountType.Asset:
+                case Model.Statements.AccountType.Asset:
                     return "The investment is " + (account.GetAccountValue() * -1).ToString("N2"); ;
-                case Model.Account.AccountType.Liability:
+                case Model.Statements.AccountType.Liability:
                 default:
                     return "The borrowing is " + account.GetAccountValue().ToString("N2"); ;
 

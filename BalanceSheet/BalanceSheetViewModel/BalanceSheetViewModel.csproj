@@ -76,9 +76,10 @@
     <Compile Include="Model\Excel\ExcelSheetInfoProvider.cs" />
     <Compile Include="Model\Excel\ExcelSheetSelectorViewModel.cs" />
     <Compile Include="FileSaveAsNotification.cs" />
+    <Compile Include="Model\Statements\AccountDefintionStatement.cs" />
     <Compile Include="Model\Statements\AccountStatement.cs" />
     <Compile Include="Model\Statements\IHasValue.cs" />
-    <Compile Include="Model\Account\AccountType.cs" />
+    <Compile Include="Model\Statements\AccountType.cs" />
     <Compile Include="Model\Account\IAccount.cs" />
     <Compile Include="Model\ILogger.cs" />
     <Compile Include="InputForBalanceSheetComputation.cs" />

@@ -46,11 +46,11 @@ namespace Nachiappan.BalanceSheetViewModel
             Name = "Read Input";
             GoToPreviousCommand = new DelegateCommand(goToInputStep);
             GoToNextCommand = new DelegateCommand(goToStatementVerifyingWorkFlowStep);
-            ReadAgainCommand = new DelegateCommand(ProcessInputAndGenerateOutput);
-            ProcessInputAndGenerateOutput();
+            ReadAgainCommand = new DelegateCommand(ReadInput);
+            ReadInput();
         }
 
-        private void ProcessInputAndGenerateOutput()
+        private void ReadInput()
         {
             var input = _dataStore.GetPackage(WorkFlowViewModel.InputParametersPackageDefinition);
             var startDate = input.AccountingPeriodStartDate;
@@ -70,10 +70,28 @@ namespace Nachiappan.BalanceSheetViewModel
             var trimmedBalanceSheetStatements = BalanceSheetStatementsCleaner
                 .RemovedInvalidBalanceSheetStatements(previousBalanceSheetStatements, logger);
 
+
+            var accountDefinitionStatements = new AccountDefinitionGateway(input.AccountDefinitionFileName)
+                .GetAccountDefinitionStatements(logger, input.AccountDefintionSheetName);
+
+            var accountDefinitionAccounts = accountDefinitionStatements.Select(x => x.Account).ToList();
+
+            var accounts = journalStatements.Select(x => x.Account).ToList();
+            accounts.AddRange(previousBalanceSheetStatements.Select(x => x.Account));
+            accounts = accounts.Distinct().ToList();
+            accounts.RemoveAll(x => accountDefinitionAccounts.Contains(x));
+            accountDefinitionStatements.AddRange(accounts.Select(x => new AccountDefintionStatement()
+            {
+                AccountType = AccountType.Asset,
+                Account = x,
+                RecipientAccount = String.Empty,
+            }));
+
             _dataStore.PutPackage(trimmedBalanceSheetStatements, WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements);
             _dataStore.PutPackage(journalStatements, WorkFlowViewModel.InputJournalStatementsPackageDefintion);
             _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalStatementsPackageDefintion);
             _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
+            _dataStore.PutPackage(accountDefinitionStatements, WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
             
             ValidateAccountingPeriod(startDate, endDate, logger);
             ValidateJournalStatements(journalStatements, logger);

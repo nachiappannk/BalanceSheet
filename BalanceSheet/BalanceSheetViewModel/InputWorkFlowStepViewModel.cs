@@ -21,9 +21,13 @@ namespace Nachiappan.BalanceSheetViewModel
             PreviousBalanceSheetSelectorViewModel =
                 new ExcelSheetSelectorViewModel {Title = "Please provide the previous period balance sheet"};
 
+            AccountDefinitionViewModel = 
+                new ExcelSheetSelectorViewModel() { Title = "Please profice the account definition"};
+
 
             JournalSelectorViewModel.ValidityChanged += RaiseCanExecuteChanged;
             PreviousBalanceSheetSelectorViewModel.ValidityChanged += RaiseCanExecuteChanged;
+            AccountDefinitionViewModel.ValidityChanged += RaiseCanExecuteChanged;
 
             GoToPreviousCommand = new DelegateCommand(goToPreviousStep, () => true);
             GoToNextCommand = new DelegateCommand(GoToNext, CanGoToNext);
@@ -39,6 +43,12 @@ namespace Nachiappan.BalanceSheetViewModel
                 @"C:\Users\Z003P4AY\Desktop\V1.0.0.0\Samples\InputSample_BalanceSheetFY16.xlsx";
 
             PreviousBalanceSheetSelectorViewModel.SelectedSheet = "BS";
+
+
+            AccountDefinitionViewModel.InputFileName =
+                @"C:\Users\Z003P4AY\Desktop\V1.0.0.0\Samples\InputSample_JournalFY17.xlsx";
+
+            AccountDefinitionViewModel.SelectedSheet = "Definition";
 
             AccountingPeriodStartDate = new DateTime(2016, 4, 1);
             AccountingPeriodEndDate = new DateTime(2017, 3, 31);
@@ -82,6 +92,7 @@ namespace Nachiappan.BalanceSheetViewModel
         
         public ExcelSheetSelectorViewModel JournalSelectorViewModel { get; set; }
         public ExcelSheetSelectorViewModel PreviousBalanceSheetSelectorViewModel { get; set; }
+        public ExcelSheetSelectorViewModel AccountDefinitionViewModel { get; set; }
 
         private DateTime? _accountingPeriodStartDate;
         public DateTime? AccountingPeriodStartDate
@@ -115,6 +126,7 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             if (!JournalSelectorViewModel.IsValid) return false;
             if (!PreviousBalanceSheetSelectorViewModel.IsValid) return false;
+            if (!AccountDefinitionViewModel.IsValid) return false;
             if (AccountingPeriodEndDate == null) return false;
             if (AccountingPeriodStartDate == null) return false;
             return true;
@@ -132,7 +144,9 @@ namespace Nachiappan.BalanceSheetViewModel
                 PreviousBalanceSheetFileName = PreviousBalanceSheetSelectorViewModel.InputFileName,
                 PreviousBalanceSheetSheetName = PreviousBalanceSheetSelectorViewModel.SelectedSheet,
                 CurrentJournalFileName = JournalSelectorViewModel.InputFileName,
-                CurrentJournalSheetName = JournalSelectorViewModel.SelectedSheet
+                CurrentJournalSheetName = JournalSelectorViewModel.SelectedSheet,
+                AccountDefinitionFileName = AccountDefinitionViewModel.InputFileName,
+                AccountDefintionSheetName = AccountDefinitionViewModel.SelectedSheet,
             };
 
             _dataStore.PutPackage(input ,WorkFlowViewModel.InputParametersPackageDefinition);

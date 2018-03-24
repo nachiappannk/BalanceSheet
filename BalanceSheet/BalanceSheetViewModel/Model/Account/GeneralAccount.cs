@@ -10,6 +10,9 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         private readonly DateTime _openingDate;
         private readonly DateTime _closingDateTime;
         private readonly List<JournalStatement> _journalStatements;
+        private readonly List<AccountDefintionStatement> _accountDefinitionStatements;
+
+        private readonly Dictionary<string, int> _degreeOfNotionalnessForAccounts;
         private readonly Dictionary<string, RealAccount> _realAccounts = new Dictionary<string, RealAccount>();
         private readonly Dictionary<string, NominalAccount> _nominaAccounts = new Dictionary<string, NominalAccount>();
         private readonly Dictionary<string, NominalAccount> _doubleNominalAccounts = new Dictionary<string, NominalAccount>();
@@ -17,19 +20,27 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
 
 
         public GeneralAccount(DateTime openingDate, DateTime closingDateTime, 
-            List<BalanceSheetStatement> previousBalanceSheetStatements, List<JournalStatement> journalStatements)
+            List<BalanceSheetStatement> previousBalanceSheetStatements, List<JournalStatement> journalStatements,
+            List<AccountDefintionStatement> accountDefinitionStatements)
         {
             _openingDate = openingDate;
             _closingDateTime = closingDateTime;
             _journalStatements = journalStatements;
+            _accountDefinitionStatements = accountDefinitionStatements;
+
+
+            _degreeOfNotionalnessForAccounts = GetDegreeOfNotionalnessOfAccounts(accountDefinitionStatements);
 
             OpenAccounts(previousBalanceSheetStatements);
             PostStatements(journalStatements);
             CloseAccounts();
         }
 
-
-
+        private Dictionary<string, int> GetDegreeOfNotionalnessOfAccounts(List<AccountDefintionStatement> accountDefinitionStatements)
+        {
+            return new NotionalnessComputer().ComputerNotionalness(accountDefinitionStatements);
+        }
+        
         private void OpenAccounts(List<BalanceSheetStatement> previousBalanceSheetStatements)
         {
             foreach (var balanceSheetStatement in previousBalanceSheetStatements)
@@ -50,17 +61,22 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
 
         private bool IsRealLedgerName(string name)
         {
-            return AccountClassifer.IsRealLedger(name);
+            var def = _accountDefinitionStatements.FirstOrDefault(x => x.Account == name);
+            if (def == null) return true;
+            if (def.AccountType == AccountType.Asset) return true;
+            if (def.AccountType == AccountType.Equity) return true;
+            if (def.AccountType == AccountType.Liability) return true;
+            return false;
         }
 
         private bool IsNominalLedgerName(string name)
         {
-            return AccountClassifer.IsNominalLedger(name);
+            return !IsRealLedgerName(name);
         }
 
         private bool IsDoubleNominalLedgerName(string name)
         {
-            return AccountClassifer.IsDoubleNominalLedger(name);
+            return false;
         }
 
         private List<IAccount> GetRealAccounts()
@@ -84,7 +100,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             }
             foreach (var nominalLedger in _nominaAccounts)
             {
-                CloseLedger(nominalLedger.Value, nominalLedger.Key);
+                //CloseLedger(nominalLedger.Value, nominalLedger.Key);
             }
         }
 
@@ -116,7 +132,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         private void CloseLedger(NominalAccount nominalAccount, string fullName)
         {
             var value = nominalAccount.GetAccountValue();
-            var baseLedgerName = AccountClassifer.GetBasePartOfName(fullName);
+            var baseLedgerName = _accountDefinitionStatements.Where(x => x.Account == fullName).FirstOrDefault()
+                .RecipientAccount;
             nominalAccount.PostStatement(_closingDateTime, "Closing", value * -1);
             var baseLedger = GetLedger(baseLedgerName);
             baseLedger.PostStatement(_closingDateTime, "Closing of " + AccountClassifer.GetNominalPartOfName(fullName), value);
@@ -153,16 +170,6 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             throw new Exception();
         }
 
-        private string GetNominalPartOfName(string name)
-        {
-            return AccountClassifer.GetNominalPartOfName(name);
-        }
-
-        private string GetBasePartOfName(string name)
-        {
-            return AccountClassifer.GetBasePartOfName(name);
-        }
-
         private void CreateRealLedger(string name, double value)
         {
             if (!IsRealLedgerName(name))throw new Exception();
@@ -170,4 +177,40 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             _realAccounts.Add(name, new RealAccount(name, _openingDate, value));
         }
     }
+
+    public class NotionalnessComputer
+    {
+        private Dictionary<string, int> _notianalnessDictionary = new Dictionary<string, int>();
+
+        private Dictionary<string, string> _recipientAccounts = new Dictionary<string, string>();
+        public Dictionary<string,int> ComputerNotionalness(List<AccountDefintionStatement> accountDefintionStatements)
+        {
+            _recipientAccounts = accountDefintionStatements.ToDictionary(x => x.Account, x => x.RecipientAccount);
+
+            foreach (var accountDefintionStatement in accountDefintionStatements)
+            {
+                int degreeOfNotionalness = GetDegreeOfNotionalNess(accountDefintionStatement.Account);
+            }
+            return _notianalnessDictionary;
+        }
+
+        private int GetDegreeOfNotionalNess(string account)
+        {
+            if (_notianalnessDictionary.ContainsKey(account)) return _notianalnessDictionary[account];
+            var recipientAccount = _recipientAccounts[account];
+            if (recipientAccount == String.Empty)
+            {
+                _notianalnessDictionary.Add(account,0);
+                return 0;
+            }
+            else
+            {
+                var notionalnessOfRecipientAccount = GetDegreeOfNotionalNess(recipientAccount);
+                var notionalness = notionalnessOfRecipientAccount + 1;
+                _notianalnessDictionary.Add(account, notionalness);
+                return notionalness;
+            }
+        }
+    }
+
 }

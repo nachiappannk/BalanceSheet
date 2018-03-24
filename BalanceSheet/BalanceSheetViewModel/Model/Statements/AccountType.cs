@@ -1,4 +1,4 @@
-﻿namespace Nachiappan.BalanceSheetViewModel.Model.Account
+﻿namespace Nachiappan.BalanceSheetViewModel.Model.Statements
 {
     public enum AccountType
     {

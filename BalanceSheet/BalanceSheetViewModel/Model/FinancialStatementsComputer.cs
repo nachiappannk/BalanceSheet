@@ -10,8 +10,11 @@ namespace Nachiappan.BalanceSheetViewModel.Model
             var journalStatements = dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion);
             var previousBalanceSheetStatements =
                 dataStore.GetPackage(WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
+            var accountDefinitionStatement =
+                dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+
             GeneralAccount generalAccount = new GeneralAccount(input.AccountingPeriodStartDate, input.AccountingPeriodEndDate,
-                previousBalanceSheetStatements, journalStatements);
+                previousBalanceSheetStatements, journalStatements, accountDefinitionStatement);
             dataStore.PutPackage(generalAccount.GetAllAccounts(), WorkFlowViewModel.AccountsPackageDefinition);
             dataStore.PutPackage(generalAccount.GetTrialBalanceStatements(),
                 WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);

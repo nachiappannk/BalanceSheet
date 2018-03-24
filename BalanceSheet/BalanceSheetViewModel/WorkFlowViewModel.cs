@@ -15,7 +15,10 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public static readonly PackageDefinition<List<TrimmedJournalStatement>> TrimmedJournalStatementsPackageDefintion
             = new PackageDefinition<List<TrimmedJournalStatement>>(nameof(TrimmedJournalStatementsPackageDefintion));
-        
+
+        public static readonly PackageDefinition<List<AccountDefintionStatement>> InputAccountDefinitionPackageDefinition
+            = new PackageDefinition<List<AccountDefintionStatement>>(nameof(InputAccountDefinitionPackageDefinition));
+
         public static readonly PackageDefinition<List<BalanceSheetStatement>> PreviousBalanceSheetStatementsPackageDefinition = 
             new PackageDefinition<List<BalanceSheetStatement>>(nameof(PreviousBalanceSheetStatementsPackageDefinition));
 
