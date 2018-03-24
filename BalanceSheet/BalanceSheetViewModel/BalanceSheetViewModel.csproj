@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutApplicationWorkFlowStepViewModel.cs" />
+    <Compile Include="Model\FinancialStatementsComputer.cs" />
     <Compile Include="Model\ExcelGateway\BalanceSheetStatementsCleaner.cs" />
     <Compile Include="Model\ExcelGateway\JournalStatementsCleaner.cs" />
     <Compile Include="Model\ExcelGateway\BalanceSheetReader.cs" />
