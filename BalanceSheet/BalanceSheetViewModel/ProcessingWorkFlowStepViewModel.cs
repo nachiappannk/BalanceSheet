@@ -58,10 +58,8 @@ namespace Nachiappan.BalanceSheetViewModel
 
             var logger = new Logger();
 
-
             var journalStatements = JournalReader.ReadJournalStatements
                 (input.CurrentJournalFileName, input.CurrentJournalSheetName, logger);
-
 
             var previousBalanceSheetStatements = BalanceSheetReader.ReadBalanceSheetStatements
                 (input.PreviousBalanceSheetFileName, input.PreviousBalanceSheetSheetName, logger);
@@ -77,18 +75,9 @@ namespace Nachiappan.BalanceSheetViewModel
             _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalStatementsPackageDefintion);
             _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
             
-
             ValidateAccountingPeriod(startDate, endDate, logger);
             ValidateJournalStatements(journalStatements, logger);
             ValidateBalanceSheetStatements(previousBalanceSheetStatements, logger);
-
-
-            GeneralAccount generalAccount = new GeneralAccount(input.AccountingPeriodStartDate, input.AccountingPeriodEndDate,
-                previousBalanceSheetStatements, journalStatements);
-
-            _dataStore.PutPackage(generalAccount.GetAllAccounts(), WorkFlowViewModel.AccountsPackageDefinition);
-            _dataStore.PutPackage(generalAccount.GetTrialBalanceStatements(), WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
-            _dataStore.PutPackage(generalAccount.GetBalanceSheetStatements(), WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
 
             logger.InformationList.Sort((a, b) =>
             {
@@ -96,9 +85,16 @@ namespace Nachiappan.BalanceSheetViewModel
                 if (a.GetType() == typeof(Error)) return -1;
                 return 1;
             });
-            
+
             InformationList = logger.InformationList.ToList();
-            OverAllMessage = GetOverAllErrorMessage(logger.InformationList.ToList());            
+            OverAllMessage = GetOverAllErrorMessage(logger.InformationList.ToList());
+
+
+
+
+
+
+
         }
 
         private static string GetOverAllErrorMessage(List<Information> errorsAndWarnings)
