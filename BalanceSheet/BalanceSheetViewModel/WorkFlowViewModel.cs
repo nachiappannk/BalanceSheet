@@ -66,17 +66,17 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToInputStep()
         {
-            CurrentStep = new InputWorkFlowStepViewModel(_dataStore, GoToProcessingStep, GoToAboutApplicationStep);
+            CurrentStep = new InputWorkFlowStepViewModel(_dataStore, GoToInputReadingStep, GoToAboutApplicationStep);
         }
 
-        private void GoToProcessingStep()
+        private void GoToInputReadingStep()
         {
-            CurrentStep = new ProcessingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToOptionsStep);
+            CurrentStep = new InputReadingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToOptionsStep);
         }
 
         private void GoToOptionsStep()
         {
-            CurrentStep = new OptionsWorkFlowStepViewModel(_dataStore, GoToProcessingStep, GoToStatementVerifyingWorkFlowStep);
+            CurrentStep = new OptionsWorkFlowStepViewModel(_dataStore, GoToInputReadingStep, GoToStatementVerifyingWorkFlowStep);
         }
 
         private void GoToStatementVerifyingWorkFlowStep()

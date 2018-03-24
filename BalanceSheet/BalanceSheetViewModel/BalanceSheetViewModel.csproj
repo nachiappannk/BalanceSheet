@@ -92,7 +92,7 @@
     <Compile Include="Model\Statements\TrimmedBalanceSheetStatement.cs" />
     <Compile Include="OptionsWorkFlowStepViewModel.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />
-    <Compile Include="ProcessingWorkFlowStepViewModel.cs" />
+    <Compile Include="InputReadingWorkFlowStepViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Account\RealAccount.cs" />

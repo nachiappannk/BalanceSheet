@@ -9,7 +9,7 @@ using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
-    public class ProcessingWorkFlowStepViewModel : WorkFlowStepViewModel
+    public class InputReadingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
         public DelegateCommand ReadAgainCommand { get; set; }
 
@@ -39,11 +39,11 @@ namespace Nachiappan.BalanceSheetViewModel
             }
         }
 
-        public ProcessingWorkFlowStepViewModel(DataStore dataStore, Action goToInputStep, 
+        public InputReadingWorkFlowStepViewModel(DataStore dataStore, Action goToInputStep, 
             Action goToStatementVerifyingWorkFlowStep)
         {
             _dataStore = dataStore;
-            Name = "Read Input And Process";
+            Name = "Read Input";
             GoToPreviousCommand = new DelegateCommand(goToInputStep);
             GoToNextCommand = new DelegateCommand(goToStatementVerifyingWorkFlowStep);
             ReadAgainCommand = new DelegateCommand(ProcessInputAndGenerateOutput);

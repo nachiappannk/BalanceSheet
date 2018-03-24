@@ -17,8 +17,8 @@
                 <local:InputWorkFlowStepUserControl></local:InputWorkFlowStepUserControl>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type balanceSheetViewModel:ProcessingWorkFlowStepViewModel}">
-                <local:ProcessingWorkFlowStepUserControl></local:ProcessingWorkFlowStepUserControl>
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:InputReadingWorkFlowStepViewModel}">
+                <local:InputReadingWorkFlowStepUserControl></local:InputReadingWorkFlowStepUserControl>
             </DataTemplate>
             <DataTemplate DataType="{x:Type balanceSheetViewModel:AboutApplicationWorkFlowStepViewModel}">
                 <local:AboutApplicationWorkFlowStepUserControl/>

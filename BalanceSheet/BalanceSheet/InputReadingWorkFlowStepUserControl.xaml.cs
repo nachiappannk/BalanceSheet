@@ -18,9 +18,9 @@ namespace Nachiappan.BalanceSheet
     /// <summary>
     /// Interaction logic for ProcessingWorkFlowStepUserControl.xaml
     /// </summary>
-    public partial class ProcessingWorkFlowStepUserControl : UserControl
+    public partial class InputReadingWorkFlowStepUserControl : UserControl
     {
-        public ProcessingWorkFlowStepUserControl()
+        public InputReadingWorkFlowStepUserControl()
         {
             InitializeComponent();
         }
