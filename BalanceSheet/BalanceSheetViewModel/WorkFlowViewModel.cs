@@ -76,7 +76,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToOptionsStep()
         {
-            CurrentStep = new OptionsWorkFlowStepViewModel(_dataStore, GoToInputReadingStep, GoToStatementVerifyingWorkFlowStep);
+            CurrentStep = new AlteringAccountsRelationWorkFlowStepViewModel(_dataStore, GoToInputReadingStep, GoToStatementVerifyingWorkFlowStep);
         }
 
         private void GoToStatementVerifyingWorkFlowStep()

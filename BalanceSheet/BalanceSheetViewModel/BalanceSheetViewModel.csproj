@@ -90,7 +90,7 @@
     <Compile Include="Model\Account\AccountClassifer.cs" />
     <Compile Include="Model\Account\NominalAccount.cs" />
     <Compile Include="Model\Statements\TrimmedBalanceSheetStatement.cs" />
-    <Compile Include="OptionsWorkFlowStepViewModel.cs" />
+    <Compile Include="AlteringAccountsRelationWorkFlowStepViewModel.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />
     <Compile Include="InputReadingWorkFlowStepViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />

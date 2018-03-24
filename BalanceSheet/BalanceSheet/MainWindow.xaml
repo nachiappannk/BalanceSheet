@@ -32,8 +32,8 @@
                 <local:PrintOutputWorkFlowStepUserControl/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type balanceSheetViewModel:OptionsWorkFlowStepViewModel}">
-                <local:OptionsWorkFlowStepUserControl/>
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:AlteringAccountsRelationWorkFlowStepViewModel}">
+                <local:AlteringAccountsRelationWorkFlowStepUserControl/>
             </DataTemplate>
 
         </Grid.Resources>

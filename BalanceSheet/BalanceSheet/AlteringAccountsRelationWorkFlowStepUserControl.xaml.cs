@@ -18,9 +18,9 @@ namespace Nachiappan.BalanceSheet
     /// <summary>
     /// Interaction logic for OptionsWorkFlowStepUserControl.xaml
     /// </summary>
-    public partial class OptionsWorkFlowStepUserControl : UserControl
+    public partial class AlteringAccountsRelationWorkFlowStepUserControl : UserControl
     {
-        public OptionsWorkFlowStepUserControl()
+        public AlteringAccountsRelationWorkFlowStepUserControl()
         {
             InitializeComponent();
         }

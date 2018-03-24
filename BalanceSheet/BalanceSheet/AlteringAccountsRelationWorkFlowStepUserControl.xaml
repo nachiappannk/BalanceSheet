@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Nachiappan.BalanceSheet.OptionsWorkFlowStepUserControl"
+﻿<UserControl x:Class="Nachiappan.BalanceSheet.AlteringAccountsRelationWorkFlowStepUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
              xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance balanceSheetViewModel:OptionsWorkFlowStepViewModel}"
+             d:DataContext="{d:DesignInstance balanceSheetViewModel:AlteringAccountsRelationWorkFlowStepViewModel}"
              d:DesignHeight="300" d:DesignWidth="700">
     <Grid>
         <Grid.RowDefinitions>

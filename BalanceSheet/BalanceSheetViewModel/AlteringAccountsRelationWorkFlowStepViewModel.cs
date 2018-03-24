@@ -7,18 +7,18 @@ using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
-    public class OptionsWorkFlowStepViewModel : WorkFlowStepViewModel
+    public class AlteringAccountsRelationWorkFlowStepViewModel : WorkFlowStepViewModel
     {
         public List<AccountRelationViewModel> LedgerOptions { get; set; }
 
-        public OptionsWorkFlowStepViewModel(DataStore dataStore, Action goToPreviousStep, 
+        public AlteringAccountsRelationWorkFlowStepViewModel(DataStore dataStore, Action goToPreviousStep, 
             Action goToNextStep)
         {
             FinancialStatementsComputer.ComputerFinanicalStatemments(dataStore);
 
             GoToNextCommand = new DelegateCommand(goToNextStep);
             GoToPreviousCommand = new DelegateCommand(goToPreviousStep);
-            Name = "Account type selection/verification";
+            Name = "Modify Accounts relation";
 
             var ledgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
 
