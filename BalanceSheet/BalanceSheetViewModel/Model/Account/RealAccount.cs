@@ -8,7 +8,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
     public class RealAccount : IAccount
     {
         private readonly string _accountName;
-        private double ledgerValue = 0;
+        private double ledgerValue;
 
         private List<AccountStatement> ledgerStatements = new List<AccountStatement>();
 
@@ -20,11 +20,25 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
                 Date = openingDate,
                 Description = "Opening",
                 SerialNumber = 1,
-                Value =  value
+                Value =  value,
+                RunningTotaledValue = value,
             });
             ledgerValue = value;
 
         }
+		
+		public List<AccountType> GetPossibleAccountTypes()
+        {
+            if (ledgerValue.IsZero())
+                return new List<AccountType>() {AccountType.Asset, AccountType.Liability, AccountType.Equity};
+            if (ledgerValue < 0)
+                return new List<AccountType>() {AccountType.Asset};
+            if(_accountName.ToLower().Contains("cap"))
+                return new List<AccountType>() {AccountType.Equity, AccountType.Liability};
+            return new List<AccountType>(){AccountType.Liability, AccountType.Equity};
+
+        }
+		
 
         public string GetPrintableName()
         {
@@ -35,8 +49,16 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         public void PostStatement(DateTime date, string statement, double value)
         {
             var count = ledgerStatements.Count + 1;
-            ledgerStatements.Add(new AccountStatement() { Date = date, Description = statement, SerialNumber = count, Value = value });
             ledgerValue += value;
+            ledgerStatements.Add(new AccountStatement()
+            {
+                Date = date,
+                Description = statement,
+                SerialNumber = count,
+                Value = value,
+                RunningTotaledValue = ledgerValue,
+            });
+            
         }
 
         public double GetAccountValue()
@@ -68,20 +90,11 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
                 SerialNumber = x.SerialNumber,
                 Date = x.Date,
                 Description = x.Description,
+                RunningTotaledValue = x.RunningTotaledValue * factor,
                 Value = x.Value * factor,
             }).ToList();
         }
 
-        public List<AccountType> GetPossibleAccountTypes()
-        {
-            if (ledgerValue.IsZero())
-                return new List<AccountType>() {AccountType.Asset, AccountType.Liability, AccountType.Equity};
-            if (ledgerValue < 0)
-                return new List<AccountType>() {AccountType.Asset};
-            if(_accountName.ToLower().Contains("cap"))
-                return new List<AccountType>() {AccountType.Equity, AccountType.Liability};
-            return new List<AccountType>(){AccountType.Liability, AccountType.Equity};
-
-        }
+        
     }
 }

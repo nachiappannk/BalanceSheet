@@ -14,6 +14,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
             Date = x.Date;
             Credit = x.GetCreditValueOrNull();
             Debit = x.GetDebitValueOrNull();
+            Balance = x.RunningTotaledValue;
         }
 
         [DisplayName("S.No.")]
@@ -33,5 +34,9 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
         [DisplayName("Debit")]
         [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
         public double? Debit { get; set; }
+
+        [DisplayName("Balance")]
+        [DisplayFormat(DataFormatString = CommonDefinition.ValueDisplayFormat)]
+        public double Balance { get; set; }
     }
 }
