@@ -23,8 +23,6 @@ namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewMod
 
         private string _selectedLedgerName;
         private readonly Dictionary<string, IAccount> _accounts;
-        private List<DisplayableAccountStatement> _ledgerStatements;
-        private string _ledgerType;
         private Dictionary<string, AccountType> _ledgerTypes;
         private SelectedAccountViewModel _selectedAccountViewModel;
 
