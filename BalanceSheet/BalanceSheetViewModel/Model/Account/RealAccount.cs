@@ -26,8 +26,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             ledgerValue = value;
 
         }
-		
-		public List<AccountType> GetPossibleAccountTypes()
+        
+        public List<AccountType> GetPossibleAccountTypes()
         {
             if (ledgerValue.IsZero())
                 return new List<AccountType>() {AccountType.Asset, AccountType.Liability, AccountType.Equity};
@@ -38,7 +38,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             return new List<AccountType>(){AccountType.Liability, AccountType.Equity};
 
         }
-		
+        
 
         public string GetPrintableName()
         {

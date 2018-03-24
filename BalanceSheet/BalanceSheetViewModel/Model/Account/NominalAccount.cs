@@ -40,8 +40,13 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         public void PostStatement(DateTime date, string statement, double value)
         {
             var count = _ledgerStatements.Count + 1;
-            _ledgerStatements.Add(new AccountStatement() { Date = date, Description = statement, SerialNumber = count, Value = value });
             ledgerValue += value;
+            _ledgerStatements.Add(new AccountStatement()
+            {
+                Date = date, Description = statement, SerialNumber = count, Value = value,
+                RunningTotaledValue = ledgerValue,
+            });
+            
         }
 
         public double GetAccountValue()
