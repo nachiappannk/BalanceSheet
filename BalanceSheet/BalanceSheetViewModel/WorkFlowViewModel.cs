@@ -40,7 +40,11 @@ namespace Nachiappan.BalanceSheetViewModel
 
         public static readonly PackageDefinition<List<CorrectedAccountDefintionStatement>> CorrectedAccountDefinitionPackageDefinition = 
             new PackageDefinition<List<CorrectedAccountDefintionStatement>>(nameof(CorrectedAccountDefinitionPackageDefinition));
- 
+
+
+        public static readonly PackageDefinition<List<AccountPrintOption>> AccountPrintOptionsPackageDefinition =
+            new PackageDefinition<List<AccountPrintOption>>(nameof(AccountPrintOptionsPackageDefinition));
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

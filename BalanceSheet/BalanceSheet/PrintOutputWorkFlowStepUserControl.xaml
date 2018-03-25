@@ -9,7 +9,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance balanceSheetViewModel:PrintOutputWorkFlowStepViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="700">
     <Grid>
         <i:Interaction.Triggers>
             <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SaveOutputRequest}">
@@ -29,9 +29,46 @@
             <Button Style="{StaticResource FooterStripButton}" Content="Close" DockPanel.Dock="Right" Command="{Binding GoToNextCommand}"/>
         </DockPanel>
         <Grid Grid.Row="1">
-            <Button Content="Save Output" Height="24" Width="100" Command="{Binding SaveOutputCommand}"/>
+            <Border Style="{StaticResource MainBorderStyle}">
+                <Border.Resources>
+                    <Style x:Key="ReadOnlyFormatableDataGrid" TargetType="{x:Type local:FormatableDataGrid}">
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                        <Setter Property="VerticalAlignment" Value="Top"/>
+                        <Setter Property="IsReadOnly" Value="False"/>
+                        <Setter Property="ColumnWidth" Value="Auto"/>
+                        <Setter Property="Margin" Value="4"/>
+                        <Setter Property="AlternationCount" Value="2" />
+                    </Style>
+                </Border.Resources>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <local:FormatableDataGrid DataContext="{Binding AccountPrintOptions}" ItemsSource="{Binding}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}" 
+                                              CanUserAddRows="False"
+                                              AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Account" Binding="{Binding Name}" Width="1*"/>
+                            <DataGridTemplateColumn Width="120" Header="Print (Excel)">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox HorizontalAlignment="Center" 
+                                                  IsChecked="{Binding Path=IsPrintingNecessary, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </local:FormatableDataGrid>
+                    <Button Grid.Row="1" Content="Save" Command="{Binding SaveOutputCommand}" Width="Auto" 
+                            HorizontalAlignment="Right"/>
+                </Grid>
+                
+
+            </Border>
         </Grid>
-        
+
 
     </Grid>
 </UserControl>

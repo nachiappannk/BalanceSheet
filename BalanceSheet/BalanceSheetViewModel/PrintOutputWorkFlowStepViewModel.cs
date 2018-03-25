@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Documents;
 using Nachiappan.BalanceSheetViewModel.Model;
+using Nachiappan.BalanceSheetViewModel.Model.Account;
 using Nachiappan.BalanceSheetViewModel.Model.Excel;
 using Nachiappan.BalanceSheetViewModel.Model.ExcelGateway;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
@@ -17,6 +18,8 @@ namespace Nachiappan.BalanceSheetViewModel
         private readonly DataStore _dataStore;
         public DelegateCommand SaveOutputCommand { get; set; }
 
+        public List<AccountPrintOption> AccountPrintOptions { get; set; }
+
         public InteractionRequest<FileSaveAsNotification> SaveOutputRequest { get; private set; }
 
         public PrintOutputWorkFlowStepViewModel(DataStore dataStore, Action goToPrevious)
@@ -27,8 +30,22 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToNextCommand = new DelegateCommand(CloseApplication);
             SaveOutputCommand = new DelegateCommand(SaveOutput);
             SaveOutputRequest = new InteractionRequest<FileSaveAsNotification>();
+            
 
+            
 
+            if (dataStore.IsPackageStored(WorkFlowViewModel.AccountPrintOptionsPackageDefinition))
+            {
+                AccountPrintOptions = dataStore.GetPackage(WorkFlowViewModel.AccountPrintOptionsPackageDefinition);
+            }
+            else
+            {
+                var accountDefinitions = dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+                AccountPrintOptions =
+                    accountDefinitions.Select(x => new AccountPrintOption() { Name = x.Account }).ToList();
+                dataStore.PutPackage(AccountPrintOptions, WorkFlowViewModel.AccountPrintOptionsPackageDefinition);
+
+            }
         }
 
         private void CloseApplication()
@@ -64,6 +81,46 @@ namespace Nachiappan.BalanceSheetViewModel
                 WriteBalanceSheet(outputFileName);
                 WriteTrialBalance(outputFileName);
                 WriteAccountDefinitions(outputFileName);
+                WriteAccounts(outputFileName);
+            }
+        }
+
+        private void WriteAccounts(string outputFileName)
+        {
+            var accountsToBePrinted =
+                AccountPrintOptions.Where(x => x.IsPrintingNecessary).Select(x => x.Name).ToList();
+
+            var accounts = _dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
+            var accountsDictionary = accounts.ToDictionary(x => x.GetName(), x => x);
+            foreach (var accountToBePrinted in accountsToBePrinted)
+            {
+                WriteAccount(accountsDictionary[accountToBePrinted], outputFileName);
+            }
+        }
+
+        private void WriteAccount(IAccount account, string outputFileName)
+        {
+            var statements = account.GetAccountStatements();
+            var headings = new List<string> {"S.No.", "Date", "Account", "Credit", "Debit", "Balance" };
+            using (var writer = new ExcelSheetWriter(outputFileName, "Acc-"+account.GetName()))
+            {
+                var index = 0;
+                writer.Write(index++, headings.ToArray<object>());
+                writer.SetColumnsWidth(6, 12, 45, 12, 12, 12);
+                writer.ApplyHeadingFormat(headings.Count);
+                writer.WriteList(index, statements, (b, rowIndex) => new object[]
+                {
+                    b.SerialNumber,
+                    b.Date,
+                    b.Description,
+                    b.GetCreditValue(),
+                    b.GetDebitValue(),
+                    b.RunningTotaledValue,
+                });
+                index = index + 1 + statements.Count;
+                writer.Write(index, new object[] { "", "Total", "", statements.GetCreditTotal(),
+                    statements.GetDebitTotal(), statements.GetTotal()});
+
             }
         }
 
@@ -124,5 +181,11 @@ namespace Nachiappan.BalanceSheetViewModel
             JournalGateway gateway = new JournalGateway(fileName);
             gateway.WriteJournal(journalStatements);
         }       
+    }
+
+    public class AccountPrintOption
+    {
+        public string Name { get; set; }
+        public bool IsPrintingNecessary { get; set; }
     }
 }
