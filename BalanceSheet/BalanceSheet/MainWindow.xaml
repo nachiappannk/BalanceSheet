@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
         xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
-        xmlns:statementVerifyingWorkFlowStepViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewModel;assembly=BalanceSheetViewModel"
+        xmlns:statementVerifyingWorkFlowStepViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel;assembly=BalanceSheetViewModel"
         d:DataContext="{d:DesignInstance balanceSheetViewModel:WorkFlowViewModel}"
         mc:Ignorable="d"
         Icon="if_money_299107.ico"
@@ -35,6 +35,13 @@
             <DataTemplate DataType="{x:Type balanceSheetViewModel:AlteringAccountsRelationWorkFlowStepViewModel}">
                 <local:AlteringAccountsRelationWorkFlowStepUserControl/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type statementVerifyingWorkFlowStepViewModel:InputViewingWorkFlowStepViewModel}">
+                <local:InputViewingWorkFlowStepUserControl/>
+            </DataTemplate>
+
+
+            
 
         </Grid.Resources>
         <ContentPresenter Content="{Binding CurrentStep}"/>

@@ -65,6 +65,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutApplicationWorkFlowStepViewModel.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableAccountDefintionStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableCorrectedAccountDefintionStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\InputViewingWorkFlowStepViewModel.cs" />
     <Compile Include="Model\FinancialStatementsComputer.cs" />
     <Compile Include="Model\ExcelGateway\BalanceSheetStatementsCleaner.cs" />
     <Compile Include="Model\ExcelGateway\JournalStatementsCleaner.cs" />
@@ -90,6 +93,7 @@
     <Compile Include="Model\Account\GeneralAccount.cs" />
     <Compile Include="Model\Account\AccountClassifer.cs" />
     <Compile Include="Model\Account\NominalAccount.cs" />
+    <Compile Include="Model\Statements\CorrectedAccountDefintionStatement.cs" />
     <Compile Include="Model\Statements\TrimmedBalanceSheetStatement.cs" />
     <Compile Include="AlteringAccountsRelationWorkFlowStepViewModel.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />
@@ -99,14 +103,14 @@
     <Compile Include="Model\Account\RealAccount.cs" />
     <Compile Include="Model\Excel\RowCellsReader.cs" />
     <Compile Include="Model\Statements\BalanceSheetStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\CommonDefinition.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableAccountStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableBalanceSheetStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableJournalStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableTrialBalanceStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableTrimmedBalanceSheetStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\DisplayableTrimmedJournalStatement.cs" />
-    <Compile Include="StatementVerifyingWorkFlowStepViewModel\StatementVerifyingWorkFlowStepViewModel.cs" />
+    <Compile Include="StatementDisplayingViewModel\CommonDefinition.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableAccountStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableBalanceSheetStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableJournalStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableTrialBalanceStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableTrimmedBalanceSheetStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\DisplayableTrimmedJournalStatement.cs" />
+    <Compile Include="StatementDisplayingViewModel\StatementVerifyingWorkFlowStepViewModel.cs" />
     <Compile Include="Model\Statements\TrimmedJournalStatement.cs" />
     <Compile Include="Model\Statements\TrialBalanceStatement.cs" />
     <Compile Include="WorkFlowStepViewModel.cs" />

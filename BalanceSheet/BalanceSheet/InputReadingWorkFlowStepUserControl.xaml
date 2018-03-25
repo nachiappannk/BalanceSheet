@@ -68,10 +68,12 @@
                     <TextBlock Text="  1. Modify the input excel file (journal or balance sheet)" Style="{StaticResource NormalText}"/>
                     <TextBlock Text="  2. Save the input excel file" Style="{StaticResource NormalText}"/>
                     <TextBlock Text="  3. Hit the refresh button" Style="{StaticResource NormalText}"/>
-                    <Grid Margin="0,0,0,4">
-                        <Button Content="Refresh" Width="60"  HorizontalAlignment="Right" 
+                    <DockPanel LastChildFill="False" Margin="0,0,0,4">
+                        <Button Content="View Input" Width="Auto"  DockPanel.Dock="Right" 
+                                Margin="2,0" Command="{Binding ViewInputStatementsCommand}"/>
+                        <Button Content="Refresh" Width="60"  DockPanel.Dock="Right" 
                                 Margin="2,0" Command="{Binding ReadAgainCommand}"/>
-                    </Grid>
+                    </DockPanel>
                 </StackPanel>
             </Border>
         </Grid>

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
 
-namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewModel
+namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 {
     public class DisplayableTrialBalanceStatement
     {

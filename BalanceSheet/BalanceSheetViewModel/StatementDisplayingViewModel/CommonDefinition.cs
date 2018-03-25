@@ -1,4 +1,4 @@
-﻿namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewModel
+﻿namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 {
     public static class CommonDefinition
     {

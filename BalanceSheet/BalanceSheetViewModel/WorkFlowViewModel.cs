@@ -5,6 +5,7 @@ using Nachiappan.BalanceSheetViewModel.Annotations;
 using Nachiappan.BalanceSheetViewModel.Model;
 using Nachiappan.BalanceSheetViewModel.Model.Account;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
+using Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel;
 
 namespace Nachiappan.BalanceSheetViewModel
 {
@@ -40,6 +41,9 @@ namespace Nachiappan.BalanceSheetViewModel
         public static readonly PackageDefinition<List<TrimmedBalanceSheetStatement>> TrimmedPreviousBalanceSheetStatements = 
             new PackageDefinition<List<TrimmedBalanceSheetStatement>>(nameof(TrimmedPreviousBalanceSheetStatements));
 
+        public static readonly PackageDefinition<List<CorrectedAccountDefintionStatement>> CorrectedAccountDefinitionPackageDefinition = 
+            new PackageDefinition<List<CorrectedAccountDefintionStatement>>(nameof(CorrectedAccountDefinitionPackageDefinition));
+ 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -74,17 +78,25 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToInputReadingStep()
         {
-            CurrentStep = new InputReadingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToOptionsStep);
+            CurrentStep = new InputReadingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToAlteringRelationStep, 
+                SetCurrentStep);
         }
 
-        private void GoToOptionsStep()
+        private void GoToAlteringRelationStep()
         {
-            CurrentStep = new AlteringAccountsRelationWorkFlowStepViewModel(_dataStore, GoToInputReadingStep, GoToStatementVerifyingWorkFlowStep);
+            CurrentStep = new AlteringAccountsRelationWorkFlowStepViewModel(_dataStore, 
+                GoToInputReadingStep, GoToStatementVerifyingWorkFlowStep);
         }
+
+        private void SetCurrentStep(WorkFlowStepViewModel viewModel)
+        {
+            CurrentStep = viewModel;
+        }
+
 
         private void GoToStatementVerifyingWorkFlowStep()
         {
-            CurrentStep = new StatementVerifyingWorkFlowStepViewModel.StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToOptionsStep, GoToPrintStatementWorkFlowStep);
+            CurrentStep = new StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToAlteringRelationStep, GoToPrintStatementWorkFlowStep);
         }
 
         private void GoToPrintStatementWorkFlowStep()

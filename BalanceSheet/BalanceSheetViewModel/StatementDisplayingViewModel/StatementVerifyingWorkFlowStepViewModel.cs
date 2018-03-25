@@ -6,7 +6,7 @@ using Nachiappan.BalanceSheetViewModel.Model.Account;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
 using Prism.Commands;
 
-namespace Nachiappan.BalanceSheetViewModel.StatementVerifyingWorkFlowStepViewModel
+namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 {
     public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
     {

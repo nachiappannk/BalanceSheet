@@ -75,6 +75,9 @@
       <DependentUpon>AboutApplicationWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="FormatableDataGrid.cs" />
+    <Compile Include="InputViewingWorkFlowStepUserControl.xaml.cs">
+      <DependentUpon>InputViewingWorkFlowStepUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InputWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>InputWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,10 @@
     <Page Include="ExcelSheetSelectorUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InputViewingWorkFlowStepUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InputWorkFlowStepUserControl.xaml">
       <SubType>Designer</SubType>

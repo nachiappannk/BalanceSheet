@@ -5,6 +5,7 @@ using Nachiappan.BalanceSheetViewModel.Model;
 using Nachiappan.BalanceSheetViewModel.Model.Account;
 using Nachiappan.BalanceSheetViewModel.Model.ExcelGateway;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
+using Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel;
 using Prism.Commands;
 
 namespace Nachiappan.BalanceSheetViewModel
@@ -13,7 +14,10 @@ namespace Nachiappan.BalanceSheetViewModel
     {
         public DelegateCommand ReadAgainCommand { get; set; }
 
+        public DelegateCommand ViewInputStatementsCommand { get; set; }
+
         private readonly DataStore _dataStore;
+        private readonly Action<WorkFlowStepViewModel> _setCurrentStep;
 
         public List<Information> InformationList
         {
@@ -40,14 +44,22 @@ namespace Nachiappan.BalanceSheetViewModel
         }
 
         public InputReadingWorkFlowStepViewModel(DataStore dataStore, Action goToInputStep, 
-            Action goToStatementVerifyingWorkFlowStep)
+            Action goToStatementVerifyingWorkFlowStep, Action<WorkFlowStepViewModel> setCurrentStep)
         {
             _dataStore = dataStore;
+            _setCurrentStep = setCurrentStep;
             Name = "Read Input";
             GoToPreviousCommand = new DelegateCommand(goToInputStep);
             GoToNextCommand = new DelegateCommand(goToStatementVerifyingWorkFlowStep);
             ReadAgainCommand = new DelegateCommand(ReadInput);
+            ViewInputStatementsCommand = new DelegateCommand(GoToViewStatements);
             ReadInput();
+        }
+         
+        private void GoToViewStatements()
+        {
+            _setCurrentStep.Invoke(new InputViewingWorkFlowStepViewModel(_dataStore, 
+                () => _setCurrentStep.Invoke(this)));
         }
 
         private void ReadInput()
@@ -74,24 +86,16 @@ namespace Nachiappan.BalanceSheetViewModel
             var accountDefinitionStatements = new AccountDefinitionGateway(input.AccountDefinitionFileName)
                 .GetAccountDefinitionStatements(logger, input.AccountDefintionSheetName);
 
-            var accountDefinitionAccounts = accountDefinitionStatements.Select(x => x.Account).ToList();
-
-            var accounts = journalStatements.Select(x => x.Account).ToList();
-            accounts.AddRange(previousBalanceSheetStatements.Select(x => x.Account));
-            accounts = accounts.Distinct().ToList();
-            accounts.RemoveAll(x => accountDefinitionAccounts.Contains(x));
-            accountDefinitionStatements.AddRange(accounts.Select(x => new AccountDefintionStatement()
-            {
-                AccountType = AccountType.Asset,
-                Account = x,
-                RecipientAccount = String.Empty,
-            }));
-
+            var cleanedAccountDefinitionStatements =
+                AccountDefinitionCleaner.CorrectInvalidStatements(accountDefinitionStatements,
+                    previousBalanceSheetStatements, journalStatements, logger);
+            
             _dataStore.PutPackage(trimmedBalanceSheetStatements, WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements);
             _dataStore.PutPackage(journalStatements, WorkFlowViewModel.InputJournalStatementsPackageDefintion);
             _dataStore.PutPackage(trimmedJournalStatements, WorkFlowViewModel.TrimmedJournalStatementsPackageDefintion);
             _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
             _dataStore.PutPackage(accountDefinitionStatements, WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+            _dataStore.PutPackage(cleanedAccountDefinitionStatements, WorkFlowViewModel.CorrectedAccountDefinitionPackageDefinition);
             
             ValidateAccountingPeriod(startDate, endDate, logger);
             ValidateJournalStatements(journalStatements, logger);
@@ -106,12 +110,6 @@ namespace Nachiappan.BalanceSheetViewModel
 
             InformationList = logger.InformationList.ToList();
             OverAllMessage = GetOverAllErrorMessage(logger.InformationList.ToList());
-
-
-
-
-
-
 
         }
 
