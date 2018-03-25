@@ -8,7 +8,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 {
     public static class BalanceSheetStatementsCleaner
     {
-        public static List<TrimmedBalanceSheetStatement> RemovedInvalidBalanceSheetStatements(
+        public static List<CorrectedBalanceSheetStatement> RemovedInvalidBalanceSheetStatements(
             List<BalanceSheetStatement> statements
             , ILogger logger)
         {
@@ -24,17 +24,17 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             return trimmedStatements2;
         }
 
-        private static List<TrimmedBalanceSheetStatement> RemoveStatementsWithInvalidAccount(List<BalanceSheetStatement> statements, ILogger logger)
+        private static List<CorrectedBalanceSheetStatement> RemoveStatementsWithInvalidAccount(List<BalanceSheetStatement> statements, ILogger logger)
         {
             var mismatchedStatements = statements.Where(x => !AccountClassifer.IsRealLedger(x.Account)).ToList();
             statements.RemoveAll(x => mismatchedStatements.Contains(x));
             
-            var z = mismatchedStatements.Select(x => new TrimmedBalanceSheetStatement(x, "Invalid account name"))
+            var z = mismatchedStatements.Select(x => new CorrectedBalanceSheetStatement(x, "Invalid account name"))
                 .ToList();
             return z;
         }
 
-        private static List<TrimmedBalanceSheetStatement> RemoveDuplicateStatements(List<BalanceSheetStatement> statements)
+        private static List<CorrectedBalanceSheetStatement> RemoveDuplicateStatements(List<BalanceSheetStatement> statements)
         {
             var accountToTimesDictionary =
                 statements.Select(x => x.Account).GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
@@ -42,7 +42,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             var statementsWhereAccountIsrepeated = statements.Where(x => invalidAccountNames.Contains(x.Account)).ToList();
             statements.RemoveAll(x => statementsWhereAccountIsrepeated.Contains(x));
             var trimmedStatements = statementsWhereAccountIsrepeated.Select(x =>
-                new TrimmedBalanceSheetStatement(x, "The account entry is there multiple times")).ToList();
+                new CorrectedBalanceSheetStatement(x, "The account entry is there multiple times")).ToList();
             return trimmedStatements;
         }
     }

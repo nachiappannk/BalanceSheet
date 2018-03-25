@@ -14,8 +14,8 @@ namespace Nachiappan.BalanceSheetViewModel
         public static readonly PackageDefinition<List<JournalStatement>> InputJournalStatementsPackageDefintion 
             = new PackageDefinition<List<JournalStatement>>(nameof(InputJournalStatementsPackageDefintion));
 
-        public static readonly PackageDefinition<List<TrimmedJournalStatement>> TrimmedJournalStatementsPackageDefintion
-            = new PackageDefinition<List<TrimmedJournalStatement>>(nameof(TrimmedJournalStatementsPackageDefintion));
+        public static readonly PackageDefinition<List<CorrectedJournalStatement>> TrimmedJournalStatementsPackageDefintion
+            = new PackageDefinition<List<CorrectedJournalStatement>>(nameof(TrimmedJournalStatementsPackageDefintion));
 
         public static readonly PackageDefinition<List<AccountDefintionStatement>> InputAccountDefinitionPackageDefinition
             = new PackageDefinition<List<AccountDefintionStatement>>(nameof(InputAccountDefinitionPackageDefinition));
@@ -38,8 +38,8 @@ namespace Nachiappan.BalanceSheetViewModel
         public static readonly PackageDefinition<Dictionary<string, AccountType>> AccountNameToTypeMapPackageDefinition = 
             new PackageDefinition<Dictionary<string, AccountType>>(nameof(AccountNameToTypeMapPackageDefinition));
 
-        public static readonly PackageDefinition<List<TrimmedBalanceSheetStatement>> TrimmedPreviousBalanceSheetStatements = 
-            new PackageDefinition<List<TrimmedBalanceSheetStatement>>(nameof(TrimmedPreviousBalanceSheetStatements));
+        public static readonly PackageDefinition<List<CorrectedBalanceSheetStatement>> TrimmedPreviousBalanceSheetStatements = 
+            new PackageDefinition<List<CorrectedBalanceSheetStatement>>(nameof(TrimmedPreviousBalanceSheetStatements));
 
         public static readonly PackageDefinition<List<CorrectedAccountDefintionStatement>> CorrectedAccountDefinitionPackageDefinition = 
             new PackageDefinition<List<CorrectedAccountDefintionStatement>>(nameof(CorrectedAccountDefinitionPackageDefinition));

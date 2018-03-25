@@ -13,10 +13,12 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
             Reason = x.Reason;
         }
 
-        [DisplayName("Account Tpe")]
+        [DisplayName("Account Type")]
         public AccountType AccountType { get; set; }
 
         public string Account { get; set; }
+
+        [DisplayName("Recipient Account")]
         public string RecipientAccount { get; set; }
         public string Reason { get; set; }
     }

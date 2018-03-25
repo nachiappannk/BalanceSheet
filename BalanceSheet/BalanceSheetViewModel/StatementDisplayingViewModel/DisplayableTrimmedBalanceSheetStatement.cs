@@ -6,7 +6,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 {
     public class DisplayableTrimmedBalanceSheetStatement
     {
-        public DisplayableTrimmedBalanceSheetStatement(TrimmedBalanceSheetStatement statement)
+        public DisplayableTrimmedBalanceSheetStatement(CorrectedBalanceSheetStatement statement)
         {
             Account = statement.Account;
             Credit = statement.GetCreditValueOrNull();

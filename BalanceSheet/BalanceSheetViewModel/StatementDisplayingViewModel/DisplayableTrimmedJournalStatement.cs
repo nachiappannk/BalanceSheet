@@ -7,7 +7,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 {
     public class DisplayableTrimmedJournalStatement
     {
-        public DisplayableTrimmedJournalStatement(TrimmedJournalStatement x)
+        public DisplayableTrimmedJournalStatement(CorrectedJournalStatement x)
         {
             Account = x.Account;
             Date = x.Date;

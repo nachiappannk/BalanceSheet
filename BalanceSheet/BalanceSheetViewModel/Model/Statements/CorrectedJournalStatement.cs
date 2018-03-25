@@ -2,9 +2,9 @@
 
 namespace Nachiappan.BalanceSheetViewModel.Model.Statements
 {
-    public class TrimmedJournalStatement : IHasValue
+    public class CorrectedJournalStatement : IHasValue
     {
-        public TrimmedJournalStatement(JournalStatement x, string reason)
+        public CorrectedJournalStatement(JournalStatement x, string reason)
         {
             Account = x.Account;
             Date = x.Date;

@@ -8,7 +8,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 {
     public class JournalStatementsCleaner
     {
-        public static List<TrimmedJournalStatement> RemoveInvalidJournalStatements(
+        public static List<CorrectedJournalStatement> RemoveInvalidJournalStatements(
             List<JournalStatement> journalStatements, DateTime startDate, DateTime endDate,
             Logger logger)
         {
@@ -19,17 +19,17 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             return tJournalStatements;
         }
 
-        private static IEnumerable<TrimmedJournalStatement> RemoveStatementsWithInvalidDescription(
+        private static IEnumerable<CorrectedJournalStatement> RemoveStatementsWithInvalidDescription(
             List<JournalStatement> statements)
         {
             var filteredStatements2 = statements.Where(x => string.IsNullOrWhiteSpace(x.Description)).ToList();
             statements.RemoveAll(x => filteredStatements2.Contains(x));
             var trimmedJournalStatements =
-                filteredStatements2.Select(x => new TrimmedJournalStatement(x, "The description is invalid"));
+                filteredStatements2.Select(x => new CorrectedJournalStatement(x, "The description is invalid"));
             return trimmedJournalStatements;
         }
 
-        private static List<TrimmedJournalStatement> RemoveStatementsWithInvalidAccount(
+        private static List<CorrectedJournalStatement> RemoveStatementsWithInvalidAccount(
             List<JournalStatement> statements)
         {
             var invalidAccountStatement = statements.Where(x =>
@@ -42,11 +42,11 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 
             statements.RemoveAll(x => invalidAccountStatement.Contains(x));
             return invalidAccountStatement
-                .Select(x => new TrimmedJournalStatement(x, "The account is invalid")).ToList();
+                .Select(x => new CorrectedJournalStatement(x, "The account is invalid")).ToList();
         }
 
         private static void ValidateTrimmedJournalStatements
-            (List<TrimmedJournalStatement> trimmedStatements, ILogger logger)
+            (List<CorrectedJournalStatement> trimmedStatements, ILogger logger)
         {
             if (trimmedStatements.Any())
             {
@@ -55,7 +55,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             }
         }
 
-        private static List<TrimmedJournalStatement> RemoveOutOfDateStatements(List<JournalStatement> statements,
+        private static List<CorrectedJournalStatement> RemoveOutOfDateStatements(List<JournalStatement> statements,
             DateTime startDate, DateTime endDate)
         {
             var statementsBeforePeriod = statements.Where(x => x.Date < startDate).ToList();
@@ -64,9 +64,9 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             statements.RemoveAll(x => statementsAfterPeriod.Contains(x));
 
             var trimmedStatements = statementsAfterPeriod
-                .Select(x => new TrimmedJournalStatement(x, "After the end of  accounting period")).ToList();
+                .Select(x => new CorrectedJournalStatement(x, "After the end of  accounting period")).ToList();
             trimmedStatements.AddRange(statementsBeforePeriod.Select(x =>
-                new TrimmedJournalStatement(x, "Before the start of accounting period")));
+                new CorrectedJournalStatement(x, "Before the start of accounting period")));
 
             return trimmedStatements;
         }

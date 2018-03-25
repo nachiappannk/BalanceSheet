@@ -94,7 +94,7 @@
     <Compile Include="Model\Account\AccountClassifer.cs" />
     <Compile Include="Model\Account\NominalAccount.cs" />
     <Compile Include="Model\Statements\CorrectedAccountDefintionStatement.cs" />
-    <Compile Include="Model\Statements\TrimmedBalanceSheetStatement.cs" />
+    <Compile Include="Model\Statements\CorrectedBalanceSheetStatement.cs" />
     <Compile Include="AlteringAccountsRelationWorkFlowStepViewModel.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />
     <Compile Include="InputReadingWorkFlowStepViewModel.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="StatementDisplayingViewModel\DisplayableTrimmedBalanceSheetStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\DisplayableTrimmedJournalStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\StatementVerifyingWorkFlowStepViewModel.cs" />
-    <Compile Include="Model\Statements\TrimmedJournalStatement.cs" />
+    <Compile Include="Model\Statements\CorrectedJournalStatement.cs" />
     <Compile Include="Model\Statements\TrialBalanceStatement.cs" />
     <Compile Include="WorkFlowStepViewModel.cs" />
     <Compile Include="WorkFlowViewModel.cs" />

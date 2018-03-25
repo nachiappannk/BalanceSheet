@@ -1,8 +1,8 @@
 ﻿namespace Nachiappan.BalanceSheetViewModel.Model.Statements
 {
-    public class TrimmedBalanceSheetStatement : IHasValue
+    public class CorrectedBalanceSheetStatement : IHasValue
     {
-        public TrimmedBalanceSheetStatement(BalanceSheetStatement x, string reason)
+        public CorrectedBalanceSheetStatement(BalanceSheetStatement x, string reason)
         {
             Value = x.Value;
             Account = x.Account;
