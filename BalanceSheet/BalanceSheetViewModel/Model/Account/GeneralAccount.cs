@@ -13,8 +13,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         private readonly List<AccountDefintionStatement> _accountDefinitionStatements;
 
         private readonly Dictionary<string, Account> _accounts;
-        private Dictionary<string, int> _degreeOfNotionalness;
-        private Dictionary<string, string> _recipientAccounts;
+        private readonly Dictionary<string, int> _degreeOfNotionalness;
+        private readonly Dictionary<string, string> _recipientAccounts;
         public GeneralAccount(DateTime openingDate, DateTime closingDateTime, 
             List<BalanceSheetStatement> previousBalanceSheetStatements, List<JournalStatement> journalStatements,
             List<AccountDefintionStatement> accountDefinitionStatements)
@@ -76,34 +76,12 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
                     var accountNameOfRecipientAccount = _recipientAccounts[accountNameOfAccountToBeClosed];
                     var recipientAccount = _accounts[accountNameOfRecipientAccount];
                     var value = accountToBeClosed.GetAccountValue();
-                    var description = "Closing: "+ accountToBeClosed.GetName() + " to " + recipientAccount.GetName();
                     accountToBeClosed.PostStatement(_closingDateTime, 
                         "Closing and Transfer of balance to " + recipientAccount.GetName(), value * -1);
                     recipientAccount.PostStatement(_closingDateTime, "Transfer from "+accountToBeClosed.GetName(), value);
                 }
             }
-
-            //var notionalNess = _degreeOfNotionalness.
-
-            //foreach (var doubleNominalLedger in _doubleNominalAccounts)
-            //{
-            //    CloseLedger(doubleNominalLedger.Value, doubleNominalLedger.Key);
-            //}
-            //foreach (var nominalLedger in _nominaAccounts)
-            //{
-            //    //CloseLedger(nominalLedger.Value, nominalLedger.Key);
-            //}
         }
-
-        //private void CloseLedger(Account account, string fullName)
-        //{
-        //    var value = account.GetAccountValue();
-        //    var baseLedgerName = _accountDefinitionStatements.Where(x => x.Account == fullName).FirstOrDefault()
-        //        .RecipientAccount;
-        //    account.PostStatement(_closingDateTime, "Closing", value * -1);
-        //    var baseLedger = GetLedger(baseLedgerName);
-        //    baseLedger.PostStatement(_closingDateTime, "Closing of " + AccountClassifer.GetNominalPartOfName(fullName), value);
-        //}
 
         public List<BalanceSheetStatement> GetBalanceSheetStatements()
         {
