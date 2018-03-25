@@ -65,12 +65,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutApplicationWorkFlowStepViewModel.cs" />
+    <Compile Include="Model\ExcelGateway\AccountDefinitionStatementsCorrecter.cs" />
     <Compile Include="StatementDisplayingViewModel\DisplayableAccountDefintionStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\DisplayableCorrectedAccountDefintionStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\InputViewingWorkFlowStepViewModel.cs" />
     <Compile Include="Model\FinancialStatementsComputer.cs" />
-    <Compile Include="Model\ExcelGateway\BalanceSheetStatementsCleaner.cs" />
-    <Compile Include="Model\ExcelGateway\JournalStatementsCleaner.cs" />
+    <Compile Include="Model\ExcelGateway\BalanceSheetStatementsCorrecter.cs" />
+    <Compile Include="Model\ExcelGateway\JournalStatementsCorrecter.cs" />
     <Compile Include="Model\ExcelGateway\BalanceSheetReader.cs" />
     <Compile Include="Model\ExcelGateway\JournalReader.cs" />
     <Compile Include="Model\ExcelGateway\BalanceSheetGateway.cs" />

@@ -6,9 +6,9 @@ using Nachiappan.BalanceSheetViewModel.Model.Statements;
 
 namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 {
-    public class JournalStatementsCleaner
+    public class JournalStatementsCorrecter
     {
-        public static List<CorrectedJournalStatement> RemoveInvalidJournalStatements(
+        public static List<CorrectedJournalStatement> CorrectInvalidStatements(
             List<JournalStatement> journalStatements, DateTime startDate, DateTime endDate,
             Logger logger)
         {

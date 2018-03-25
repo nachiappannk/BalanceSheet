@@ -76,18 +76,18 @@ namespace Nachiappan.BalanceSheetViewModel
             var previousBalanceSheetStatements = BalanceSheetReader.ReadBalanceSheetStatements
                 (input.PreviousBalanceSheetFileName, input.PreviousBalanceSheetSheetName, logger);
             
-            var trimmedJournalStatements = JournalStatementsCleaner
-                .RemoveInvalidJournalStatements(journalStatements, startDate, endDate, logger);
+            var trimmedJournalStatements = JournalStatementsCorrecter
+                .CorrectInvalidStatements(journalStatements, startDate, endDate, logger);
 
-            var trimmedBalanceSheetStatements = BalanceSheetStatementsCleaner
-                .RemovedInvalidBalanceSheetStatements(previousBalanceSheetStatements, logger);
+            var trimmedBalanceSheetStatements = BalanceSheetStatementsCorrecter
+                .CorrectInvalidStatements(previousBalanceSheetStatements, logger);
 
 
             var accountDefinitionStatements = new AccountDefinitionGateway(input.AccountDefinitionFileName)
                 .GetAccountDefinitionStatements(logger, input.AccountDefintionSheetName);
 
             var cleanedAccountDefinitionStatements =
-                AccountDefinitionCleaner.CorrectInvalidStatements(accountDefinitionStatements,
+                AccountDefinitionStatementsCorrecter.CorrectInvalidStatements(accountDefinitionStatements,
                     previousBalanceSheetStatements, journalStatements, logger);
             
             _dataStore.PutPackage(trimmedBalanceSheetStatements, WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements);
