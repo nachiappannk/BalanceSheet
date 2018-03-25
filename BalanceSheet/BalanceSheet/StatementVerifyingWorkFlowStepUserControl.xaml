@@ -46,19 +46,10 @@
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
 
-                <TabItem Header="Trimmed BalanceSheet" Visibility="{Binding IsTrimmedBalanceSheetJournalVisible, 
-                    Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <local:FormatableDataGrid ItemsSource="{Binding TrimmedBalanceSheetStatements}" 
+                <TabItem Header="Account Definition">
+                    <local:FormatableDataGrid ItemsSource="{Binding AccountDefinitionStatements}" 
                                               Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
                 </TabItem>
-
-
-                <TabItem Header="Trimmed Journal" Visibility="{Binding IsTrimmedJournalVisible, 
-                    Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <local:FormatableDataGrid ItemsSource="{Binding TrimmedJournalStatements}" 
-                                              Style="{StaticResource ReadOnlyFormatableDataGrid}"/>
-                </TabItem>
-
 
                 <TabItem Header="Trial Balance">
                     <local:FormatableDataGrid ItemsSource="{Binding TrialBalanceStatements}" 

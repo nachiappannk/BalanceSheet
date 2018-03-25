@@ -11,15 +11,11 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
     public class StatementVerifyingWorkFlowStepViewModel : WorkFlowStepViewModel
     {
         public List<DisplayableBalanceSheetStatement> PreviousBalanceSheetStatements { get; set; }
-        public List<DisplayableTrimmedBalanceSheetStatement> TrimmedBalanceSheetStatements { get; set; }
         public List<DisplayableBalanceSheetStatement> BalanceSheetStatements { get; set; }
         public List<DisplayableJournalStatement> JournalStatements { get; set; }
-        public List<DisplayableTrimmedJournalStatement> TrimmedJournalStatements { get; set; }
+        public List<DisplayableAccountDefintionStatement> AccountDefinitionStatements { get; set; }
         public List<DisplayableTrialBalanceStatement> TrialBalanceStatements { get; set; }
 
-        public bool IsTrimmedJournalVisible { get; set; }
-
-        public bool IsTrimmedBalanceSheetJournalVisible { get; set; }
 
         private string _selectedLedgerName;
         private readonly Dictionary<string, IAccount> _accounts;
@@ -40,16 +36,14 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
             BalanceSheetStatements = GetBalanceSheetStatements(dataStore, WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
 
             JournalStatements = GetInputJournalStatement(dataStore);
-            TrimmedJournalStatements = GetTrimmedStatements(dataStore);
             TrialBalanceStatements = GetTrailBalanceStatements(dataStore);
-            TrimmedBalanceSheetStatements = GetTrimmedBalanceSheetStatements(dataStore);
 
-            IsTrimmedJournalVisible = TrimmedJournalStatements.Any();
-            IsTrimmedBalanceSheetJournalVisible = TrimmedBalanceSheetStatements.Any();
+            var accoutDifinitionStatements =
+                dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+            AccountDefinitionStatements = accoutDifinitionStatements
+                .Select(x => new DisplayableAccountDefintionStatement(x)).ToList();
 
             _accounts = CreateAccountDictionary(dataStore);
-
-
 
             LedgerNames = _accounts.Select(x => x.Key).ToList();
             SelectedLedgerName = LedgerNames.ElementAt(0);
@@ -64,24 +58,11 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
             return dictionary;
         }
 
-        private static List<DisplayableTrimmedBalanceSheetStatement> GetTrimmedBalanceSheetStatements(DataStore dataStore)
-        {
-            return dataStore
-                .GetPackage(WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements)
-                .Select(x => new DisplayableTrimmedBalanceSheetStatement(x)).ToList();
-        }
-
         private List<DisplayableTrialBalanceStatement> GetTrailBalanceStatements(DataStore dataStore)
         {
             return dataStore
                 .GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition)
                 .Select(x => new DisplayableTrialBalanceStatement(x)).ToList();
-        }
-
-        private List<DisplayableTrimmedJournalStatement> GetTrimmedStatements(DataStore dataStore)
-        {
-            var journalStatements = dataStore.GetPackage(WorkFlowViewModel.TrimmedJournalStatementsPackageDefintion);
-            return journalStatements.Select(x => new DisplayableTrimmedJournalStatement(x)).ToList();
         }
 
         private List<DisplayableJournalStatement> GetInputJournalStatement(DataStore dataStore)
