@@ -6,11 +6,10 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
 {
     public interface IAccount
     {
-        string GetPrintableName();
+        string GetName();
         void PostStatement(DateTime date, string statement, double value);
         double GetAccountValue();
         List<AccountStatement> GetAccountStatements();
-        List<AccountType> GetPossibleAccountTypes();
-        List<AccountStatement> GetAccountStatements(AccountType accountType);
+        AccountType GetAccountType();
     }
 }

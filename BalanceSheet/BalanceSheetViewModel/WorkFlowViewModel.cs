@@ -35,9 +35,6 @@ namespace Nachiappan.BalanceSheetViewModel
         public static readonly PackageDefinition<List<IAccount>> AccountsPackageDefinition = 
             new PackageDefinition<List<IAccount>>(nameof(AccountsPackageDefinition));
 
-        public static readonly PackageDefinition<Dictionary<string, AccountType>> AccountNameToTypeMapPackageDefinition = 
-            new PackageDefinition<Dictionary<string, AccountType>>(nameof(AccountNameToTypeMapPackageDefinition));
-
         public static readonly PackageDefinition<List<CorrectedBalanceSheetStatement>> TrimmedPreviousBalanceSheetStatements = 
             new PackageDefinition<List<CorrectedBalanceSheetStatement>>(nameof(TrimmedPreviousBalanceSheetStatements));
 
@@ -78,16 +75,11 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToInputReadingStep()
         {
-            CurrentStep = new InputReadingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToAlteringRelationStep, 
+            CurrentStep = new InputReadingWorkFlowStepViewModel(_dataStore, GoToInputStep, GoToStatementVerifyingWorkFlowStep, 
                 SetCurrentStep);
         }
 
-        private void GoToAlteringRelationStep()
-        {
-            CurrentStep = new AlteringAccountsRelationWorkFlowStepViewModel(_dataStore, 
-                GoToInputReadingStep, GoToStatementVerifyingWorkFlowStep);
-        }
-
+ 
         private void SetCurrentStep(WorkFlowStepViewModel viewModel)
         {
             CurrentStep = viewModel;
@@ -96,7 +88,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void GoToStatementVerifyingWorkFlowStep()
         {
-            CurrentStep = new StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToAlteringRelationStep, GoToPrintStatementWorkFlowStep);
+            CurrentStep = new StatementVerifyingWorkFlowStepViewModel(_dataStore, GoToInputReadingStep, GoToPrintStatementWorkFlowStep);
         }
 
         private void GoToPrintStatementWorkFlowStep()

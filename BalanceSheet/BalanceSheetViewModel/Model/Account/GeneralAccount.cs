@@ -12,13 +12,9 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         private readonly List<JournalStatement> _journalStatements;
         private readonly List<AccountDefintionStatement> _accountDefinitionStatements;
 
-        private readonly Dictionary<string, int> _degreeOfNotionalnessForAccounts;
-        private readonly Dictionary<string, RealAccount> _realAccounts = new Dictionary<string, RealAccount>();
-        private readonly Dictionary<string, NominalAccount> _nominaAccounts = new Dictionary<string, NominalAccount>();
-        private readonly Dictionary<string, NominalAccount> _doubleNominalAccounts = new Dictionary<string, NominalAccount>();
-
-
-
+        private readonly Dictionary<string, Account> _accounts;
+        private Dictionary<string, int> _degreeOfNotionalness;
+        private Dictionary<string, string> _recipientAccounts;
         public GeneralAccount(DateTime openingDate, DateTime closingDateTime, 
             List<BalanceSheetStatement> previousBalanceSheetStatements, List<JournalStatement> journalStatements,
             List<AccountDefintionStatement> accountDefinitionStatements)
@@ -27,25 +23,24 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             _closingDateTime = closingDateTime;
             _journalStatements = journalStatements;
             _accountDefinitionStatements = accountDefinitionStatements;
+            _recipientAccounts = _accountDefinitionStatements.ToDictionary(x => x.Account, x => x.RecipientAccount);
+            _degreeOfNotionalness = new NotionalnessComputer().ComputerNotionalness(accountDefinitionStatements);
 
+            _accounts = _accountDefinitionStatements
+                .Select(x => new Account(x.Account, x.AccountType))
+                .ToDictionary(x => x.GetName(), x => x);
 
-            _degreeOfNotionalnessForAccounts = GetDegreeOfNotionalnessOfAccounts(accountDefinitionStatements);
-
-            OpenAccounts(previousBalanceSheetStatements);
+            PostOpeningStatements(previousBalanceSheetStatements);
             PostStatements(journalStatements);
             CloseAccounts();
         }
-
-        private Dictionary<string, int> GetDegreeOfNotionalnessOfAccounts(List<AccountDefintionStatement> accountDefinitionStatements)
-        {
-            return new NotionalnessComputer().ComputerNotionalness(accountDefinitionStatements);
-        }
         
-        private void OpenAccounts(List<BalanceSheetStatement> previousBalanceSheetStatements)
+        private void PostOpeningStatements(List<BalanceSheetStatement> previousBalanceSheetStatements)
         {
             foreach (var balanceSheetStatement in previousBalanceSheetStatements)
             {
-                CreateRealLedger(balanceSheetStatement.Account, balanceSheetStatement.Value);
+                var ledger = GetLedger(balanceSheetStatement.Account);
+                ledger.PostStatement(_openingDate, "Opening Balance", balanceSheetStatement.Value);
             }
         }
 
@@ -53,63 +48,69 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         {
             foreach (var journalStatement in journalStatements)
             {
-                var ledger = this.GetLedger(journalStatement.Account);
+                var ledger = GetLedger(journalStatement.Account);
                 ledger.PostStatement(journalStatement.Date, journalStatement.Description, journalStatement.Value);
             }
         }
 
-
-        private bool IsRealLedgerName(string name)
-        {
-            var def = _accountDefinitionStatements.FirstOrDefault(x => x.Account == name);
-            if (def == null) return true;
-            if (def.AccountType == AccountType.Asset) return true;
-            if (def.AccountType == AccountType.Equity) return true;
-            if (def.AccountType == AccountType.Liability) return true;
-            return false;
-        }
-
-        private bool IsNominalLedgerName(string name)
-        {
-            return !IsRealLedgerName(name);
-        }
-
-        private bool IsDoubleNominalLedgerName(string name)
-        {
-            return false;
-        }
-
         private List<IAccount> GetRealAccounts()
         {
-            return _realAccounts.Select(x => x.Value).ToList<IAccount>();
+            return _accounts.Select(x => x.Value).ToList<IAccount>();
         }
 
         public List<IAccount> GetAllAccounts()
         {
-            var ledgers = _realAccounts.Select(x => x.Value).ToList<IAccount>();
-            ledgers.AddRange(_nominaAccounts.Select(x => x.Value).ToList());
-            ledgers.AddRange(_doubleNominalAccounts.Select(x => x.Value).ToList());
-            return ledgers;
+            return _accounts.Select(x => x.Value).ToList<IAccount>();
         }
 
         private void CloseAccounts()
         {
-            foreach (var doubleNominalLedger in _doubleNominalAccounts)
+
+            var degreeOfNotionalness = _degreeOfNotionalness.Select(x => x.Value).Max();
+            for (int i = degreeOfNotionalness; i > 0; i--)
             {
-                CloseLedger(doubleNominalLedger.Value, doubleNominalLedger.Key);
+                var accountsToBeClosed = _degreeOfNotionalness.Where(x => x.Value == i).Select(x => x.Key);
+                foreach (var accountNameOfAccountToBeClosed in accountsToBeClosed)
+                {
+                    var accountToBeClosed = _accounts[accountNameOfAccountToBeClosed];
+                    var accountNameOfRecipientAccount = _recipientAccounts[accountNameOfAccountToBeClosed];
+                    var recipientAccount = _accounts[accountNameOfRecipientAccount];
+                    var value = accountToBeClosed.GetAccountValue();
+                    var description = "Closing: "+ accountToBeClosed.GetName() + " to " + recipientAccount.GetName();
+                    accountToBeClosed.PostStatement(_closingDateTime, 
+                        "Closing and Transfer of balance to " + recipientAccount.GetName(), value * -1);
+                    recipientAccount.PostStatement(_closingDateTime, "Transfer from "+accountToBeClosed.GetName(), value);
+                }
             }
-            foreach (var nominalLedger in _nominaAccounts)
-            {
-                //CloseLedger(nominalLedger.Value, nominalLedger.Key);
-            }
+
+            //var notionalNess = _degreeOfNotionalness.
+
+            //foreach (var doubleNominalLedger in _doubleNominalAccounts)
+            //{
+            //    CloseLedger(doubleNominalLedger.Value, doubleNominalLedger.Key);
+            //}
+            //foreach (var nominalLedger in _nominaAccounts)
+            //{
+            //    //CloseLedger(nominalLedger.Value, nominalLedger.Key);
+            //}
         }
+
+        //private void CloseLedger(Account account, string fullName)
+        //{
+        //    var value = account.GetAccountValue();
+        //    var baseLedgerName = _accountDefinitionStatements.Where(x => x.Account == fullName).FirstOrDefault()
+        //        .RecipientAccount;
+        //    account.PostStatement(_closingDateTime, "Closing", value * -1);
+        //    var baseLedger = GetLedger(baseLedgerName);
+        //    baseLedger.PostStatement(_closingDateTime, "Closing of " + AccountClassifer.GetNominalPartOfName(fullName), value);
+        //}
 
         public List<BalanceSheetStatement> GetBalanceSheetStatements()
         {
             var ledgers = this.GetRealAccounts();
             return ledgers.Select(x => new BalanceSheetStatement()
             {
-                Account = x.GetPrintableName(),
+                Account = x.GetName(),
                 Value = x.GetAccountValue(),
             }).Where(x => !x.Value.IsZero()).ToList();
         }
@@ -129,52 +130,15 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             return trialBalanseStatements;
         }
 
-        private void CloseLedger(NominalAccount nominalAccount, string fullName)
-        {
-            var value = nominalAccount.GetAccountValue();
-            var baseLedgerName = _accountDefinitionStatements.Where(x => x.Account == fullName).FirstOrDefault()
-                .RecipientAccount;
-            nominalAccount.PostStatement(_closingDateTime, "Closing", value * -1);
-            var baseLedger = GetLedger(baseLedgerName);
-            baseLedger.PostStatement(_closingDateTime, "Closing of " + AccountClassifer.GetNominalPartOfName(fullName), value);
-        }
+        
 
         private IAccount GetLedger(string name)
         {
-            if (IsRealLedgerName(name))
+            if (_accounts.ContainsKey(name))
             {
-                if (!_realAccounts.ContainsKey(name))
-                {
-                    _realAccounts.Add(name, new RealAccount(name, _openingDate, 0));
-                }
-                return _realAccounts[name];
-            }
-
-            if (IsNominalLedgerName(name))
-            {
-                if (!_nominaAccounts.ContainsKey(name))
-                {
-                    _nominaAccounts.Add(name, new NominalAccount(name));
-                }
-                return _nominaAccounts[name];
-            }
-
-            if (IsDoubleNominalLedgerName(name))
-            {
-                if (!_doubleNominalAccounts.ContainsKey(name))
-                {
-                    _doubleNominalAccounts.Add(name, new NominalAccount(name));
-                }
-                return _doubleNominalAccounts[name];
+                return _accounts[name];
             }
             throw new Exception();
-        }
-
-        private void CreateRealLedger(string name, double value)
-        {
-            if (!IsRealLedgerName(name))throw new Exception();
-            if(_realAccounts.ContainsKey(name)) throw new Exception();
-            _realAccounts.Add(name, new RealAccount(name, _openingDate, value));
         }
     }
 
@@ -212,5 +176,4 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             }
         }
     }
-
 }

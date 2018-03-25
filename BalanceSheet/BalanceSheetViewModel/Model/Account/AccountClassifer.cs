@@ -28,41 +28,5 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         {
             return _doubleNominalAccountPatternRegex.IsMatch(name);
         }
-
-        public static string GetNominalPartOfName(string name)
-        {
-            if (IsNominalLedger(name))
-            {
-                var match = _nominalAccountPatternRegex.Match(name);
-                return match.Groups[2].Value;
-            }
-            else if(IsDoubleNominalLedger(name))
-            {
-                var match = _doubleNominalAccountPatternRegex.Match(name);
-                return match.Groups[2].Value;
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-
-        public static string GetBasePartOfName(string name)
-        {
-            if (IsNominalLedger(name))
-            {
-                var match = _nominalAccountPatternRegex.Match(name);
-                return match.Groups[1].Value;
-            }
-            else if (IsDoubleNominalLedger(name))
-            {
-                var match = _doubleNominalAccountPatternRegex.Match(name);
-                return match.Groups[1].Value;
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
     }
 }

@@ -81,9 +81,6 @@
     <Compile Include="InputWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>InputWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AlteringAccountsRelationWorkFlowStepUserControl.xaml.cs">
-      <DependentUpon>AlteringAccountsRelationWorkFlowStepUserControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="PrintOutputWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>PrintOutputWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
@@ -128,10 +125,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="AlteringAccountsRelationWorkFlowStepUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="PrintOutputWorkFlowStepUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

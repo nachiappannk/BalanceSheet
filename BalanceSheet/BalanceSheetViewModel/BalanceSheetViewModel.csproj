@@ -93,15 +93,13 @@
     <Compile Include="Model\Statements\JournalStatement.cs" />
     <Compile Include="Model\Account\GeneralAccount.cs" />
     <Compile Include="Model\Account\AccountClassifer.cs" />
-    <Compile Include="Model\Account\NominalAccount.cs" />
     <Compile Include="Model\Statements\CorrectedAccountDefintionStatement.cs" />
     <Compile Include="Model\Statements\CorrectedBalanceSheetStatement.cs" />
-    <Compile Include="AlteringAccountsRelationWorkFlowStepViewModel.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />
     <Compile Include="InputReadingWorkFlowStepViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\Account\RealAccount.cs" />
+    <Compile Include="Model\Account\Account.cs" />
     <Compile Include="Model\Excel\RowCellsReader.cs" />
     <Compile Include="Model\Statements\BalanceSheetStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\CommonDefinition.cs" />

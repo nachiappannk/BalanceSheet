@@ -32,10 +32,6 @@
                 <local:PrintOutputWorkFlowStepUserControl/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type balanceSheetViewModel:AlteringAccountsRelationWorkFlowStepViewModel}">
-                <local:AlteringAccountsRelationWorkFlowStepUserControl/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type statementVerifyingWorkFlowStepViewModel:InputViewingWorkFlowStepViewModel}">
                 <local:InputViewingWorkFlowStepUserControl/>
             </DataTemplate>

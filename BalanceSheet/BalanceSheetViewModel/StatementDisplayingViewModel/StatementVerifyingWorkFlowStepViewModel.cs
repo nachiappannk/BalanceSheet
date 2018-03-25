@@ -19,14 +19,14 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 
         private string _selectedLedgerName;
         private readonly Dictionary<string, IAccount> _accounts;
-        private Dictionary<string, AccountType> _ledgerTypes;
         private SelectedAccountViewModel _selectedAccountViewModel;
 
         public StatementVerifyingWorkFlowStepViewModel(DataStore dataStore, Action goToPreviousStep, 
             Action goToNextStep)
         {
 
-            _ledgerTypes = dataStore.GetPackage(WorkFlowViewModel.AccountNameToTypeMapPackageDefinition);
+            FinancialStatementsComputer.ComputerFinanicalStatemments(dataStore);
+
 
             GoToPreviousCommand = new DelegateCommand(goToPreviousStep);
             GoToNextCommand = new DelegateCommand(goToNextStep);
@@ -54,7 +54,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
         private static Dictionary<string, IAccount> CreateAccountDictionary(DataStore dataStore)
         {
             var allLedgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
-            var dictionary = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
+            var dictionary = allLedgers.ToDictionary(x => x.GetName(), x => x);
             return dictionary;
         }
 
@@ -103,7 +103,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
                 _selectedLedgerName = value;
                 if (_accounts.ContainsKey(value))
                 {
-                    SelectedAccountViewModel = new SelectedAccountViewModel(_accounts, value, _ledgerTypes);
+                    SelectedAccountViewModel = new SelectedAccountViewModel(_accounts, value);
                 }
                 FirePropertyChanged();
             }
@@ -114,12 +114,11 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 
     public class SelectedAccountViewModel
     {
-        public SelectedAccountViewModel(IDictionary<string, IAccount> accounts, string selectedAccount, 
-            IDictionary<string,AccountType> accountTypes)
+        public SelectedAccountViewModel(IDictionary<string, IAccount> accounts, string selectedAccount)
         {
             var account = accounts[selectedAccount];
-            var accountType = GetAccountType(account, accountTypes);
-            var statements = account.GetAccountStatements(accountType);
+            var accountType = account.GetAccountType();
+            var statements = account.GetAccountStatements();
             AccountName = selectedAccount;
             AccountStatements = statements.Select(x => new DisplayableAccountStatement(x)).ToList();
             AccountType = accountType.ToString();
@@ -144,23 +143,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 
             }
         }
-
-        private AccountType GetAccountType(IAccount ledger, IDictionary<string, AccountType> preferenceAccountTypes)
-        {
-            var possibleAccountTypes = ledger.GetPossibleAccountTypes();
-            if (possibleAccountTypes.Count == 1) return possibleAccountTypes.ElementAt(0);
-            if (preferenceAccountTypes.ContainsKey(ledger.GetPrintableName()))
-            {
-                var accountType = preferenceAccountTypes[ledger.GetPrintableName()];
-                if (possibleAccountTypes.Contains(accountType)) return accountType;
-                else return possibleAccountTypes.ElementAt(0);
-            }
-            else
-            {
-                return possibleAccountTypes.ElementAt(0);
-            }
-        }
-
+        
         public string AccountName { get; set; }
 
         public string OverAllMessage { get; set; }
