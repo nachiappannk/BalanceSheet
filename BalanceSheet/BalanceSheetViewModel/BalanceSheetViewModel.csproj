@@ -92,7 +92,7 @@
     <Compile Include="Model\ExcelGateway\JournalGateway.cs" />
     <Compile Include="Model\Statements\JournalStatement.cs" />
     <Compile Include="Model\Account\GeneralAccount.cs" />
-    <Compile Include="Model\Account\AccountClassifer.cs" />
+    <Compile Include="Model\Account\AccountNameValidator.cs" />
     <Compile Include="Model\Statements\CorrectedAccountDefintionStatement.cs" />
     <Compile Include="Model\Statements\CorrectedBalanceSheetStatement.cs" />
     <Compile Include="PrintOutputWorkFlowStepViewModel.cs" />

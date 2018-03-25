@@ -25,7 +25,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 
         private static List<CorrectedBalanceSheetStatement> RemoveStatementsWithInvalidAccount(List<BalanceSheetStatement> statements, ILogger logger)
         {
-            var mismatchedStatements = statements.Where(x => !AccountClassifer.IsAccountNameValid(x.Account)).ToList();
+            var mismatchedStatements = statements.Where(x => !AccountNameValidator.IsAccountNameValid(x.Account)).ToList();
             statements.RemoveAll(x => mismatchedStatements.Contains(x));
             
             var z = mismatchedStatements.Select(x => new CorrectedBalanceSheetStatement(x, "Invalid account name"))

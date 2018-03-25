@@ -25,7 +25,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             _inputFile = inputFile;
         }
 
-        public void WriteJournal(IList<AccountDefintionStatement> accountDefintionStatements)
+        public void WirteAccountDefinitions(IList<AccountDefintionStatement> accountDefintionStatements)
         {
             using (ExcelSheetWriter writer = new ExcelSheetWriter(_inputFile, "AccountDefinition"))
             {

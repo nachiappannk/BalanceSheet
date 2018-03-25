@@ -34,10 +34,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
         {
             var invalidAccountStatement = statements.Where(x =>
             {
-                var isNominalAccount = AccountClassifer.IsNominalLedger(x.Account);
-                var isRealAccount = AccountClassifer.IsAccountNameValid(x.Account);
-                var isDoubleNominalAccount = AccountClassifer.IsDoubleNominalLedger(x.Account);
-                return !isRealAccount && !isNominalAccount && !isDoubleNominalAccount;
+                return !AccountNameValidator.IsAccountNameValid(x.Account);
             }).ToList();
 
             statements.RemoveAll(x => invalidAccountStatement.Contains(x));

@@ -45,10 +45,14 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                 }
                 else
                 {
-                    if (statement.AccountType != AccountType.Liability || statement.AccountType != AccountType.Equity)
-                        logger.Log(MessageType.Warning, "From the balance sheet " + name + " looks like an liability or equity" ,
+                    if (statement.AccountType != AccountType.Liability && statement.AccountType != AccountType.Equity)
+                    {
+                        logger.Log(MessageType.Warning, "From the balance sheet " + name + " looks like an liability or equity",
                             "Account definition is modified");
-                    statement.AccountType = AccountType.Liability;
+                        statement.AccountType = AccountType.Liability;
+                    }
+
+                    
                 }
             }
             return result;

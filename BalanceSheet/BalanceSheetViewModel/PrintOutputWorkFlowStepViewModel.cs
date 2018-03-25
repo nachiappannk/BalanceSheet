@@ -61,7 +61,9 @@ namespace Nachiappan.BalanceSheetViewModel
                 if (File.Exists(outputFileName)) File.Delete(outputFileName);
                 WriteJournal(outputFileName);
                 WritePreviousBalanceSheet(outputFileName);
+                WriteBalanceSheet(outputFileName);
                 WriteTrialBalance(outputFileName);
+                WriteAccountDefinitions(outputFileName);
             }
         }
 
@@ -93,11 +95,26 @@ namespace Nachiappan.BalanceSheetViewModel
             }
         }
 
+
+        private void WriteAccountDefinitions(string outputFileName)
+        {
+            var accountDefintionStatements = _dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+            AccountDefinitionGateway gateway = new AccountDefinitionGateway(outputFileName);
+            gateway.WirteAccountDefinitions(accountDefintionStatements);
+        }
+
         private void WritePreviousBalanceSheet(string outputFileName)
         {
             var balanceStatements = _dataStore.GetPackage(WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
             BalanceSheetGateway gateway = new BalanceSheetGateway(outputFileName);
             gateway.WriteBalanceSheet(balanceStatements, "PreviousBS");
+        }
+
+        private void WriteBalanceSheet(string outputFileName)
+        {
+            var balanceStatements = _dataStore.GetPackage(WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
+            BalanceSheetGateway gateway = new BalanceSheetGateway(outputFileName);
+            gateway.WriteBalanceSheet(balanceStatements, "BalanceSheet");
         }
 
 
