@@ -8,10 +8,7 @@ namespace Nachiappan.BalanceSheetViewModel
 {
     public class AboutApplicationWorkFlowStepViewModel : WorkFlowStepViewModel
     {
-        public InteractionRequest<FileSaveAsNotification> SampleBalanceSheetSaveAsRequest { get; private set; }
-        public InteractionRequest<FileSaveAsNotification> SampleJournalSaveAsRequest { get; private set; }
-        public InteractionRequest<FileSaveAsNotification> SampleAccountDefinitionSaveAsRequest { get; private set; }
-        public InteractionRequest<FileSaveAsNotification> DocumentationSaveAsRequest { get; private set; }
+        public InteractionRequest<FileSaveAsNotification> FileSaveAsInteractionRequest { get; private set; }
 
         public DelegateCommand SaveSampleBalanceSheetCommand { get; set; }
         public DelegateCommand SaveSampleJournalCommand { get; set; }
@@ -27,10 +24,7 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToPreviousCommand = new DelegateCommand(() => { }, () => false);
             GoToNextCommand = new DelegateCommand(nextStep, ()=> true);
 
-            SampleBalanceSheetSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
-            SampleJournalSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
-            DocumentationSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
-            SampleAccountDefinitionSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
+            FileSaveAsInteractionRequest = new InteractionRequest<FileSaveAsNotification>();
 
             SaveSampleBalanceSheetCommand = new DelegateCommand(SaveSampleBalanceSheet);
             SaveSampleJournalCommand = new DelegateCommand(SaveJournal);
@@ -45,7 +39,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "HelpDocument",
                 ".docx",
                 "Excel File (.docx)|*.docx",
-                "Nachiappan.BalanceSheetViewModel.Docs.HelpDocument.docx", DocumentationSaveAsRequest);
+                "Nachiappan.BalanceSheetViewModel.Docs.HelpDocument.docx");
         }
 
         private void SaveSampleBalanceSheet()
@@ -55,7 +49,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "BalanceSheetFormat",
                 ".xlsx",
                 "Excel File (.xlsx)|*.xlsx",
-                "Nachiappan.BalanceSheetViewModel.Docs.PreviousBalanceSheetTemplate.xlsx", SampleBalanceSheetSaveAsRequest);
+                "Nachiappan.BalanceSheetViewModel.Docs.PreviousBalanceSheetTemplate.xlsx");
         }
 
         private void SaveJournal()
@@ -65,7 +59,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "JournalFormat",
                 ".xlsx",
                 "Excel File (.xlsx)|*.xlsx",
-                "Nachiappan.BalanceSheetViewModel.Docs.CurrentJournalTemplate.xlsx", SampleJournalSaveAsRequest);
+                "Nachiappan.BalanceSheetViewModel.Docs.CurrentJournalTemplate.xlsx");
         }
 
         private void SaveAccountDefinition()
@@ -75,11 +69,11 @@ namespace Nachiappan.BalanceSheetViewModel
                 "AccountDefinition",
                 ".xlsx",
                 "Excel File (.xlsx)|*.xlsx",
-                "Nachiappan.BalanceSheetViewModel.Docs.AccountDefinitionFormat.xlsx", SampleAccountDefinitionSaveAsRequest);
+                "Nachiappan.BalanceSheetViewModel.Docs.AccountDefinitionFormat.xlsx");
         }
 
         private void SaveFile(string saveFileTitle, string defaultFileName, string outputFileExtention, string filter,
-            string resourceName, InteractionRequest<FileSaveAsNotification> interactionRequest)
+            string resourceName)
         {
             var file = new FileSaveAsNotification()
             {
@@ -88,7 +82,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 OutputFileExtention = outputFileExtention,
                 OutputFileExtentionFilter = filter,
             };
-            interactionRequest.Raise(file);
+            FileSaveAsInteractionRequest.Raise(file);
             if (file.FileSaved)
             {
                 var assembly = Assembly.GetExecutingAssembly();

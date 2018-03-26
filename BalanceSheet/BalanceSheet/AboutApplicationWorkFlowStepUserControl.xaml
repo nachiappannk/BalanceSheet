@@ -12,16 +12,7 @@
              d:DesignHeight="300" d:DesignWidth="700">
     <Grid>
         <i:Interaction.Triggers>
-            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SampleBalanceSheetSaveAsRequest}">
-                <local:SaveFileAction/>
-            </interactionRequest:InteractionRequestTrigger>
-            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SampleJournalSaveAsRequest}">
-                <local:SaveFileAction/>
-            </interactionRequest:InteractionRequestTrigger>
-            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding DocumentationSaveAsRequest}">
-                <local:SaveFileAction/>
-            </interactionRequest:InteractionRequestTrigger>
-            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SampleAccountDefinitionSaveAsRequest}">
+            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding FileSaveAsInteractionRequest}">
                 <local:SaveFileAction/>
             </interactionRequest:InteractionRequestTrigger>
         </i:Interaction.Triggers>
