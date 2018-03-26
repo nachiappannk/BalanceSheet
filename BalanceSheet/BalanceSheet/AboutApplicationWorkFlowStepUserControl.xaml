@@ -21,6 +21,9 @@
             <interactionRequest:InteractionRequestTrigger SourceObject="{Binding DocumentationSaveAsRequest}">
                 <local:SaveFileAction/>
             </interactionRequest:InteractionRequestTrigger>
+            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SampleAccountDefinitionSaveAsRequest}">
+                <local:SaveFileAction/>
+            </interactionRequest:InteractionRequestTrigger>
         </i:Interaction.Triggers>
 
 
@@ -44,12 +47,13 @@
                     <TextBlock Style="{StaticResource NormalText}" 
                         Text="Balance sheet is a software that helps you in creating your balance sheet"/>
                     <TextBlock Style="{StaticResource NormalText}"  
-                        TextWrapping="Wrap" Text="It needs the journal and previous periods balance sheet for the computation. The formats can be downloaded from below"/>
+                        TextWrapping="Wrap" Text="It needs the journal, previous periods balance sheet and account definition for the computation. The formats can be downloaded from below"/>
 
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical">
-                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleBalanceSheetCommand}" Content="Download Balance sheet Format" Height="24" Width="200"/>
-                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleJournalCommand}" Content="Download Journal Format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleBalanceSheetCommand}" Content="Download Balance sheet format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleJournalCommand}" Content="Download Journal format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveAccountDefinitionCommand}" Content="Download Account definition format" Height="24" Width="200"/>
                     <Button DockPanel.Dock="Bottom" Command="{Binding SaveHelpDocumentCommand}" Content="Download Help Document" Height="24" Width="200"/>
                 </StackPanel>
             </DockPanel>

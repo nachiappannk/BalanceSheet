@@ -10,11 +10,14 @@ namespace Nachiappan.BalanceSheetViewModel
     {
         public InteractionRequest<FileSaveAsNotification> SampleBalanceSheetSaveAsRequest { get; private set; }
         public InteractionRequest<FileSaveAsNotification> SampleJournalSaveAsRequest { get; private set; }
+        public InteractionRequest<FileSaveAsNotification> SampleAccountDefinitionSaveAsRequest { get; private set; }
         public InteractionRequest<FileSaveAsNotification> DocumentationSaveAsRequest { get; private set; }
 
         public DelegateCommand SaveSampleBalanceSheetCommand { get; set; }
         public DelegateCommand SaveSampleJournalCommand { get; set; }
         public DelegateCommand SaveHelpDocumentCommand { get; set; }
+
+        public DelegateCommand SaveAccountDefinitionCommand { get; set; }
 
 
         public AboutApplicationWorkFlowStepViewModel(Action nextStep)
@@ -27,10 +30,12 @@ namespace Nachiappan.BalanceSheetViewModel
             SampleBalanceSheetSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
             SampleJournalSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
             DocumentationSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
+            SampleAccountDefinitionSaveAsRequest = new InteractionRequest<FileSaveAsNotification>();
 
             SaveSampleBalanceSheetCommand = new DelegateCommand(SaveSampleBalanceSheet);
             SaveSampleJournalCommand = new DelegateCommand(SaveJournal);
             SaveHelpDocumentCommand = new DelegateCommand(SaveHelpDocument);
+            SaveAccountDefinitionCommand = new DelegateCommand(SaveAccountDefinition);
 
         }
 
@@ -40,7 +45,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "HelpDocument",
                 ".docx",
                 "Excel File (.docx)|*.docx",
-                "Nachiappan.BalanceSheetViewModel.Docs.HelpDocument.docx");
+                "Nachiappan.BalanceSheetViewModel.Docs.HelpDocument.docx", DocumentationSaveAsRequest);
         }
 
         private void SaveSampleBalanceSheet()
@@ -50,7 +55,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 "BalanceSheetFormat",
                 ".xlsx",
                 "Excel File (.xlsx)|*.xlsx",
-                "Nachiappan.BalanceSheetViewModel.Docs.PreviousBalanceSheetTemplate.xlsx");
+                "Nachiappan.BalanceSheetViewModel.Docs.PreviousBalanceSheetTemplate.xlsx", SampleBalanceSheetSaveAsRequest);
         }
 
         private void SaveJournal()
@@ -60,11 +65,21 @@ namespace Nachiappan.BalanceSheetViewModel
                 "JournalFormat",
                 ".xlsx",
                 "Excel File (.xlsx)|*.xlsx",
-                "Nachiappan.BalanceSheetViewModel.Docs.CurrentJournalTemplate.xlsx");
+                "Nachiappan.BalanceSheetViewModel.Docs.CurrentJournalTemplate.xlsx", SampleJournalSaveAsRequest);
+        }
+
+        private void SaveAccountDefinition()
+        {
+
+            SaveFile("Save Account Definition",
+                "AccountDefinition",
+                ".xlsx",
+                "Excel File (.xlsx)|*.xlsx",
+                "Nachiappan.BalanceSheetViewModel.Docs.AccountDefinitionFormat.xlsx", SampleAccountDefinitionSaveAsRequest);
         }
 
         private void SaveFile(string saveFileTitle, string defaultFileName, string outputFileExtention, string filter,
-            string resourceName)
+            string resourceName, InteractionRequest<FileSaveAsNotification> interactionRequest)
         {
             var file = new FileSaveAsNotification()
             {
@@ -73,7 +88,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 OutputFileExtention = outputFileExtention,
                 OutputFileExtentionFilter = filter,
             };
-            SampleBalanceSheetSaveAsRequest.Raise(file);
+            interactionRequest.Raise(file);
             if (file.FileSaved)
             {
                 var assembly = Assembly.GetExecutingAssembly();
