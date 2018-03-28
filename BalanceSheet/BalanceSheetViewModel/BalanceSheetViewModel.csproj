@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutApplicationWorkFlowStepViewModel.cs" />
+    <Compile Include="Model\ExcelGateway\AccountDefinitionGateway.cs" />
     <Compile Include="Model\ExcelGateway\AccountDefinitionStatementsCorrecter.cs" />
     <Compile Include="StatementDisplayingViewModel\DisplayableAccountDefintionStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\DisplayableCorrectedAccountDefintionStatement.cs" />

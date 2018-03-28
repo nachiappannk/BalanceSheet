@@ -61,7 +61,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                     var credit = isCreditAvailable ? r.ReadDouble(Credit) : 0;
                     var isDebitAvailable = r.IsValueAvailable(Debit);
                     var debit = isDebitAvailable ? r.ReadDouble(Debit) : 0;
-                    if (isCreditAvailable && isDebitAvailable)
+                    if (!credit.IsZero() && !debit.IsZero())
                     {
                         logger.Log(MessageType.Warning, $"In file{r.FileName}, ",
                                                         $"in sheet{r.SheetName}, " ,
