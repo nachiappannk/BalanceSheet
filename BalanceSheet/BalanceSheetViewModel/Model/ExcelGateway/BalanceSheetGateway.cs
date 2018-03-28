@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nachiappan.BalanceSheetViewModel.Model.Excel;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
@@ -54,8 +55,9 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                 SheetHeadingVerifier.VerifyHeadingNames(logger, reader, headings);
                 var balanceSheetStatements = reader.ReadAllLines(1, (r) =>
                 {
+                    
                     var isValid = r.IsValueAvailable(SerialNumber);
-                    if (!isValid) return new BalanceSheetStatementWithValidity() { IsValid = false };
+                    if (!isValid) return Tuple.Create(new BalanceSheetStatement(), false);
 
                     var isCreditAvailable = r.IsValueAvailable(Credit);
                     var credit = isCreditAvailable ? r.ReadDouble(Credit) : 0;
@@ -75,22 +77,17 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                                                         $"in line no. {r.LineNumber}, " ,
                                                         "both credit and debit is not mentioned. Taking the value as 0");
                     }
-                    return new BalanceSheetStatementWithValidity()
+
+                    return Tuple.Create(new BalanceSheetStatement()
                     {
-                        IsValid = true,
                         Account = r.ReadString(Ledger),
                         Value = credit - debit,
-                    };
+                    }, true);
                 }).ToList();
                 var balanceSheet = new List<BalanceSheetStatement>();
-                balanceSheet.AddRange(balanceSheetStatements.Where(x => x.IsValid).Select(y => new BalanceSheetStatement() { Account = y.Account, Value = y.Value }));
+                balanceSheet.AddRange(balanceSheetStatements.Where(x => x.Item2).Select(y => y.Item1));
                 return balanceSheet;
             }
-        }
-
-        public class BalanceSheetStatementWithValidity : BalanceSheetStatement
-        {
-            public bool IsValid { get; set; }
         }
     }
 }
