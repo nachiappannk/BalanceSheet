@@ -60,16 +60,81 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 
         private List<DisplayableTrialBalanceStatement> GetTrailBalanceStatements(DataStore dataStore)
         {
-            return dataStore
-                .GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition)
+            var trialBalanceStatements = dataStore
+                .GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
+            var displayableTrialBalanceStatements = trialBalanceStatements
                 .Select(x => new DisplayableTrialBalanceStatement(x)).ToList();
+
+            displayableTrialBalanceStatements.Add(new DisplayableTrialBalanceStatement());
+            var debitTotal = trialBalanceStatements.GetDebitTotal();
+            var creditTotal = trialBalanceStatements.GetCreditTotal();
+
+            displayableTrialBalanceStatements.Add(new DisplayableTrialBalanceStatement()
+            {
+                Account = "Total",
+                Credit = creditTotal,
+                Debit = debitTotal,
+            });
+
+            if (!(creditTotal - debitTotal).IsZero())
+            {
+                double? nullDouble = null;
+                double? creditDifference = (creditTotal > debitTotal) ? creditTotal - debitTotal : nullDouble;
+                double? debitDifference = (debitTotal > creditTotal) ? debitTotal - creditTotal : nullDouble;
+
+                displayableTrialBalanceStatements.Add(new DisplayableTrialBalanceStatement()
+                {
+
+                    Account = "Difference",
+                    Credit = creditDifference,
+                    Debit = debitDifference
+                });
+            }
+
+            
+
+            return displayableTrialBalanceStatements;
         }
 
         private List<DisplayableJournalStatement> GetInputJournalStatement(DataStore dataStore)
         {
             var journalStatements = dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion);
-            return journalStatements.Select(x =>
+            var displayableJournalStatements = journalStatements.Select(x =>
                 new DisplayableJournalStatement(x)).ToList();
+            
+            displayableJournalStatements.Add(new DisplayableJournalStatement());
+            var creditTotal = journalStatements.GetCreditTotal();
+            var debitTotal = journalStatements.GetDebitTotal();
+            displayableJournalStatements.Add(new DisplayableJournalStatement()
+            {
+                Account = "Total",
+                Credit = creditTotal,
+                Debit = debitTotal,
+            });
+
+            if (!(creditTotal - debitTotal).IsZero())
+            {
+                if (creditTotal > debitTotal)
+                {
+                    displayableJournalStatements.Add(new DisplayableJournalStatement()
+                    {
+                        Account = "Difference",
+                        Credit = creditTotal - debitTotal,
+                    });
+                }
+                else
+                {
+                    displayableJournalStatements.Add(new DisplayableJournalStatement()
+                    {
+                        Account = "Difference",
+                        Debit = debitTotal - creditTotal,
+                    });
+                }
+            }
+
+
+
+            return displayableJournalStatements;
         }
 
         private List<DisplayableBalanceSheetStatement> GetBalanceSheetStatements(DataStore dataStore, PackageDefinition<List<BalanceSheetStatement>> packageDefinition)
@@ -78,6 +143,38 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
             var displayableStatements = statements
                 .Select(x => new DisplayableBalanceSheetStatement(x))
                 .ToList();
+
+            displayableStatements.Add(new DisplayableBalanceSheetStatement());
+            var creditTotal = statements.GetCreditTotal();
+            var debitTotal = statements.GetDebitTotal();
+            var totalStatement = new DisplayableBalanceSheetStatement
+            {
+                Account = "Total",
+                Credit = creditTotal,
+                Debit = debitTotal
+            };
+            displayableStatements.Add(totalStatement);
+
+            if (!(creditTotal - debitTotal).IsZero())
+            {
+                if (creditTotal > debitTotal)
+                {
+                    displayableStatements.Add(new DisplayableBalanceSheetStatement()
+                    {
+                        Account = "Difference",
+                        Credit = creditTotal - debitTotal,
+                    });
+                }
+                else
+                {
+                    displayableStatements.Add(new DisplayableBalanceSheetStatement()
+                    {
+                        Account = "Difference",
+                        Debit = debitTotal - creditTotal,
+                    });
+                }
+            }
+
             return displayableStatements;
         }
 

@@ -14,6 +14,10 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
             Debit = x.GetDebitValueOrNull();
         }
 
+        public DisplayableTrialBalanceStatement()
+        {
+        }
+
 
         [DisplayName("Account")]
         public string Account { get; set; }

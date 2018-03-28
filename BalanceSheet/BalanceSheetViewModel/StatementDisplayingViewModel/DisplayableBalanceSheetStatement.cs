@@ -6,6 +6,14 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 {
     public class DisplayableBalanceSheetStatement
     {
+
+        public DisplayableBalanceSheetStatement()
+        {
+            Account = null;
+            Credit = null;
+            Debit = null;
+        }
+
         public DisplayableBalanceSheetStatement(BalanceSheetStatement x)
         {
 

@@ -18,10 +18,20 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
             Debit = x.GetDebitValueOrNull();
         }
 
+        public DisplayableJournalStatement()
+        {
+            Account = null;
+            Date = null;
+            Description =null;
+            Tag = null;
+            Credit = null;
+            Debit = null;
+        }
+
 
         [DisplayName("Date")]
         [DisplayFormat(DataFormatString = CommonDefinition.DateDisplayFormat)]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [DisplayName("Account")]
         public string Account { get; set; }
