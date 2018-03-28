@@ -63,15 +63,15 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                     var debit = isDebitAvailable ? r.ReadDouble(Debit) : 0;
                     if (!credit.IsZero() && !debit.IsZero())
                     {
-                        logger.Log(MessageType.Warning, $"In file{r.FileName}, ",
-                                                        $"in sheet{r.SheetName}, " ,
+                        logger.Log(MessageType.Warning, $"In file {r.FileName}, ",
+                                                        $"in sheet {r.SheetName}, " ,
                                                         $"in line no. {r.LineNumber}, " ,
                                                         "both credit and debit is mentioned. Taking the difference as value");
                     }
                     if (!isCreditAvailable && !isDebitAvailable)
                     {
-                        logger.Log(MessageType.Warning, $"In file{r.FileName}, " ,
-                                                        $"in sheet{r.SheetName}, " ,
+                        logger.Log(MessageType.Warning, $"In file {r.FileName}, " ,
+                                                        $"in sheet {r.SheetName}, " ,
                                                         $"in line no. {r.LineNumber}, " ,
                                                         "both credit and debit is not mentioned. Taking the value as 0");
                     }

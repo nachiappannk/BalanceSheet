@@ -125,6 +125,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Excel
         public bool IsValueAvailable(int zeroBasedColumnIndex)
         {
             var value = ReadCell(zeroBasedColumnIndex);
+            if (value is string && string.IsNullOrWhiteSpace(value as string)) return false;
             return value != null;
         }
 

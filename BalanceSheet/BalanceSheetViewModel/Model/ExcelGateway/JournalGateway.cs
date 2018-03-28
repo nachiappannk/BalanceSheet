@@ -79,8 +79,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                     }
                     if (!isCreditAvailable && !isDebitAvailable)
                     {
-                        logger.Log(MessageType.Warning, $"In file{r.FileName}, " ,
-                                                               $"in sheet{r.SheetName}, " ,
+                        logger.Log(MessageType.Warning, $"In file {r.FileName}, " ,
+                                                               $"in sheet {r.SheetName}, " ,
                                                                $"in line no. {r.LineNumber}, " ,
                                                                "both credit and debit is not mentioned. Taking the value as 0");
                     }
