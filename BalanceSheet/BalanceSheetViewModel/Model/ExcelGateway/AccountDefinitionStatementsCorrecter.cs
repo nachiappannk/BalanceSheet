@@ -15,12 +15,9 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
             result.AddRange(RemoveDuplicationDefinitions(statements, logger));
             result.AddRange(RemoveMoreThan2DegreeOnNotionalness(statements, logger));
 
-            
-
             var journalAccountNames = journalStatements.Select(x => x.Account).ToList();
             var reason1 = "Added: Account definition was not found, but account was referred in journal";
             result.AddRange(AddMissingAccountAndGetCorrectedList(statements, journalAccountNames, reason1));
-
 
             var balanceSheetAccountNames = previousBalanceSheetStatements.Select(x => x.Account).ToList();
             var reason2 = "Added: Account definition was not found, but account was referred in balance sheet";

@@ -22,6 +22,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                 {
                     x.Account = string.Empty;
                 }
+
+                x.Account = x.Account.ToLower();
                 x.Account = Regex.Replace(x.Account, @"\s+", " ");
                 x.Account = x.Account.Trim();
             });

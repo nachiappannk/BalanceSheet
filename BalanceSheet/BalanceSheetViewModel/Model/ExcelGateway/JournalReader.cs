@@ -39,6 +39,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
         {
             journalStatements.ForEach(AdjustAccount);
             journalStatements.ForEach(x => x.Account = x.Account.Trim());
+            journalStatements.ForEach(x => x.Account = x.Account.ToLower());
             journalStatements.ForEach(x => x.Account = Regex.Replace(x.Account, @"\s+", " "));
         }
 
