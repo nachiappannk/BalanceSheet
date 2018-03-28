@@ -38,8 +38,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                 {
                     rowIndex - 1,
                     b.Account,
-                    b.GetCreditValue(),
-                    b.GetDebitValue(),
+                    b.GetCreditValueOrNull(),
+                    b.GetDebitValueOrNull(),
                 });
                 index = index + 1 + balanceSheetStatements.Count;
                 writer.Write(index, new object[] { "", "Total", balanceSheetStatements.GetCreditTotal(), balanceSheetStatements.GetDebitTotal(),

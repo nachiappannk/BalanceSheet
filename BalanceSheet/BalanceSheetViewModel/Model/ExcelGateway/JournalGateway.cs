@@ -45,8 +45,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                         j.Account,
                         j.Tag,
                         j.Description,
-                        j.GetCreditValue(),
-                        j.GetDebitValue(),
+                        j.GetCreditValueOrNull(),
+                        j.GetDebitValueOrNull(),
                     });
 
             }
