@@ -84,9 +84,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                         Value = credit - debit,
                     }, true);
                 }).ToList();
-                var balanceSheet = new List<BalanceSheetStatement>();
-                balanceSheet.AddRange(balanceSheetStatements.Where(x => x.Item2).Select(y => y.Item1));
-                return balanceSheet;
+                return balanceSheetStatements.Where(x => x.Item2).Select(y => y.Item1).ToList();
             }
         }
     }

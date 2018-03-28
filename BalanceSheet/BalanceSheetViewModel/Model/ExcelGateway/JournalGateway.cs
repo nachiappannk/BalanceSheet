@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nachiappan.BalanceSheetViewModel.Model.Excel;
 using Nachiappan.BalanceSheetViewModel.Model.Statements;
@@ -62,6 +63,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
 
                 var journalStatements = reader.ReadAllLines(1, (r) =>
                 {
+                    if(!r.IsValueAvailable(SerialNumber)) return Tuple.Create(new JournalStatement(),false);
                     var isCreditAvailable = r.IsValueAvailable(Credit);
                     var credit = isCreditAvailable ? r.ReadDouble(Credit) : 0;
                     var isDebitAvailable = r.IsValueAvailable(Debit);
@@ -84,7 +86,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                                                                $"in line no. {r.LineNumber}, " ,
                                                                "both credit and debit is not mentioned. Taking the value as 0");
                     }
-                    return new JournalStatement()
+                    var journalStatement =  new JournalStatement()
                     {
                         Date = r.ReadDate(Date),
                         Account = r.ReadString(LedgerName),
@@ -92,8 +94,11 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
                         Description = r.ReadString(Description),
                         Value = credit - debit,
                     };
+                    return Tuple.Create(journalStatement,true);
                 }).ToList();
-                return journalStatements;
+                
+
+                return journalStatements.Where(x=> x.Item2).Select(x => x.Item1).ToList();
             }
         }
     }
