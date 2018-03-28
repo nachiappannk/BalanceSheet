@@ -13,8 +13,11 @@ namespace Nachiappan.BalanceSheetViewModel.Model
             var accountDefinitionStatement =
                 dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
 
+            var accountPrintableNamesLookup =
+                dataStore.GetPackage(WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
             GeneralAccount generalAccount = new GeneralAccount(input.AccountingPeriodStartDate, input.AccountingPeriodEndDate,
-                previousBalanceSheetStatements, journalStatements, accountDefinitionStatement);
+                previousBalanceSheetStatements, journalStatements, accountDefinitionStatement, accountPrintableNamesLookup);
 
 
             dataStore.PutPackage(generalAccount.GetAllAccounts(), WorkFlowViewModel.AccountsPackageDefinition);

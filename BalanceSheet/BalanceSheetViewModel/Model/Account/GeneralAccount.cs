@@ -17,7 +17,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         private readonly Dictionary<string, string> _recipientAccounts;
         public GeneralAccount(DateTime openingDate, DateTime closingDateTime, 
             List<BalanceSheetStatement> previousBalanceSheetStatements, List<JournalStatement> journalStatements,
-            List<AccountDefintionStatement> accountDefinitionStatements)
+            List<AccountDefintionStatement> accountDefinitionStatements, Dictionary<string, string> printableNamesLookUp)
         {
             _openingDate = openingDate;
             _closingDateTime = closingDateTime;
@@ -26,8 +26,10 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             _recipientAccounts = _accountDefinitionStatements.ToDictionary(x => x.Account, x => x.RecipientAccount);
             _degreeOfNotionalness = new NotionalnessComputer().ComputerNotionalness(accountDefinitionStatements);
 
+            var printableAccountName = 
+
             _accounts = _accountDefinitionStatements
-                .Select(x => new Account(x.Account, x.AccountType))
+                .Select(x => new Account(x.Account, x.AccountType, printableNamesLookUp))
                 .ToDictionary(x => x.GetName(), x => x);
 
             PostOpeningStatements(previousBalanceSheetStatements);
@@ -77,8 +79,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
                     var recipientAccount = _accounts[accountNameOfRecipientAccount];
                     var value = accountToBeClosed.GetAccountValue();
                     accountToBeClosed.PostStatement(_closingDateTime, 
-                        "Closing and Transfer of balance to " + recipientAccount.GetName(), value * -1);
-                    recipientAccount.PostStatement(_closingDateTime, "Transfer from "+accountToBeClosed.GetName(), value);
+                        "Closing and Transfer of balance to " + recipientAccount.GetPrintableName(), value * -1);
+                    recipientAccount.PostStatement(_closingDateTime, "Transfer from "+accountToBeClosed.GetPrintableName(), value);
                 }
             }
         }

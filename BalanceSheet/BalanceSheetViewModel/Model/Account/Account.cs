@@ -8,14 +8,17 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
     public class Account : IAccount
     {
         private readonly string _accountName;
+        private readonly string _printableAccountName;
         private readonly AccountType _accountType;
         private double _ledgerValue;
 
         private readonly List<AccountStatement> _ledgerStatements = new List<AccountStatement>();
 
-        public Account(string accountName, AccountType accountType)
+        public Account(string accountName, AccountType accountType, Dictionary<string,string> accountNamesLookUp)
         {
             _accountName = accountName;
+            _printableAccountName = accountName;
+            if (accountNamesLookUp.ContainsKey(_accountName)) _printableAccountName = accountNamesLookUp[_accountName];
             _accountType = accountType;
             _ledgerValue = 0;
         }
@@ -25,7 +28,12 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
             return _accountName;
         }
 
-       
+        public string GetPrintableName()
+        {
+            return _printableAccountName;
+        }
+
+
         public void PostStatement(DateTime date, string statement, double value)
         {
             var count = _ledgerStatements.Count + 1;

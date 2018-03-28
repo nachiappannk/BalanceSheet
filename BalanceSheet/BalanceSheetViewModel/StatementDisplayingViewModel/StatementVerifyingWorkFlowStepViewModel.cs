@@ -49,7 +49,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 
             _accounts = CreateAccountDictionary(dataStore);
 
-            LedgerNames = _accounts.Select(x => x.Key).ToList();
+            LedgerNames = _accounts.Select(x => x.Value.GetPrintableName()).ToList();
             SelectedLedgerName = LedgerNames.ElementAt(0);
 
             
@@ -58,7 +58,7 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
         private static Dictionary<string, IAccount> CreateAccountDictionary(DataStore dataStore)
         {
             var allLedgers = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
-            var dictionary = allLedgers.ToDictionary(x => x.GetName(), x => x);
+            var dictionary = allLedgers.ToDictionary(x => x.GetPrintableName(), x => x);
             return dictionary;
         }
 

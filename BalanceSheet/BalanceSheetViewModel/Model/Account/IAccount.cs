@@ -7,6 +7,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
     public interface IAccount
     {
         string GetName();
+        string GetPrintableName();
         void PostStatement(DateTime date, string statement, double value);
         double GetAccountValue();
         List<AccountStatement> GetAccountStatements();

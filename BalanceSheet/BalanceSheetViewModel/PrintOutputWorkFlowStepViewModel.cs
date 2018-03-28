@@ -40,9 +40,9 @@ namespace Nachiappan.BalanceSheetViewModel
             }
             else
             {
-                var accountDefinitions = dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+                var accounts = dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
                 AccountPrintOptions =
-                    accountDefinitions.Select(x => new AccountPrintOption() { Name = x.Account }).ToList();
+                    accounts.Select(x => new AccountPrintOption() { Name = x.GetPrintableName() }).ToList();
                 dataStore.PutPackage(AccountPrintOptions, WorkFlowViewModel.AccountPrintOptionsPackageDefinition);
 
             }
@@ -91,7 +91,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 AccountPrintOptions.Where(x => x.IsPrintingNecessary).Select(x => x.Name).ToList();
 
             var accounts = _dataStore.GetPackage(WorkFlowViewModel.AccountsPackageDefinition);
-            var accountsDictionary = accounts.ToDictionary(x => x.GetName(), x => x);
+            var accountsDictionary = accounts.ToDictionary(x => x.GetPrintableName(), x => x);
             foreach (var accountToBePrinted in accountsToBePrinted)
             {
                 WriteAccount(accountsDictionary[accountToBePrinted], outputFileName);
@@ -102,7 +102,7 @@ namespace Nachiappan.BalanceSheetViewModel
         {
             var statements = account.GetAccountStatements();
             var headings = new List<string> {"S.No.", "Date", "Account", "Credit", "Debit", "Balance" };
-            using (var writer = new ExcelSheetWriter(outputFileName, "Acc-"+account.GetName()))
+            using (var writer = new ExcelSheetWriter(outputFileName, "Acc-"+account.GetPrintableName()))
             {
                 var index = 0;
                 writer.Write(index++, headings.ToArray<object>());
