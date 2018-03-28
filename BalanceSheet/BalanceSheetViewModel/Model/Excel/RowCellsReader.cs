@@ -60,7 +60,15 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Excel
 
             if (value is string)
             {
-                var retValue = Convert.ToDateTime((string)value);
+                var retValue = DateTime.MinValue;
+                try
+                {
+                    retValue = Convert.ToDateTime((string)value);
+                }
+                catch (Exception e)
+                {
+                }
+
                 var errorMessage = $"Expected to find a date but found text, so using {retValue.ToString(CultureInfo.InvariantCulture)}";
                 LogError(zeroBasedColumnIndex, errorMessage);
                 return retValue;
