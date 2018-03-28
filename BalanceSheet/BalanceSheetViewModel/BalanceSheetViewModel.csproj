@@ -67,6 +67,9 @@
     <Compile Include="AboutApplicationWorkFlowStepViewModel.cs" />
     <Compile Include="Model\ExcelGateway\AccountDefinitionGateway.cs" />
     <Compile Include="Model\ExcelGateway\AccountDefinitionStatementsCorrecter.cs" />
+    <Compile Include="Model\Statements\ICanClone.cs" />
+    <Compile Include="Model\Statements\IHasAccount.cs" />
+    <Compile Include="Model\Statements\IHasRecipientAccount.cs" />
     <Compile Include="StatementDisplayingViewModel\DisplayableAccountDefintionStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\DisplayableCorrectedAccountDefintionStatement.cs" />
     <Compile Include="StatementDisplayingViewModel\InputViewingWorkFlowStepViewModel.cs" />

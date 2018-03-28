@@ -86,9 +86,25 @@ namespace Nachiappan.BalanceSheetViewModel
             var accountDefinitionStatements = new AccountDefinitionGateway(input.AccountDefinitionFileName)
                 .GetAccountDefinitionStatements(logger, input.AccountDefintionSheetName);
 
+
+            accountDefinitionStatements.ForEach(x => x.Account = x.Account.Trim());
+            var displayableAccountNames = accountDefinitionStatements.ToDictionary(x => x.Account.ToLower(), x => x.Account);
+            accountDefinitionStatements.ForEach(x => x.Account = x.Account.ToLower());
+            accountDefinitionStatements.ForEach(x =>
+            {
+                if (x.RecipientAccount != null)
+                {
+                    x.RecipientAccount = x.RecipientAccount.Trim().ToLower();
+                }
+            });
+                
+
             var cleanedAccountDefinitionStatements =
                 AccountDefinitionStatementsCorrecter.CorrectInvalidStatements(accountDefinitionStatements,
                     previousBalanceSheetStatements, journalStatements, logger);
+
+
+
             
             _dataStore.PutPackage(trimmedBalanceSheetStatements, WorkFlowViewModel.TrimmedPreviousBalanceSheetStatements);
             _dataStore.PutPackage(journalStatements, WorkFlowViewModel.InputJournalStatementsPackageDefintion);
@@ -96,7 +112,8 @@ namespace Nachiappan.BalanceSheetViewModel
             _dataStore.PutPackage(previousBalanceSheetStatements, WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
             _dataStore.PutPackage(accountDefinitionStatements, WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
             _dataStore.PutPackage(cleanedAccountDefinitionStatements, WorkFlowViewModel.CorrectedAccountDefinitionPackageDefinition);
-            
+            _dataStore.PutPackage(displayableAccountNames, WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
             ValidateAccountingPeriod(startDate, endDate, logger);
             ValidateJournalStatements(journalStatements, logger);
             ValidateBalanceSheetStatements(previousBalanceSheetStatements, logger);

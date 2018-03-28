@@ -39,7 +39,11 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
             TrialBalanceStatements = GetTrailBalanceStatements(dataStore);
 
             var accoutDifinitionStatements =
-                dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+                dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition)
+                    .MakeAccountPrintable(dataStore, 
+                    WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition)
+                .MakeRecipientAccountPrintable(dataStore,
+                WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
             AccountDefinitionStatements = accoutDifinitionStatements
                 .Select(x => new DisplayableAccountDefintionStatement(x)).ToList();
 
@@ -61,9 +65,14 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
         private List<DisplayableTrialBalanceStatement> GetTrailBalanceStatements(DataStore dataStore)
         {
             var trialBalanceStatements = dataStore
-                .GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
+                .GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition)
+                .MakeAccountPrintable(dataStore,
+                    WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
+
             var displayableTrialBalanceStatements = trialBalanceStatements
                 .Select(x => new DisplayableTrialBalanceStatement(x)).ToList();
+                
 
             displayableTrialBalanceStatements.Add(new DisplayableTrialBalanceStatement());
             var debitTotal = trialBalanceStatements.GetDebitTotal();
@@ -98,7 +107,10 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 
         private List<DisplayableJournalStatement> GetInputJournalStatement(DataStore dataStore)
         {
-            var journalStatements = dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion);
+            var journalStatements = dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion)
+                .MakeAccountPrintable(dataStore,
+                    WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
             var displayableJournalStatements = journalStatements.Select(x =>
                 new DisplayableJournalStatement(x)).ToList();
             
@@ -139,7 +151,11 @@ namespace Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel
 
         private List<DisplayableBalanceSheetStatement> GetBalanceSheetStatements(DataStore dataStore, PackageDefinition<List<BalanceSheetStatement>> packageDefinition)
         {
-            var statements = dataStore.GetPackage(packageDefinition);
+            var statements = dataStore.GetPackage(packageDefinition)
+                .MakeAccountPrintable(dataStore,
+                WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
+
             var displayableStatements = statements
                 .Select(x => new DisplayableBalanceSheetStatement(x))
                 .ToList();

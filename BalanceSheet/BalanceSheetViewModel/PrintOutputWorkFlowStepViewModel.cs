@@ -129,7 +129,9 @@ namespace Nachiappan.BalanceSheetViewModel
             var headings = new List<string> {"S.No.", "Account", "Tag", "Credit", "Debit"};
 
             var trialBalanceStatements =
-                _dataStore.GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
+                _dataStore.GetPackage(WorkFlowViewModel.TrialBalanceStatementsPackageDefinition)
+                    .MakeAccountPrintable(_dataStore,
+                        WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
 
             using (var writer = new ExcelSheetWriter(outputFileName, "TrialBalance"))
             {
@@ -155,21 +157,33 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void WriteAccountDefinitions(string outputFileName)
         {
-            var accountDefintionStatements = _dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition);
+            var accountDefintionStatements = _dataStore.GetPackage(WorkFlowViewModel.InputAccountDefinitionPackageDefinition)
+            .MakeAccountPrintable(_dataStore,
+                        WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition)
+                .MakeRecipientAccountPrintable(_dataStore,
+                WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
+
             AccountDefinitionGateway gateway = new AccountDefinitionGateway(outputFileName);
             gateway.WirteAccountDefinitions(accountDefintionStatements);
         }
 
         private void WritePreviousBalanceSheet(string outputFileName)
         {
-            var balanceStatements = _dataStore.GetPackage(WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition);
+            var balanceStatements = _dataStore.GetPackage(WorkFlowViewModel.PreviousBalanceSheetStatementsPackageDefinition)
+                .MakeAccountPrintable(_dataStore,
+                    WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
             BalanceSheetGateway gateway = new BalanceSheetGateway(outputFileName);
             gateway.WriteBalanceSheet(balanceStatements, "PreviousBS");
         }
 
         private void WriteBalanceSheet(string outputFileName)
         {
-            var balanceStatements = _dataStore.GetPackage(WorkFlowViewModel.BalanceSheetStatementsPackageDefinition);
+            var balanceStatements = _dataStore.GetPackage(WorkFlowViewModel.BalanceSheetStatementsPackageDefinition)
+                .MakeAccountPrintable(_dataStore,
+                    WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+            ;
             BalanceSheetGateway gateway = new BalanceSheetGateway(outputFileName);
             gateway.WriteBalanceSheet(balanceStatements, "BalanceSheet");
         }
@@ -177,7 +191,10 @@ namespace Nachiappan.BalanceSheetViewModel
 
         private void WriteJournal(String fileName)
         {
-            var journalStatements = _dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion);
+            var journalStatements = _dataStore.GetPackage(WorkFlowViewModel.InputJournalStatementsPackageDefintion)
+                .MakeAccountPrintable(_dataStore,
+                    WorkFlowViewModel.DisplayableAccountNamesDictionaryPackageDefinition);
+
             JournalGateway gateway = new JournalGateway(fileName);
             gateway.WriteJournal(journalStatements);
         }       
