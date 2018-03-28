@@ -33,7 +33,7 @@ namespace Nachiappan.BalanceSheetViewModel
             GoToNextCommand = new DelegateCommand(GoToNext, CanGoToNext);
 
             SetParametersValueFromCache(dataStore);
-
+            /*
 
             JournalSelectorViewModel.InputFileName =
                 @"C:\Users\Z003P4AY\Desktop\V1.0.0.0\Samples\InputSample_JournalFY17.xlsx";
@@ -52,7 +52,7 @@ namespace Nachiappan.BalanceSheetViewModel
 
             AccountingPeriodStartDate = new DateTime(2016, 4, 1);
             AccountingPeriodEndDate = new DateTime(2017, 3, 31);
-            
+            */
         }
 
         private void SetParametersValueFromCache(DataStore dataStore)
