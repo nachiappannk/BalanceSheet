@@ -54,7 +54,21 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Account
         public List<AccountStatement> GetAccountStatements()
         {
             var ledgerStatements = GetRawTypeIndependentAccountStatements();
-            return ledgerStatements.Select(x => new AccountStatement(x)).ToList();
+
+
+            var accountStatements = ledgerStatements.Select(x => new AccountStatement(x)).ToList();
+            if (_accountType == AccountType.Asset) InvertStatementValues(accountStatements);
+            if (_accountType == AccountType.Liability) InvertStatementValues(accountStatements);
+
+
+
+            return accountStatements;
+        }
+
+        private static void InvertStatementValues(List<AccountStatement> accountStatements)
+        {
+            accountStatements.ForEach(x => x.Value = x.Value * -1);
+            accountStatements.ForEach(x => x.RunningTotaledValue = x.RunningTotaledValue * -1);
         }
 
         public AccountType GetAccountType()
