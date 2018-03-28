@@ -15,6 +15,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model
 
             GeneralAccount generalAccount = new GeneralAccount(input.AccountingPeriodStartDate, input.AccountingPeriodEndDate,
                 previousBalanceSheetStatements, journalStatements, accountDefinitionStatement);
+
+
             dataStore.PutPackage(generalAccount.GetAllAccounts(), WorkFlowViewModel.AccountsPackageDefinition);
             dataStore.PutPackage(generalAccount.GetTrialBalanceStatements(),
                 WorkFlowViewModel.TrialBalanceStatementsPackageDefinition);
