@@ -88,7 +88,19 @@ namespace Nachiappan.BalanceSheetViewModel
 
 
             accountDefinitionStatements.ForEach(x => x.Account = x.Account.Trim());
-            var displayableAccountNames = accountDefinitionStatements.ToDictionary(x => x.Account.ToLower(), x => x.Account);
+
+            var displayableAccountNames = new Dictionary<string, string>();
+            foreach (var accountDefinitionStatement in accountDefinitionStatements)
+            {
+                var printableName = accountDefinitionStatement.Account.Trim();
+                var name = printableName.ToLower();
+                if (!displayableAccountNames.ContainsKey(name))
+                {
+                    displayableAccountNames.Add(name, printableName);
+                }
+
+            }
+
             accountDefinitionStatements.ForEach(x => x.Account = x.Account.ToLower());
             accountDefinitionStatements.ForEach(x =>
             {

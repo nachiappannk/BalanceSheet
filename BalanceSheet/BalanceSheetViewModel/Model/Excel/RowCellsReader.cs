@@ -65,7 +65,7 @@ namespace Nachiappan.BalanceSheetViewModel.Model.Excel
                 {
                     retValue = Convert.ToDateTime((string)value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
 
