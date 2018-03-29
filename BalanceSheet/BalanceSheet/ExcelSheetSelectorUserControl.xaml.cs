@@ -28,9 +28,11 @@ namespace Nachiappan.BalanceSheet
 
         private void OnPickerButtonClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".xlsx";
-            dialog.Filter = "Excel (.xlsx)|*.xlsx";
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                DefaultExt = ".xlsx",
+                Filter = "Excel (.xlsx)|*.xlsx"
+            };
             var done = dialog.ShowDialog();
             if (done == true)
             {

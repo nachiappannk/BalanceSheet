@@ -5,21 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
         xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
+        xmlns:statementVerifyingWorkFlowStepViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel.StatementDisplayingViewModel;assembly=BalanceSheetViewModel"
         d:DataContext="{d:DesignInstance balanceSheetViewModel:WorkFlowViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Icon="if_money_299107.ico"
+        WindowState="Maximized"
+        Title="Balance Sheet" Height="400" Width="600" MinHeight="400" MinWidth="600">
     <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type balanceSheetViewModel:InputWorkFlowStepViewModel}">
                 <local:InputWorkFlowStepUserControl></local:InputWorkFlowStepUserControl>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type balanceSheetViewModel:ProcessingWorkFlowStepViewModel}">
-                <local:ProcessingWorkFlowStepUserControl></local:ProcessingWorkFlowStepUserControl>
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:InputReadingWorkFlowStepViewModel}">
+                <local:InputReadingWorkFlowStepUserControl></local:InputReadingWorkFlowStepUserControl>
             </DataTemplate>
             <DataTemplate DataType="{x:Type balanceSheetViewModel:AboutApplicationWorkFlowStepViewModel}">
                 <local:AboutApplicationWorkFlowStepUserControl/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type statementVerifyingWorkFlowStepViewModel:StatementVerifyingWorkFlowStepViewModel}">
+                <local:StatementVerifyingWorkFlowStepUserControl/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type balanceSheetViewModel:PrintOutputWorkFlowStepViewModel}">
+                <local:PrintOutputWorkFlowStepUserControl/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type statementVerifyingWorkFlowStepViewModel:InputViewingWorkFlowStepViewModel}">
+                <local:InputViewingWorkFlowStepUserControl/>
+            </DataTemplate>
+
+
+            
+
         </Grid.Resources>
         <ContentPresenter Content="{Binding CurrentStep}"/>
 

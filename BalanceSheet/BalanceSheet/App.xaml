@@ -4,6 +4,75 @@
              xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Border" x:Key="MainBorderStyle">
+            <Setter Property="MaxWidth" Value="600" />
+            <Setter Property="MinWidth" Value="400" />
+            <Setter Property="Width" Value="600" />
+            <Setter Property="Background" Value="Beige"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+            <Setter Property="Margin" Value="10,10,10,10"/>
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+
+        <Style TargetType="Border" x:Key="AdditionalInformationBorderStyle">
+            <Setter Property="MaxWidth" Value="600" />
+            <Setter Property="MinWidth" Value="400" />
+            <Setter Property="Width" Value="600" />
+            <Setter Property="Background" Value="Gainsboro"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Margin" Value="10,0,10,10"/>
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+        
+        <Style TargetType="{x:Type TextBlock}" x:Key="HeadingText">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="HintText">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="NormalText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="Level2HeadingText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+        </Style>
+        
+        <Style TargetType="{x:Type TextBlock}" x:Key="HeaderStripText">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style TargetType="{x:Type Grid}" x:Key="HeaderStripGrid">
+            <Setter Property="Background" Value="DodgerBlue"/>
+        </Style>
+
+        <Style TargetType="{x:Type DockPanel}" x:Key="FooterStripDockPanel">
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Setter Property="LastChildFill" Value="False"/>
+        </Style>
+
+        <Style TargetType="{x:Type Button}" x:Key="FooterStripButton">
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="MinWidth" Value="60"/>
+            <Setter Property="MaxWidth" Value="100"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="24"/>
+        </Style>
+
+
     </Application.Resources>
 </Application>

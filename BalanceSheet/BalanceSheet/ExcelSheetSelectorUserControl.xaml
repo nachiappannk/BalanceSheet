@@ -4,19 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
+             xmlns:excel="clr-namespace:Nachiappan.BalanceSheetViewModel.Model.Excel;assembly=BalanceSheetViewModel"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance balanceSheetViewModel:ExcelSheetSelectorViewModel}"
+             d:DataContext="{d:DesignInstance excel:ExcelSheetSelectorViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel LastChildFill="False">
-        <TextBlock HorizontalAlignment="Stretch" 
-                   VerticalAlignment="Top" 
-                   FontSize="16"
-                   FontWeight="DemiBold"
+        <TextBlock Style="{StaticResource Level2HeadingText}"
                    DockPanel.Dock="Top" Text="{Binding Title}"/>
         <DockPanel  DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <TextBlock DockPanel.Dock="Left"
-                       Padding="0,0,14,0"
-                       Text="File" FontSize="14" Margin="4" VerticalAlignment="Center" />
+                       Style="{StaticResource HintText}"
+                       Text="File " VerticalAlignment="Center" />
             <Button DockPanel.Dock="Right" Margin="4" Height="24" Width="40" Content="Pick" Click="OnPickerButtonClick"/>
             <TextBox x:Name="FilePicker" IsReadOnly="True" Text="{Binding InputFileName}"  VerticalContentAlignment="Center" 
                      FontSize="10" Height="24"
@@ -25,7 +23,7 @@
         <Grid  DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <DockPanel LastChildFill="False">
                 <TextBlock DockPanel.Dock="Left"
-                           Text="Sheet" FontSize="14" Margin="4" VerticalAlignment="Center" />
+                           Text="Sheet " Style="{StaticResource HintText}" VerticalAlignment="Center" />
                 <ComboBox Width="100" 
                           SelectedValue="{Binding SelectedSheet}" Height="24" ItemsSource="{Binding SheetNames}" />
             </DockPanel>

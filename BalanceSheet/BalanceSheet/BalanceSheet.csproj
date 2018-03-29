@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>if_money_299107.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.1\lib\net45\CommonServiceLocator.dll</HintPath>
@@ -44,6 +47,7 @@
       <HintPath>..\packages\Prism.Wpf.7.0.0.336-pre\lib\net45\Prism.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Wpf.7.0.0.336-pre\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -70,13 +74,23 @@
     <Compile Include="AboutApplicationWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>AboutApplicationWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FormatableDataGrid.cs" />
+    <Compile Include="InputViewingWorkFlowStepUserControl.xaml.cs">
+      <DependentUpon>InputViewingWorkFlowStepUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InputWorkFlowStepUserControl.xaml.cs">
       <DependentUpon>InputWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProcessingWorkFlowStepUserControl.xaml.cs">
-      <DependentUpon>ProcessingWorkFlowStepUserControl.xaml</DependentUpon>
+    <Compile Include="PrintOutputWorkFlowStepUserControl.xaml.cs">
+      <DependentUpon>PrintOutputWorkFlowStepUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InputReadingWorkFlowStepUserControl.xaml.cs">
+      <DependentUpon>InputReadingWorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SaveFileAction.cs" />
+    <Compile Include="StatementVerifyingWorkFlowStepUserControl.xaml.cs">
+      <DependentUpon>StatementVerifyingWorkFlowStepUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WorkFlowStepUserControl.xaml.cs">
       <DependentUpon>WorkFlowStepUserControl.xaml</DependentUpon>
     </Compile>
@@ -87,6 +101,10 @@
     <Page Include="ExcelSheetSelectorUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InputViewingWorkFlowStepUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InputWorkFlowStepUserControl.xaml">
       <SubType>Designer</SubType>
@@ -107,7 +125,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ProcessingWorkFlowStepUserControl.xaml">
+    <Page Include="PrintOutputWorkFlowStepUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InputReadingWorkFlowStepUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatementVerifyingWorkFlowStepUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -148,6 +174,9 @@
       <Project>{05BE0073-ED0E-4EC5-98E6-CD53620DAC6F}</Project>
       <Name>BalanceSheetViewModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="if_money_299107.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

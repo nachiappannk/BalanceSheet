@@ -9,16 +9,10 @@
              xmlns:interactionRequest="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance balanceSheetViewModel:AboutApplicationWorkFlowStepViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="700">
     <Grid>
         <i:Interaction.Triggers>
-            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SampleBalanceSheetSaveAsRequest}">
-                <local:SaveFileAction/>
-            </interactionRequest:InteractionRequestTrigger>
-            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SampleJournalSaveAsRequest}">
-                <local:SaveFileAction/>
-            </interactionRequest:InteractionRequestTrigger>
-            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding DocumentationSaveAsRequest}">
+            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding FileSaveAsInteractionRequest}">
                 <local:SaveFileAction/>
             </interactionRequest:InteractionRequestTrigger>
         </i:Interaction.Triggers>
@@ -29,26 +23,36 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <Grid Row="0" Background="DodgerBlue">
-            <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="White"></TextBlock>
+        <Grid Row="0" Style="{StaticResource HeaderStripGrid}">
+            <TextBlock Text="{Binding Name}" Style="{StaticResource HeaderStripText}"></TextBlock>
         </Grid>
-        <DockPanel Grid.Row="2" Background="DodgerBlue" LastChildFill="False">
-            <Button Width="60" Height="24" Content="Previous" DockPanel.Dock="Left" Margin="4,0" Command="{Binding GoToPreviousCommand}"/>
-            <Button Width="60" Height="24" Content="Next" DockPanel.Dock="Right" Margin="4,0" Command="{Binding GoToNextCommand}"/>
+        <DockPanel Grid.Row="2" Style="{StaticResource FooterStripDockPanel}">
+            <Button Style="{StaticResource FooterStripButton}" Content="Previous" DockPanel.Dock="Left" Command="{Binding GoToPreviousCommand}"/>
+            <Button Style="{StaticResource FooterStripButton}" Content="Next" DockPanel.Dock="Right" Command="{Binding GoToNextCommand}"/>
         </DockPanel>
 
-        <DockPanel Grid.Row="1" LastChildFill="False">
-            <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">This application helps in computing the balance sheet, trial balances and various other ledgers</TextBlock>
-            <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap">The application needs the previous year balance sheet and current years journal as input. You could download the format of the balance sheet and journal</TextBlock>
-            <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleBalanceSheetCommand}" Content="Download Balance sheet Format" Height="24" Width="200"/>
-            <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleJournalCommand}" Content="Download Journal Format" Height="24" Width="200"/>
-            <Button DockPanel.Dock="Bottom" Command="{Binding SaveHelpDocumentCommand}" Content="Download Help Document" Height="24" Width="200"/>
-        </DockPanel>
+        <Border Style="{StaticResource MainBorderStyle}" Grid.Row="1">
+            <DockPanel Grid.Row="1" LastChildFill="False">
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+                    <TextBlock Text="About Balance Sheet" Style="{StaticResource HeadingText}"/>
+                    <TextBlock Style="{StaticResource NormalText}" 
+                        Text="Balance sheet is a software that helps you in creating your balance sheet"/>
+                    <TextBlock Style="{StaticResource NormalText}"  
+                        TextWrapping="Wrap" Text="It needs the journal, previous periods balance sheet and account definition for the computation. The formats can be downloaded from below"/>
 
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical">
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleBalanceSheetCommand}" Content="Download Balance sheet format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveSampleJournalCommand}" Content="Download Journal format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveAccountDefinitionCommand}" Content="Download Account definition format" Height="24" Width="200"/>
+                    <Button DockPanel.Dock="Bottom" Command="{Binding SaveHelpDocumentCommand}" Content="Download Help Document" Height="24" Width="200"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
     </Grid>
-    
-    
-    
-    
+
+
+
+
 
 </UserControl>

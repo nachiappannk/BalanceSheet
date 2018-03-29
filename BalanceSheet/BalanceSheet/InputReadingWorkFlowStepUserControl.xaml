@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="Nachiappan.BalanceSheet.InputReadingWorkFlowStepUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance balanceSheetViewModel:InputReadingWorkFlowStepViewModel}"
+             d:DesignHeight="300" d:DesignWidth="700">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Row="0" Style="{StaticResource HeaderStripGrid}">
+            <TextBlock Text="{Binding Name}" Style="{StaticResource HeaderStripText}"></TextBlock>
+        </Grid>
+        <DockPanel Grid.Row="2" Style="{StaticResource FooterStripDockPanel}">
+            <Button Style="{StaticResource FooterStripButton}" Content="Previous" DockPanel.Dock="Left" Command="{Binding GoToPreviousCommand}"/>
+            <Button Style="{StaticResource FooterStripButton}" Content="Next" DockPanel.Dock="Right" Command="{Binding GoToNextCommand}"/>
+        </DockPanel>
+        <Grid Grid.Row="1">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Border}" x:Key="InformationStyle">
+                    <Setter Property="MinHeight" Value="35"/>
+                    <Setter Property="CornerRadius" Value="4"/>
+                    <Setter Property="Margin" Value="2"/>
+                    <Setter Property="Padding" Value="10,4,10,10"/>
+                </Style>
+                <DataTemplate DataType="{x:Type balanceSheetViewModel:Warning}">
+                    <Border Background="#FFF8E01F"
+                            Style="{StaticResource InformationStyle}">
+                        <Grid>
+                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type balanceSheetViewModel:Error}">
+                    <Border Background="#FFFF6347"
+                            Style="{StaticResource InformationStyle}">
+                        <Grid>
+                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Border Style="{StaticResource MainBorderStyle}">
+                <Grid Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{Binding OverAllMessage}" Style="{StaticResource HeadingText}"/>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding InformationList}"/>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource AdditionalInformationBorderStyle}" Grid.Row="1">
+                <StackPanel Orientation="Vertical" Margin="2,0">
+                    <TextBlock Text="The steps to modify journal / balance sheet at this stage are below"  
+                               Style="{StaticResource HeadingText}"/>
+                    <TextBlock Text="  1. Modify the input excel file (journal or balance sheet)" Style="{StaticResource NormalText}"/>
+                    <TextBlock Text="  2. Save the input excel file" Style="{StaticResource NormalText}"/>
+                    <TextBlock Text="  3. Hit the refresh button" Style="{StaticResource NormalText}"/>
+                    <DockPanel LastChildFill="False" Margin="0,0,0,4">
+                        <Button Content="View Input" Width="Auto"  DockPanel.Dock="Right" 
+                                Margin="2,0" Command="{Binding ViewInputStatementsCommand}"/>
+                        <Button Content="Refresh" Width="60"  DockPanel.Dock="Right" 
+                                Margin="2,0" Command="{Binding ReadAgainCommand}"/>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

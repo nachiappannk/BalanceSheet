@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="Nachiappan.BalanceSheet.PrintOutputWorkFlowStepUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Nachiappan.BalanceSheet"
+             xmlns:balanceSheetViewModel="clr-namespace:Nachiappan.BalanceSheetViewModel;assembly=BalanceSheetViewModel"
+             xmlns:interactionRequest="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance balanceSheetViewModel:PrintOutputWorkFlowStepViewModel}"
+             d:DesignHeight="300" d:DesignWidth="700">
+    <Grid>
+        <i:Interaction.Triggers>
+            <interactionRequest:InteractionRequestTrigger SourceObject="{Binding SaveOutputRequest}">
+                <local:SaveFileAction/>
+            </interactionRequest:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Row="0" Style="{StaticResource HeaderStripGrid}">
+            <TextBlock Text="{Binding Name}" Style="{StaticResource HeaderStripText}"></TextBlock>
+        </Grid>
+        <DockPanel Grid.Row="2" Style="{StaticResource FooterStripDockPanel}">
+            <Button Style="{StaticResource FooterStripButton}" Content="Previous" DockPanel.Dock="Left" Command="{Binding GoToPreviousCommand}"/>
+            <Button Style="{StaticResource FooterStripButton}" Content="Close" DockPanel.Dock="Right" Command="{Binding GoToNextCommand}"/>
+        </DockPanel>
+        <Grid Grid.Row="1">
+            <Border Style="{StaticResource MainBorderStyle}">
+                <Border.Resources>
+                    <Style x:Key="ReadOnlyFormatableDataGrid" TargetType="{x:Type local:FormatableDataGrid}">
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                        <Setter Property="VerticalAlignment" Value="Top"/>
+                        <Setter Property="IsReadOnly" Value="False"/>
+                        <Setter Property="ColumnWidth" Value="Auto"/>
+                        <Setter Property="Margin" Value="4"/>
+                        <Setter Property="AlternationCount" Value="2" />
+                    </Style>
+                </Border.Resources>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <local:FormatableDataGrid DataContext="{Binding AccountPrintOptions}" ItemsSource="{Binding}" 
+                                              Style="{StaticResource ReadOnlyFormatableDataGrid}" 
+                                              CanUserAddRows="False"
+                                              AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Account" Binding="{Binding Name}" Width="1*"/>
+                            <DataGridTemplateColumn Width="120" Header="Print (Excel)">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox HorizontalAlignment="Center" 
+                                                  IsChecked="{Binding Path=IsPrintingNecessary, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </local:FormatableDataGrid>
+                    <Button Grid.Row="1" Content="Save" Command="{Binding SaveOutputCommand}" Width="Auto" 
+                            HorizontalAlignment="Right"/>
+                </Grid>
+                
+
+            </Border>
+        </Grid>
+
+
+    </Grid>
+</UserControl>

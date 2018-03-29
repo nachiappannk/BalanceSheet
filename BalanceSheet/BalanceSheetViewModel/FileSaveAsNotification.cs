@@ -10,7 +10,6 @@ namespace Nachiappan.BalanceSheetViewModel
         public string OutputFileName { get; set; }
         public string OutputFileExtention { get; set; }
         public string OutputFileExtentionFilter { get; set; }
-
         public bool FileSaved { get; set; }
     }
 }
