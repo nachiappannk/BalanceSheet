@@ -22,7 +22,7 @@ namespace Nachiappan.BalanceSheetViewModel
                 new ExcelSheetSelectorViewModel {Title = "Please provide the previous period balance sheet"};
 
             AccountDefinitionViewModel = 
-                new ExcelSheetSelectorViewModel() { Title = "Please profice the account definition"};
+                new ExcelSheetSelectorViewModel() { Title = "Please provide the account definition"};
 
 
             JournalSelectorViewModel.ValidityChanged += RaiseCanExecuteChanged;

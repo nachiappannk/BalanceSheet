@@ -152,9 +152,9 @@ namespace Nachiappan.BalanceSheetViewModel
             if (errorCount > 1 && warningCount == 0) return "Please check inputs. There are few errors";
             if (errorCount == 1 && warningCount > 1) return "Please check inputs. There is an errors and a few warnings";
             if (errorCount == 1 && warningCount == 1) return "Please check inputs. There is an errors and a warning";
-            if (errorCount == 1 && warningCount == 0) return "Please check inputs. There is an few errors";
-            if (errorCount == 0 && warningCount > 1) return "Please review inputs. There are a few warnings";
-            if (errorCount == 0 && warningCount == 1) return "Please review inputs. There a warning";
+            if (errorCount == 1 && warningCount == 0) return "Please check inputs. There is an errors";
+            if (errorCount == 0 && warningCount > 1) return "Please check inputs. There are few warnings";
+            if (errorCount == 0 && warningCount == 1) return "Please check inputs. There is a warning";
             return "Congrats!!! There are no errors or warnings. Please verify output";
         }
 
