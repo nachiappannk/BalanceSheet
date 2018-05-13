@@ -58,8 +58,8 @@ namespace Nachiappan.BalanceSheetViewModel.Model.ExcelGateway
         private static List<CorrectedAccountDefintionStatement> AddMissingAccountAndGetCorrectedList(List<AccountDefintionStatement> statements, List<string> accountNames, string reason)
         {
             var accountDefinitionNamesHashSet = statements.Select(x => x.Account).ToHashSet();
-
-            var accountNamesToBeAdded = accountNames.Where(x => !accountDefinitionNamesHashSet.Contains(x))
+            var distinctAccountNames = accountNames.Distinct().ToList();
+            var accountNamesToBeAdded = distinctAccountNames.Where(x => !accountDefinitionNamesHashSet.Contains(x))
                 .ToList();
 
 
